@@ -1,0 +1,7 @@
+resources:
+  - gwlab_viterbi_django_deployment.yaml
+  - gwlab_viterbi_django_service.yaml
+  - gwlab_viterbi_nginx_deployment.yaml
+  - gwlab_viterbi_nginx_service.yaml
+  - gwlab_viterbi_static_deployment.yaml
+  - gwlab_viterbi_static_service.yaml
