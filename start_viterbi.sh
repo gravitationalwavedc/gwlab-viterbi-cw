@@ -13,4 +13,4 @@ npm run relay
 npm run start &
 
 cd ..
-venv/bin/python development-manage.py runserver 8001
+venv/bin/python development-manage.py runserver 8002
