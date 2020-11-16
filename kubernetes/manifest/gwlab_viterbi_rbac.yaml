@@ -1,0 +1,36 @@
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  labels:
+    app: vault-agent
+  name: viterbi-role
+rules:
+  - apiGroups: ["*"]
+    #
+    # at the HTTP level, the name of the resource for accessing Secret
+    # objects is "secrets"
+    resources: ["secrets"]
+    verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: viterbi-rolebinding
+  labels:
+    app: vault-agent
+subjects:
+  - kind: ServiceAccount
+    name: viterbi
+    namespace: gwcloud
+roleRef:
+  kind: Role
+  name: viterbi-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: viterbi
+  namespace: gwcloud

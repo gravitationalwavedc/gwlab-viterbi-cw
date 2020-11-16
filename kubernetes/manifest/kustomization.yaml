@@ -1,4 +1,6 @@
 resources:
+  - gwlab_viterbi_vault_secrets_integrator.yaml
+  - gwlab_viterbi_vault_rbac.yaml
   - gwlab_viterbi_django_deployment.yaml
   - gwlab_viterbi_django_service.yaml
   - gwlab_viterbi_nginx_deployment.yaml
