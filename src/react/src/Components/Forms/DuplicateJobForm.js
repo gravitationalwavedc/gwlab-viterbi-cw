@@ -32,33 +32,31 @@ export default createFragmentContainer(DuplicateJobForm,
                 data {
                     dataChoice
                     sourceDataset
-                    startTime,
-                    duration,
-                    h0,
-                    a0,
-                    orbitTp,
-                    signalFrequency,
-                    psi,
-                    cosi,
-                    alpha,
-                    delta,
-                    orbitPeriod,
-                    randSeed,
-                    ifo,
-                    noiseLevel
+                    startFrequencyBand
+                    minStartTime
+                    maxStartTime
+                    asini
+                    freqBand
+                    alpha
+                    delta
+                    orbitTp
+                    orbitPeriod
+                    driftTime
+                    dFreq
                 }
                 search {
-                    frequency,
-                    band,
-                    a0Start,
-                    a0End,
-                    a0Bins,
-                    orbitTpStart,
-                    orbitTpEnd,
-                    orbitTpBins,
-                    alphaSearch,
-                    deltaSearch,
-                    orbitPeriodSearch
+                    searchStartTime
+                    searchTBlock
+                    searchCentralA0
+                    searchA0Band
+                    searchA0Bins
+                    searchCentralP
+                    searchPBand
+                    searchPBins
+                    searchCentralOrbitTp
+                    searchOrbitTpBand
+                    searchOrbitTpBins
+                    searchLLThreshold
                 }
             }
         }`

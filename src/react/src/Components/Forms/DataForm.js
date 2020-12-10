@@ -17,7 +17,7 @@ const DataForm = ({formik, handlePageChange}) =>
                                 name="dataChoice" 
                                 options={[
                                     {label:'Real', value: 'real'},
-                                    {label:'Simulated', value: 'simulated'}
+                                    // {label:'Simulated', value: 'simulated'}
                                 ]} />
                         </Col>
                     </Row>

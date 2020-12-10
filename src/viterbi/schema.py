@@ -6,7 +6,7 @@ from graphene_django.types import DjangoObjectType
 from graphql_jwt.decorators import login_required
 from graphql_relay.node.node import from_global_id, to_global_id
 
-from .models import ViterbiJob, Label, SearchParameter, DataParameter, Data, Search
+from .models import ViterbiJob, Label, Data, Search
 from .status import JobStatus
 from .types import OutputStartType, JobStatusType, AbstractDataType, AbstractSearchType
 from .utils.db_search.db_search import perform_db_search
@@ -94,6 +94,10 @@ class ViterbiJobNode(DjangoObjectType):
     def get_queryset(parent, queryset, info):
         if info.context.user.is_anonymous:
             raise Exception("You must be logged in to perform this action.")
+
+        if not info.context.user.is_ligo:
+            raise Exception("User must be ligo")
+
         return queryset
 
     def resolve_last_updated(parent, info):
@@ -142,20 +146,17 @@ class DataType(DjangoObjectType, AbstractDataType):
 populate_fields(
     DataType,
     [
-        'start_time',
-        'duration',
-        'h0',
-        'a0',
-        'orbit_tp',
-        'signal_frequency',
-        'psi',
-        'cosi',
+        'start_frequency_band',
+        'min_start_time',
+        'max_start_time',
+        'asini',
+        'freq_band',
         'alpha',
         'delta',
+        'orbit_tp',
         'orbit_period',
-        'rand_seed',
-        'ifo',
-        'noise_level'
+        'drift_time',
+        'd_freq'
     ],
     parameter_resolvers
 )
@@ -171,17 +172,18 @@ class SearchType(DjangoObjectType, AbstractSearchType):
 populate_fields(
     SearchType,
     [
-        'frequency',
-        'band',
-        'a0_start',
-        'a0_end',
-        'a0_bins',
-        'orbit_tp_start',
-        'orbit_tp_end',
-        'orbit_tp_bins',
-        'alpha_search',
-        'delta_search',
-        'orbit_period_search'
+        'search_start_time',
+        'search_t_block',
+        'search_central_a0',
+        'search_a0_band',
+        'search_a0_bins',
+        'search_central_p',
+        'search_p_band',
+        'search_p_bins',
+        'search_central_orbit_tp',
+        'search_orbit_tp_band',
+        'search_orbit_tp_bins',
+        'search_l_l_threshold',
     ],
     parameter_resolvers
 )
@@ -247,6 +249,9 @@ class Query(object):
 
     @login_required
     def resolve_public_viterbi_jobs(self, info, **kwargs):
+        if not info.context.user.is_ligo:
+            raise Exception("User must be ligo")
+
         # Perform the database search
         success, jobs = perform_db_search(info.context.user.user_id, kwargs)
         if not success:
@@ -282,6 +287,9 @@ class Query(object):
 
     @login_required
     def resolve_viterbi_result_files(self, info, **kwargs):
+        if not info.context.user.is_ligo:
+            raise Exception("User must be ligo")
+
         # Get the model id of the viterbi job
         _, job_id = from_global_id(kwargs.get("job_id"))
 
@@ -333,34 +341,32 @@ class DataInput(graphene.InputObjectType):
 
 
 class DataParametersInput(graphene.InputObjectType):
-    start_time = graphene.String()
-    duration = graphene.String()
-    h0 = graphene.String()
-    a0 = graphene.String()
-    orbit_tp = graphene.String()
-    signal_frequency = graphene.String()
-    psi = graphene.String()
-    cosi = graphene.String()
+    start_frequency_band = graphene.String()
+    min_start_time = graphene.String()
+    max_start_time = graphene.String()
+    asini = graphene.String()
+    freq_band = graphene.String()
     alpha = graphene.String()
     delta = graphene.String()
+    orbit_tp = graphene.String()
     orbit_period = graphene.String()
-    rand_seed = graphene.String()
-    ifo = graphene.String()
-    noise_level = graphene.String()
+    drift_time = graphene.String()
+    d_freq = graphene.String()
 
 
 class SearchParametersInput(graphene.InputObjectType):
-    frequency = graphene.String()
-    band = graphene.String()
-    a0_start = graphene.String()
-    a0_end = graphene.String()
-    a0_bins = graphene.String()
-    orbit_tp_start = graphene.String()
-    orbit_tp_end = graphene.String()
-    orbit_tp_bins = graphene.String()
-    alpha_search = graphene.String()
-    delta_search = graphene.String()
-    orbit_period_search = graphene.String()
+    search_start_time = graphene.String()
+    search_t_block = graphene.String()
+    search_central_a0 = graphene.String()
+    search_a0_band = graphene.String()
+    search_a0_bins = graphene.String()
+    search_central_p = graphene.String()
+    search_p_band = graphene.String()
+    search_p_bins = graphene.String()
+    search_central_orbit_tp = graphene.String()
+    search_orbit_tp_band = graphene.String()
+    search_orbit_tp_bins = graphene.String()
+    search_l_l_threshold = graphene.String()
 
 
 class ViterbiJobCreationResult(graphene.ObjectType):
@@ -378,6 +384,9 @@ class ViterbiJobMutation(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, start, data, data_parameters, search_parameters):
+        if not info.context.user.is_ligo:
+            raise Exception("User must be ligo")
+
         # Create the viterbi job
         job_id = create_viterbi_job(info.context.user.user_id, start, data, data_parameters, search_parameters)
 

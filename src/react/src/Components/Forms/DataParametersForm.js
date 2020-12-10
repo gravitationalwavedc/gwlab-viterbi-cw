@@ -2,7 +2,6 @@ import React from 'react';
 import {Button, Col, Row, Form} from 'react-bootstrap';
 import FormCard from './FormCard';
 import Input from './Atoms/Input';
-import CheckGroup from './Atoms/CheckGroup';
 
 const DataParametersForm = ({formik, handlePageChange}) => {
     const realData = formik.values.dataChoice === 'real';
@@ -21,8 +20,9 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                                         as="select"
                                         custom
                                         {...formik.getFieldProps('sourceDataset')}>
-                                        <option value='o1'>O1</option>
-                                        <option value='o2'>O2</option>
+                                        {/*<option value='o1'>O1</option>*/}
+                                        {/*<option value='o2'>O2</option>*/}
+                                        <option value='o3'>O3</option>
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
@@ -30,36 +30,45 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                         }
                         <Row>
                             <Col>
-                                <Input formik={formik} title="Start time (GPS)" name="startTime" type="number"/>
+                                <Input
+                                    formik={formik}
+                                    title="Start frequency of band (Hz)"
+                                    name="startFrequencyBand"
+                                    type="number"
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Input
+                                    formik={formik}
+                                    title="Minimum start time (GPS)"
+                                    name="minStartTime"
+                                    type="number"
+                                />
                             </Col>
                             <Col>
-                                <Input formik={formik} title="Duration (5/10m/2h/30d)" name="duration"/>
+                                <Input
+                                    formik={formik}
+                                    title="Maximum start time (GPS)"
+                                    name="maxStartTime"
+                                    type="number"
+                                />
                             </Col>
                         </Row>
                     </FormCard>
                 </Col>
             </Row>
-
-            {!realData &&
             <Row>
                 <Col>
                     <FormCard
-                        title="Simulation Parameters">
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Signal strength (h₀)"
-                                    name="h0"
-                                    type="number"/>
-                            </Col>
-                        </Row>
+                        title="Atom Generation Parameters">
                         <Row>
                             <Col>
                                 <Input
                                     formik={formik}
                                     title="Orbit projected semi-major axis (a sin i, seconds)"
-                                    name="a0"
+                                    name="asini"
                                     type="number"/>
                             </Col>
                         </Row>
@@ -76,26 +85,8 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                             <Col>
                                 <Input
                                     formik={formik}
-                                    title="Signal frequency (Hz)"
-                                    name="signalFrequency"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Polarisation angle (ψ, rad)"
-                                    name="psi"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Inclination angle (cos ι)"
-                                    name="cosi"
+                                    title="Frequency search band"
+                                    name="freqBand"
                                     type="number"/>
                             </Col>
                         </Row>
@@ -130,35 +121,23 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                             <Col>
                                 <Input
                                     formik={formik}
-                                    title="Random seed"
-                                    name="randSeed"
+                                    title="Coherence time (s)"
+                                    name="driftTime"
                                     type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <CheckGroup
-                                    title="Interferometer(s)"
-                                    formik={formik}
-                                    name="ifo"
-                                    options={[
-                                        {label:'Hanford', value: 'hanford'},
-                                        {label:'Livingston', value: 'livingston'}
-                                    ]} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
                                 <Input
                                     formik={formik}
-                                    title="One-sided noise PSD (sqrt(Sh), Hz^1/2)"
-                                    name="noiseLevel"
+                                    title="Frequency step size (Hz)"
+                                    name="dFreq"
                                     type="number"/>
                             </Col>
                         </Row>
                     </FormCard>
                 </Col>
-            </Row>}
+            </Row>
             <Row>
                 <Col>
                     <Button onClick={() => handlePageChange('searchParameters')}>Save and continue</Button>

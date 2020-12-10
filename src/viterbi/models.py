@@ -50,13 +50,26 @@ class ViterbiJob(models.Model):
         return request_file_download_id(self, path)
 
     def as_json(self):
+        # Get the data container type for this job
+        data = {
+            "type": self.data.data_choice,
+            "source": self.data.source_dataset
+        }
+
+        # Iterate over the data parameters
+        for d in self.data_parameter.all():
+            data[d.name] = d.value
+
+        # Get the search parameters
+        search = {}
+        for s in self.search_parameter.all():
+            search[s.name] = s.value
+
         return dict(
-            id=self.id,
-            value=dict(
-                name=self.name,
-                user=self.user_id,
-                creation_time=self.creation_time.strftime('%d %b %Y %I:%m %p'),
-            ),
+            name=self.name,
+            description=self.description,
+            data=data,
+            search=search
         )
 
 
@@ -89,6 +102,7 @@ class Data(models.Model):
             value=dict(
                 job=self.job.id,
                 choice=self.data_choice,
+                source=self.source_dataset
             ),
         )
 

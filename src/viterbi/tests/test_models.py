@@ -60,6 +60,7 @@ class TestModels(TestCase):
             "id": data.id,
             "value": {
                 "job": job.id,
-                "choice": viterbi_parameters.FAKE_DATA[0]
+                "choice": viterbi_parameters.FAKE_DATA[0],
+                "source": "o1"
             }
         })

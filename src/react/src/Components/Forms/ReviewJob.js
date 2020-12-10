@@ -20,7 +20,7 @@ const ReviewJob = ({values, handleSubmit, formik}) => {
         <React.Fragment>
             <Row>
                 <Col>
-                    <FormCard title="Data">
+                    <FormCard title="Source Parameters">
                         <Table>
                             <tbody>
                                 <tr>
@@ -34,43 +34,34 @@ const ReviewJob = ({values, handleSubmit, formik}) => {
                                 </tr>
                                 }
                                 <tr>
-                                    <th>Start time (GPS)</th>
-                                    <td className="text-right">{values.startTime}</td>
+                                    <th>Start frequency of band (Hz)</th>
+                                    <td className="text-right">{values.startFrequencyBand}</td>
                                 </tr>
                                 <tr>
-                                    <th>Duration (5/10m/2h/30d)</th>
-                                    <td className="text-right">{values.duration}</td>
+                                    <th>Minimum Start time (GPS)</th>
+                                    <td className="text-right">{values.minStartTime}</td>
+                                </tr>
+                                <tr>
+                                    <th>Maximum Start time (GPS)</th>
+                                    <td className="text-right">{values.maxStartTime}</td>
                                 </tr>
                             </tbody>
                         </Table>
                     </FormCard>
-                    {!realData &&
-                    <FormCard title="Simulation Parameters">
+                    <FormCard title="Atom Generation Parameters">
                         <Table>
                             <tbody>
                                 <tr>
-                                    <th>Signal strength (h₀)</th>
-                                    <td className="text-right">{values.h0}</td>
-                                </tr>
-                                <tr>
                                     <th>Orbit projected semi-major axis (a sin i, seconds)</th>
-                                    <td className="text-right">{values.a0}</td>
+                                    <td className="text-right">{values.asini}</td>
                                 </tr>
                                 <tr>
                                     <th>Time of ascension (GPS s)</th>
                                     <td className="text-right">{values.orbitTp}</td>
                                 </tr>
                                 <tr>
-                                    <th>Signal frequency (Hz)</th>
-                                    <td className="text-right">{values.signalFrequency}</td>
-                                </tr>
-                                <tr>
-                                    <th>Polarisation angle (ψ, rad)</th>
-                                    <td className="text-right">{values.psi}</td>
-                                </tr>
-                                <tr>
-                                    <th>Inclination angle (cos ι)</th>
-                                    <td className="text-right">{values.cosi}</td>
+                                    <th>Frequency search band</th>
+                                    <td className="text-right">{values.freqBand}</td>
                                 </tr>
                                 <tr>
                                     <th>Right ascension (rad)</th>
@@ -85,85 +76,84 @@ const ReviewJob = ({values, handleSubmit, formik}) => {
                                     <td className="text-right">{values.orbitPeriod}</td>
                                 </tr>
                                 <tr>
-                                    <th>Random seed</th>
-                                    <td className="text-right">{values.randSeed}</td>
+                                    <th>Coherence time (s)</th>
+                                    <td className="text-right">{values.driftTime}</td>
                                 </tr>
                                 <tr>
-                                    <th>Interferometer(s)</th>
-                                    <td className="text-right">{values.ifo.join(', ')}</td>
-                                </tr>
-                                <tr>
-                                    <th>One-sided noise PSD (sqrt(Sh), Hz^1/2)</th>
-                                    <td className="text-right">{values.noiseLevel}</td>
+                                    <th>Frequency step size (Hz)</th>
+                                    <td className="text-right">{values.dFreq}</td>
                                 </tr>
                             </tbody>
                         </Table>
                     </FormCard>
-                    }
-                    <FormCard title="Frequency Parameters">
+                    <FormCard title="Viterbi search parameters">
                         <Table>
                             <tbody>
                                 <tr>
-                                    <th>Start frequency (Hz)</th>
-                                    <td className="text-right">{values.frequency}</td>
+                                    <th>Start time (s)</th>
+                                    <td className="text-right">{values.searchStartTime}</td>
                                 </tr>
                                 <tr>
-                                    <th>Search band (Hz)</th>
-                                    <td className="text-right">{values.band}</td>
+                                    <th>Duration (s)</th>
+                                    <td className="text-right">{values.searchTBlock}</td>
+                                </tr>
+                                <tr>
+                                    <th>Log likelihood threshold</th>
+                                    <td className="text-right">{values.searchLLThreshold}</td>
                                 </tr>
                             </tbody>
                         </Table>
                     </FormCard>
-                    <FormCard title="Search a sin i (s)">
+                    <FormCard title="Search a sin i (A0)">
                         <Table>
                             <tbody>
                                 <tr>
-                                    <th>Start/Fixed</th>
-                                    <td className="text-right">{values.a0Start}</td>
+                                    <th>Central_A0</th>
+                                    <td className="text-right">{values.searchCentralA0}</td>
                                 </tr>
                                 <tr>
-                                    <th>End</th>
-                                    <td className="text-right">{values.a0End}</td>
+                                    <th>Band</th>
+                                    <td className="text-right">{values.searchA0Band}</td>
                                 </tr>
                                 <tr>
                                     <th># Bins</th>
-                                    <td className="text-right">{values.a0Bins}</td>
+                                    <td className="text-right">{values.searchA0Bins}</td>
                                 </tr>
                             </tbody>
                         </Table>
                     </FormCard>
-                    <FormCard title="Search time of ascension">
+                    <FormCard title="Search time of ascension (Tp)">
                         <Table>
                             <tbody>
                                 <tr>
-                                    <th>Start/Fixed</th>
-                                    <td className="text-right">{values.orbitTpStart}</td>
+                                    <th>Central_Tp</th>
+                                    <td className="text-right">{values.searchCentralOrbitTp}</td>
                                 </tr>
                                 <tr>
-                                    <th>End</th>
-                                    <td className="text-right">{values.orbitTpEnd}</td>
+                                    <th>Band</th>
+                                    <td className="text-right">{values.searchOrbitTpBand}</td>
                                 </tr>
                                 <tr>
                                     <th># Bins</th>
-                                    <td className="text-right">{values.orbitTpBins}</td>
+                                    <td className="text-right">{values.searchOrbitTpBins}</td>
                                 </tr>
                             </tbody>
                         </Table>
                     </FormCard>
-                    <FormCard title="Search Parameters">
+                    <FormCard title="Search orbital period (P)">
                         <Table>
                             <tbody>
                                 <tr>
-                                    <th>Search right ascension (rad)</th>
-                                    <td className="text-right">{values.alphaSearch}</td>
+                                    <th>Central_P</th>
+                                    <td className="text-right">{values.searchCentralP}</td>
                                 </tr>
                                 <tr>
-                                    <th>Search declination (rad)</th>
-                                    <td className="text-right">{values.deltaSearch}</td>
+                                    <th>Band</th>
+                                    <td className="text-right">{values.searchPBand}</td>
                                 </tr>
                                 <tr>
-                                    <th>Search orbital period (s)</th>
-                                    <td className="text-right">{values.orbitPeriodSearch}</td>
+                                    <th># Bins</th>
+                                    <td className="text-right">{values.searchPBins}</td>
                                 </tr>
                             </tbody>
                         </Table>

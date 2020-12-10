@@ -49,33 +49,31 @@ const NewJob = ({initialValues, router}) => {
                     sourceDataset: values.sourceDataset,
                 },
                 dataParameters: {
-                    startTime: values.startTime,
-                    duration: values.duration,
-                    h0: values.h0,
-                    a0: values.a0,
-                    orbitTp: values.orbitTp,
-                    signalFrequency: values.signalFrequency,
-                    psi: values.psi,
-                    cosi: values.cosi,
+                    startFrequencyBand: values.startFrequencyBand,
+                    minStartTime: values.minStartTime,
+                    maxStartTime: values.maxStartTime,
+                    asini: values.asini,
+                    freqBand: values.freqBand,
                     alpha: values.alpha,
                     delta: values.delta,
+                    orbitTp: values.orbitTp,
                     orbitPeriod: values.orbitPeriod,
-                    randSeed: values.randSeed,
-                    ifo: JSON.stringify(values.ifo),
-                    noiseLevel: values.noiseLevel,
+                    driftTime: values.driftTime,
+                    dFreq: values.dFreq,
                 },
                 searchParameters: {
-                    frequency: values.frequency,
-                    band: values.band,
-                    a0Start: values.a0Start,
-                    a0End: values.a0End,
-                    a0Bins: values.a0Bins,
-                    orbitTpStart: values.orbitTpStart,
-                    orbitTpEnd: values.orbitTpEnd,
-                    orbitTpBins: values.orbitTpBins,
-                    alphaSearch: values.alphaSearch,
-                    deltaSearch: values.deltaSearch,
-                    orbitPeriodSearch: values.orbitPeriodSearch,
+                    searchStartTime: values.searchStartTime,
+                    searchTBlock: values.searchTBlock,
+                    searchCentralA0: values.searchCentralA0,
+                    searchA0Band: values.searchA0Band,
+                    searchA0Bins: values.searchA0Bins,
+                    searchCentralP: values.searchCentralP,
+                    searchPBand: values.searchPBand,
+                    searchPBins: values.searchPBins,
+                    searchCentralOrbitTp: values.searchCentralOrbitTp,
+                    searchOrbitTpBand: values.searchOrbitTpBand,
+                    searchOrbitTpBins: values.searchOrbitTpBins,
+                    searchLLThreshold: values.searchLLThreshold
                 }
             }
         };
@@ -106,19 +104,19 @@ const NewJob = ({initialValues, router}) => {
                             <Nav.Item>
                                 <Nav.Link eventKey="data">
                                     <h5>Data</h5>
-                                    <p>Type and detectors</p>
+                                    <p>Data source type</p>
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <Nav.Link eventKey="dataParameters">
-                                    <h5>Data Parameters</h5>
-                                    <p>Dataset and Simulation parameters</p>
+                                    <h5>Atom Parameters</h5>
+                                    <p>Atom generation parameters</p>
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <Nav.Link eventKey="searchParameters">
                                     <h5>Search Parameters</h5>
-                                    <p>Search configuration</p>
+                                    <p>Viterbi search configuration</p>
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>

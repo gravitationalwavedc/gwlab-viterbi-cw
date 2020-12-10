@@ -62,7 +62,7 @@ def create_viterbi_job(user_id, start, data, data_parameters, search_parameters)
         data = {
             "parameters": json.dumps(params),
             "cluster": "ozstar",
-            "bundle": "fbc9f7c0815f1a83b0de36f957351c93797b2049"
+            "bundle": "0992ae26454c2a9204718afed9dc7b3d11d9cbf8"
         }
 
         # Initiate the request to the job controller

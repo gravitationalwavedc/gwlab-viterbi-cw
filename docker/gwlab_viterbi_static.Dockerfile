@@ -8,7 +8,7 @@ RUN apt-get install -y curl git python3 python-virtualenv rsync
 COPY src /src
 
 # Pull down and set up the viterbi repo
-RUN cd /tmp && git clone https://github.com/gravitationalwavedc/gwlab-viterbi-cw.git
+RUN cd /tmp && rsync -arv /src /tmp/gwlab-viterbi-cw/
 WORKDIR /tmp/gwlab-viterbi-cw/src
 RUN virtualenv -p python3 venv
 RUN venv/bin/pip install -r requirements.txt

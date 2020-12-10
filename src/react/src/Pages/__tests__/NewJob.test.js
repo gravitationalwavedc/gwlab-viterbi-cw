@@ -24,7 +24,7 @@ describe('new Job Page', () => {
         const {  getByTestId, getByText } = render(<NewJob />);
         const dataParametersPane = getByTestId('dataParametersPane');
         expect(dataParametersPane).toHaveAttribute('aria-hidden', 'true');
-        const signalNavButton = getByText('Dataset and Simulation parameters');
+        const signalNavButton = getByText('Atom Parameters');
         fireEvent.click(signalNavButton);
         expect(dataParametersPane).toHaveAttribute('aria-hidden', 'false');
     });

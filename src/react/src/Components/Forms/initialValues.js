@@ -6,36 +6,34 @@ const initialValues = {
 
     // Data Page
     dataChoice: 'real',
-    sourceDataset: 'o1',
+    sourceDataset: 'o3',
 
-    // Data Parameters Page
-    startTime: 1126259462.391,
-    duration: '10m',
-    h0: 8e-26,
-    a0: 1.45,
-    orbitTp: 2.56,
-    signalFrequency: 150,
-    psi: 0,
-    cosi: 1,
-    alpha: '',
-    delta: '',
-    orbitPeriod: 68023.84,
-    randSeed: (Math.random()*4294967296)>>>0,
-    ifo: [],
-    noiseLevel: 4e-24,
+    // Atom Parameters Page
+    startFrequencyBand: 188.0,
+    minStartTime: 1238166483,
+    maxStartTime: 1254582483,
+    asini: 0.01844,
+    freqBand: 1.2136296,
+    alpha: 4.974817413935078,
+    delta: -0.4349442914295658,
+    orbitTp: 1238161512.786,
+    orbitPeriod: 4995.263,
+    driftTime: 864000,
+    dFreq: 5.78703704e-07,
 
     // Search Parameters Page
-    frequency: 10.54,
-    band: 10.54,
-    a0Start: 10.54,
-    a0End: 10.54,
-    a0Bins: 500,
-    orbitTpStart: 10.54,
-    orbitTpEnd: 10.54,
-    orbitTpBins: 500,
-    alphaSearch: 7.54,
-    deltaSearch: 7.54,
-    orbitPeriodSearch: 10.54
+    searchStartTime: 1238166483,
+    searchTBlock: 864000,
+    searchCentralA0: 0.01844,
+    searchA0Band: 0.00012,
+    searchA0Bins: 1,
+    searchCentralP: 4995.263,
+    searchPBand: 0.003,
+    searchPBins: 1,
+    searchCentralOrbitTp: 1238160263.9702501,
+    searchOrbitTpBand: 260.8101737969591,
+    searchOrbitTpBins: 9,
+    searchLLThreshold: 296.27423
 };
 
 export default initialValues;

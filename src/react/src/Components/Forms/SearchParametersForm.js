@@ -6,13 +6,13 @@ import FormCard from './FormCard';
 const SearchParametersForm = ({formik, handlePageChange}) =>
     <Row>
         <Col>
-            <FormCard title="Frequency Parameters">
+            <FormCard title="Viterbi Search Parameters">
                 <Row>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Start frequency (Hz)"
-                            name="frequency"
+                            title="Start time (s)"
+                            name="searchStartTime"
                             type="number"/>
                     </Col>
                 </Row>
@@ -20,33 +20,42 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Search band (Hz)"
-                            name="band"
+                            title="Duration (s)"
+                            name="searchTBlock"
+                            type="number"/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Input
+                            formik={formik}
+                            title="Log likelihood threshold"
+                            name="searchLLThreshold"
                             type="number"/>
                     </Col>
                 </Row>
             </FormCard>
-            <FormCard title="Search a sin i (s)">
+            <FormCard title="Search a sin i">
                 <Row>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Start/Fixed"
-                            name="a0Start"
+                            title="Central_A0"
+                            name="searchCentralA0"
                             type="number"/>
                     </Col>
                     <Col>
                         <Input
                             formik={formik}
-                            title="End"
-                            name="a0End"
+                            title="Band"
+                            name="searchA0Band"
                             type="number"/>
                     </Col>
                     <Col>
                         <Input
                             formik={formik}
                             title="# Bins"
-                            name="a0Bins"
+                            name="searchA0Bins"
                             type="number"/>
                     </Col>
                 </Row>
@@ -56,51 +65,47 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Start/Fixed"
-                            name="orbitTpStart"
+                            title="Central_Tp"
+                            name="searchCentralOrbitTp"
                             type="number"/>
                     </Col>
                     <Col>
                         <Input
                             formik={formik}
-                            title="End"
-                            name="orbitTpEnd"
+                            title="Band"
+                            name="searchOrbitTpBand"
                             type="number"/>
                     </Col>
                     <Col>
                         <Input
                             formik={formik}
                             title="# Bins"
-                            name="orbitTpBins"
+                            name="searchOrbitTpBins"
                             type="number"/>
                     </Col>
                 </Row>
             </FormCard>
-            <FormCard title="Search Parameters">
+            <FormCard title="Search orbital period">
                 <Row>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Search right ascension (rad)"
-                            name="alphaSearch"
+                            title="Central_P"
+                            name="searchCentralP"
                             type="number"/>
                     </Col>
-                </Row>
-                <Row>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Search declination (rad)"
-                            name="deltaSearch"
+                            title="Band"
+                            name="searchPBand"
                             type="number"/>
                     </Col>
-                </Row>
-                <Row>
                     <Col>
                         <Input
                             formik={formik}
-                            title="Search orbital period (s)"
-                            name="orbitPeriodSearch"
+                            title="# Bins"
+                            name="searchPBins"
                             type="number"/>
                     </Col>
                 </Row>
