@@ -3,11 +3,12 @@ import { QueryRenderer, graphql } from 'react-relay';
 import { MockPayloadGenerator } from 'relay-test-utils';
 import { render, waitFor } from '@testing-library/react';
 import ViewJob from '../ViewJob';
+import 'regenerator-runtime/runtime';
 
 /* global environment, router */
 
 describe('view job page', () => {
-    const TestRenderer = () => (
+    const ViewJobRenderer = () => (
         <QueryRenderer
             environment={environment}
             query={graphql`
@@ -29,7 +30,7 @@ describe('view job page', () => {
         />
     );
 
-    const mockViterbiJobReturn = {
+    const mockViterbiViewJobReturn = {
         ViterbiJobNode() {
             return {
                 userId:1,
@@ -83,7 +84,10 @@ describe('view job page', () => {
                     }
                 }]
             };
-        },
+        }
+    };
+
+    const mockViterbiJobResultsFiles = {
         ViterbiResultFile() {
             return {
                 path: 'a_cool_path',
@@ -91,36 +95,24 @@ describe('view job page', () => {
                 fileSize: 1234,
                 downloadId: 'anDownloadId'
             };
-        },
-        ViterbiJobResultsFiles() {
-            return {
-                id: '123123',
-                files: [
-                    {ViterbiResultFile() {
-                        return {
-                            path: 'a_cool_path',
-                            isDir: false,
-                            fileSize: 1234,
-                            downloadId: 'anDownloadId'
-                        };
-                    }}
-                ]
-            };
         }
     };
 
     it('should render a loading page', () => {
         expect.hasAssertions();
-        const { getByText } = render(<TestRenderer />);
+        const { getByText } = render(<ViewJobRenderer />);
         expect(getByText('Loading...')).toBeInTheDocument();
     });
 
     it('should render the actual page', async () => {
         expect.hasAssertions();
-        const { getByText, getAllByText } = render(<TestRenderer />);
+        const { getByText, getAllByText } = render(<ViewJobRenderer />);
         await waitFor(() => environment.mock.resolveMostRecentOperation(operation =>
-            MockPayloadGenerator.generate(operation, mockViterbiJobReturn)
-        ));   
+            MockPayloadGenerator.generate(operation, mockViterbiViewJobReturn)
+        ));
+        await waitFor(() => environment.mock.resolveMostRecentOperation(operation =>
+            MockPayloadGenerator.generate(operation, mockViterbiJobResultsFiles)
+        ));
         expect(getByText('my-rad-job')).toBeInTheDocument();
         expect(getAllByText('a_cool_path')[0]).toBeInTheDocument();
     });
