@@ -30,6 +30,9 @@ class ViterbiJob(models.Model):
     job_id = models.IntegerField(default=None, blank=True, null=True)
 
     labels = models.ManyToManyField(Label)
+    # is_ligo_job indicates if the job has been run using proprietary data. If running a real job with GWOSC, this will
+    # be set to False, otherwise a real data job using channels other than GWOSC will result in this value being True
+    is_ligo_job = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (

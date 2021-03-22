@@ -19,7 +19,8 @@ def create_viterbi_job(user_id, start, data, data_parameters, search_parameters)
             user_id=user_id,
             name=start.name,
             description=start.description,
-            private=start.private
+            private=start.private,
+            is_ligo_job=True
         )
         viterbi_job.save()
 
