@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from gw_viterbi.jwt_tools import GWCloudUser
 from viterbi.models import ViterbiJob, Data, Label
 from viterbi.variables import viterbi_parameters
 from viterbi.views import update_viterbi_job
@@ -22,7 +23,10 @@ class TestViterbiJobModel(TestCase):
         """
         self.assertEqual(self.job.private, False)
 
-        update_viterbi_job(self.job.id, 1, True, [])
+        user = GWCloudUser('bill')
+        user.user_id = 1
+
+        update_viterbi_job(self.job.id, user, True, [])
 
         self.job.refresh_from_db()
         self.assertEqual(self.job.private, True)
@@ -34,7 +38,10 @@ class TestViterbiJobModel(TestCase):
 
         self.assertFalse(self.job.labels.exists())
 
-        update_viterbi_job(self.job.id, 1, False, ['Bad Run', 'Review Requested'])
+        user = GWCloudUser('bill')
+        user.user_id = 1
+
+        update_viterbi_job(self.job.id, user, False, ['Bad Run', 'Review Requested'])
 
         self.job.refresh_from_db()
         self.assertQuerysetEqual(

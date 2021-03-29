@@ -104,9 +104,18 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
         """
         viterbiJobs query should return a list of personal jobs for an autheniticated user.
         """
-        ViterbiJob.objects.create(user_id=self.user.id, name="Test1", job_id=2)
         ViterbiJob.objects.create(
-            user_id=self.user.id, name="Test2", job_id=1, description="A test job"
+            user_id=self.user.id,
+            name="Test1",
+            job_id=2,
+            is_ligo_job=True
+        )
+        ViterbiJob.objects.create(
+            user_id=self.user.id,
+            name="Test2",
+            job_id=1,
+            description="A test job",
+            is_ligo_job=True
         )
         # This job shouldn't appear in the list because it belongs to another user.
         ViterbiJob.objects.create(user_id=4, name="Test3", job_id=3)

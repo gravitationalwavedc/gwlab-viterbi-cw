@@ -10,13 +10,17 @@ from django.db import transaction
 from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search
 
 
-def create_viterbi_job(user_id, start, data, data_parameters, search_parameters):
+def create_viterbi_job(user, start, data, data_parameters, search_parameters):
     # validate_form = ViterbiJobForm(data={**start, **data, **signal, **sampler})
     # should be making use of cleaned_data below
 
+    # Right now, it is not possible to create a non-ligo job
+    if not user.is_ligo:
+        raise Exception("User must be ligo")
+
     with transaction.atomic():
         viterbi_job = ViterbiJob(
-            user_id=user_id,
+            user_id=user.user_id,
             name=start.name,
             description=start.description,
             private=start.private,
@@ -49,7 +53,7 @@ def create_viterbi_job(user_id, start, data, data_parameters, search_parameters)
         # Create the jwt token
         jwt_enc = jwt.encode(
             {
-                'userId': user_id,
+                'userId': user.user_id,
                 'exp': datetime.datetime.now() + datetime.timedelta(days=30)
             },
             settings.JOB_CONTROLLER_JWT_SECRET,
@@ -94,12 +98,12 @@ def create_viterbi_job(user_id, start, data, data_parameters, search_parameters)
         return viterbi_job.id
 
 
-def update_viterbi_job(job_id, user_id, private=None, labels=None):
-    viterbi_job = ViterbiJob.objects.get(id=job_id)
+def update_viterbi_job(job_id, user, private=None, labels=None):
+    viterbi_job = ViterbiJob.get_by_id(job_id, user)
 
-    if user_id == viterbi_job.user_id:
+    if user.user_id == viterbi_job.user_id:
         if labels is not None:
-            viterbi_job.labels.set(Label.objects.filter(name__in=labels))
+            viterbi_job.labels.set(Label.filter_by_name(labels))
 
         if private is not None:
             viterbi_job.private = private
