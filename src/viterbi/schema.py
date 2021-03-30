@@ -244,7 +244,7 @@ class Query(object):
     @login_required
     def resolve_public_viterbi_jobs(self, info, **kwargs):
         # Perform the database search
-        success, jobs = perform_db_search(info.context.user.user_id, kwargs)
+        success, jobs = perform_db_search(info.context.user, kwargs)
         if not success:
             return []
 
