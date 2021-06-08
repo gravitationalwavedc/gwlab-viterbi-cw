@@ -92,10 +92,10 @@ def create_viterbi_job(user, start, data, data_parameters, search_parameters):
         result = json.loads(result.content)
 
         # Save the job id
-        viterbi_job.job_id = result["jobId"]
+        viterbi_job.job_controller_id = result["jobId"]
         viterbi_job.save()
 
-        return viterbi_job.id
+        return viterbi_job
 
 
 def update_viterbi_job(job_id, user, private=None, labels=None):

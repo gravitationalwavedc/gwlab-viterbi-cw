@@ -112,7 +112,7 @@ class ViterbiJobNode(DjangoObjectType):
             # Get job details from the job controller
             _, jc_jobs = request_job_filter(
                 info.context.user.user_id,
-                ids=[parent.job_id]
+                ids=[parent.job_controller_id]
             )
 
             status_number, status_name, status_date = derive_job_status(jc_jobs[0]["history"])
@@ -369,10 +369,10 @@ class ViterbiJobMutation(relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, root, info, start, data, data_parameters, search_parameters):
         # Create the viterbi job
-        job_id = create_viterbi_job(info.context.user, start, data, data_parameters, search_parameters)
+        viterbi_job = create_viterbi_job(info.context.user, start, data, data_parameters, search_parameters)
 
         # Convert the viterbi job id to a global id
-        job_id = to_global_id("ViterbiJobNode", job_id)
+        job_id = to_global_id("ViterbiJobNode", viterbi_job.id)
 
         # Return the viterbi job id to the client
         return ViterbiJobMutation(

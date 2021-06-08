@@ -16,7 +16,7 @@ def request_file_download_id(job, path, user_id=None):
     """
 
     # Make sure that the job was actually submitted (Might be in a draft state?)
-    if not job.job_id:
+    if not job.job_controller_id:
         return False, "Job not submitted"
 
     # Create the jwt token
@@ -31,7 +31,7 @@ def request_file_download_id(job, path, user_id=None):
 
     # Generate the post payload
     data = {
-        'jobId': job.job_id,
+        'jobId': job.job_controller_id,
         'path': path
     }
 
@@ -48,7 +48,8 @@ def request_file_download_id(job, path, user_id=None):
         # Check that the request was successful
         if result.status_code != 200:
             # Oops
-            msg = f"Error getting job file download url, got error code: {result.status_code}\n\n{result.headers}\n\n{result.content}"
+            msg = f"Error getting job file download url, got error code: " \
+                  f"{result.status_code}\n\n{result.headers}\n\n{result.content}"
             print(msg)
             raise Exception(msg)
 
@@ -56,5 +57,5 @@ def request_file_download_id(job, path, user_id=None):
         result = json.loads(result.content)
 
         return True, result["fileId"]
-    except:
+    except Exception:
         return False, "Error getting job file download url"

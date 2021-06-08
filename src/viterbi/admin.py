@@ -40,7 +40,7 @@ class LabelAdmin(admin.ModelAdmin):
 
 @admin.register(ViterbiJob)
 class ViterbiJobAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'private', 'job_id', 'labels']
+    fields = ['name', 'description', 'private', 'job_controller_id', 'labels']
     filter_horizontal = ('labels',)
     readonly_fields = ('creation_time', 'last_updated')
     inlines = (

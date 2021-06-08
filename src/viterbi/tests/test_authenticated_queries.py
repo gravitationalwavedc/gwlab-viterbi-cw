@@ -72,7 +72,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                     name
                     userId
                     description
-                    jobId
+                    jobControllerId
                     private
                     lastUpdated
                     start {{
@@ -90,7 +90,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 "name": "",
                 "userId": 1,
                 "description": None,
-                "jobId": None,
+                "jobControllerId": None,
                 "private": False,
                 "lastUpdated": job.last_updated.strftime("%Y-%m-%d %H:%M:%S UTC"),
                 "start": {"name": "", "description": None, "private": False},
@@ -107,18 +107,18 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
         ViterbiJob.objects.create(
             user_id=self.user.id,
             name="Test1",
-            job_id=2,
+            job_controller_id=2,
             is_ligo_job=True
         )
         ViterbiJob.objects.create(
             user_id=self.user.id,
             name="Test2",
-            job_id=1,
+            job_controller_id=1,
             description="A test job",
             is_ligo_job=True
         )
         # This job shouldn't appear in the list because it belongs to another user.
-        ViterbiJob.objects.create(user_id=4, name="Test3", job_id=3)
+        ViterbiJob.objects.create(user_id=4, name="Test3", job_controller_id=3)
         response = self.client.execute(
             """
             query {
@@ -154,12 +154,14 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
 
     @mock.patch('viterbi.schema.perform_db_search', side_effect=perform_db_search_mock)
     def test_public_viterbi_jobs_query(self, perform_db_search):
-        ViterbiJob.objects.create(user_id=self.user.id, name="Test1", description="first job", job_id=2, private=False)
         ViterbiJob.objects.create(
-            user_id=self.user.id, name="Test2", job_id=1, description="A test job", private=False
+            user_id=self.user.id, name="Test1", description="first job", job_controller_id=2, private=False
+        )
+        ViterbiJob.objects.create(
+            user_id=self.user.id, name="Test2", job_controller_id=1, description="A test job", private=False
         )
         # This job shouldn't appear in the list because it's private.
-        ViterbiJob.objects.create(user_id=4, name="Test3", job_id=3, private=True)
+        ViterbiJob.objects.create(user_id=4, name="Test3", job_controller_id=3, private=True)
         response = self.client.execute(
            """
            query {
@@ -215,7 +217,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             user_id=self.user.id,
             name="Test1",
             description="first job",
-            job_id=2,
+            job_controller_id=2,
             private=False
         )
         global_id = to_global_id("ViterbiJobNode", job.id)

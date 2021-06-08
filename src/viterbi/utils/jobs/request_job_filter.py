@@ -48,7 +48,8 @@ def request_job_filter(user_id, ids=None, end_time_gt=None):
         # Check that the request was successful
         if result.status_code != 200:
             # Oops
-            msg = f"Error getting job status, got error code: {result.status_code}\n\n{result.headers}\n\n{result.content}"
+            msg = f"Error getting job status, got error code: " \
+                  f"{result.status_code}\n\n{result.headers}\n\n{result.content}"
             print(msg)
             raise Exception(msg)
 

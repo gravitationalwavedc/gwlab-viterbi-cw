@@ -46,7 +46,7 @@ class ViterbiJob(models.Model):
 
     private = models.BooleanField(default=False)
 
-    job_id = models.IntegerField(default=None, blank=True, null=True)
+    job_controller_id = models.IntegerField(default=None, blank=True, null=True)
 
     labels = models.ManyToManyField(Label)
     # is_ligo_job indicates if the job has been run using proprietary data. If running a real job with GWOSC, this will
