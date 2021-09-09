@@ -8,16 +8,16 @@ import Link from 'found/Link';
 import LabelDropdown from '../Components/Results/LabelDropdown';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
 
-const ViewJob = (props) => {
+const ViewJob = ({data, match, router, ...rest}) => {
     const [saved, setSaved] = useState(false); 
     const [showNotification, setShowNotification] = useState(false);
 
-    const onSave = (saved, message) => {
+    const onSave = (saved) => {
         setSaved(saved);
         setShowNotification(true);
     };
 
-    const { start, lastUpdated, userId } = props.data.viterbiJob;
+    const { start, lastUpdated, userId } = data.viterbiJob;
 
     const updated = moment.utc(lastUpdated, 'YYYY-MM-DD HH:mm:ss UTC').local().format('llll');
 
@@ -40,20 +40,20 @@ const ViewJob = (props) => {
                     <h1>{start.name}</h1>
                     <p>{start.description}</p>
                     <p>Updated on {updated}</p>
-                    <p>{props.data.viterbiJob.jobStatus.name}</p>
-                    <LabelDropdown jobId={props.match.params.jobId} data={props.data} onUpdate={onSave} />
+                    <p>{data.viterbiJob.jobStatus.name}</p>
+                    <LabelDropdown jobId={match.params.jobId} data={data} onUpdate={onSave} />
                     <Link as={Button} to={{
                         pathname: '/viterbi/job-form/duplicate/',
                         state: {
-                            jobId: props.match.params.jobId
+                            jobId: match.params.jobId
                         }
-                    }} activeClassName="selected" exact match={props.match} router={props.router}>
+                    }} activeClassName="selected" exact match={match} router={router}>
                       Duplicate job
                     </Link>
                     <PrivacyToggle 
                         userId={userId} 
-                        jobId={props.match.params.jobId} 
-                        data={props.data.viterbiJob.start} 
+                        jobId={match.params.jobId} 
+                        data={data.viterbiJob.start} 
                         onUpdate={onSave} />
                 </Col>
             </Row>
@@ -76,16 +76,16 @@ const ViewJob = (props) => {
                     <Col md={8}>
                         <Tab.Content>
                             <Tab.Pane eventKey="parameters">
-                                <Parameters jobData={props.data.viterbiJob} {...props}/>
+                                <Parameters jobData={data.viterbiJob} {...rest}/>
                             </Tab.Pane>
                             <Tab.Pane eventKey="results">
-                                <Files {...props}/>
+                                <Files jobId={data.viterbiJob.id} {...rest}/>
                             </Tab.Pane>
                         </Tab.Content>
                     </Col>
                 </Row>
             </Tab.Container>
-            <Files {...props} hidden style={{display:'none'}}/>
+            <Files {...rest} hidden style={{display:'none'}}/>
         </Container>
     );
 };

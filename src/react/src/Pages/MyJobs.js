@@ -4,12 +4,13 @@ import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { HiOutlineSearch, HiOutlinePlus } from 'react-icons/hi';
 import Link from 'found/Link';
 import JobTable from '../Components/JobTable';
+import GWLabLines from '../assets/gwlab_lines_3.svg';
 
 const RECORDS_PER_PAGE = 100;
 
 const MyJobs = ({data, match, router,relay}) => {
     const [search, setSearch] = useState('');
-    const [timeRange, setTimeRange] = useState('1d');
+    const [timeRange, setTimeRange] = useState('all');
     const [order, setOrder] = useState();
     const [direction, setDirection] = useState('descending');
 
@@ -41,83 +42,108 @@ const MyJobs = ({data, match, router,relay}) => {
     ];
 
     return (
-        <Container >
-            <h1 className="pt-5 mb-4">
-            My Jobs
-                <span className="float-right">
-                    <Link 
-                        as={Button}
-                        variant="outline-primary"
-                        to='/viterbi/' 
-                        exact 
-                        match={match}
-                        router={router}
-                        className="mr-1">
-                Switch to public jobs
-                    </Link>
-                    <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
-                        <HiOutlinePlus size={18} className="mb-1 mr-1"/>
-                Start a new job 
-                    </Link>
-                </span>
-            </h1>
-            <Form>
-                <Form.Row>
-                    <Col lg={3}>
-                        <Form.Group controlId="searchJobs">
-                            <Form.Label srOnly>
-                    Search
-                            </Form.Label>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>
-                                        <HiOutlineSearch />
-                                    </InputGroup.Text>
-                                </InputGroup.Prepend>
+        <>
+            <GWLabLines className="gwlab-lines"/>
+            <Container fluid className="banner">
+                <Container>
+                    <Row>
+                        <Col>
+                            <h1> Viterbi</h1>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <p className="body-2">
+                                Perform <nobr>high-priority</nobr> continuous wave searches for <nobr>low-mass </nobr> 
+                                <nobr>x-ray</nobr> binaries using the Viterbi pipeline.
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
+                                New experiment
+                            </Link>
+                        </Col>
+                    </Row>
+                </Container>
+            </Container>
+            <Container >
+                <h4 className="pt-5 mb-4">
+                    My experiments 
+                </h4>
+                <Form>
+                    <Form.Row>
+                        <Col lg={4}>
+                            <Form.Group controlId="searchJobs">
+                                <Form.Label srOnly>
+                              Search
+                                </Form.Label>
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>
+                                            <HiOutlineSearch />
+                                        </InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control 
+                                        placeholder="Search..." 
+                                        value={search} 
+                                        onChange={({target}) => setSearch(target.value)} />
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                        <Col lg={3}>
+                            <Form.Group controlId="timeRange">
+                                <Form.Label srOnly>
+                              Time
+                                </Form.Label>
                                 <Form.Control 
-                                    placeholder="Find a job..." 
-                                    value={search} 
-                                    onChange={({target}) => setSearch(target.value)} />
-                            </InputGroup>
-                        </Form.Group>
-                    </Col>
-                    <Col lg={3}>
-                        <Form.Group controlId="timeRange">
-                            <Form.Label srOnly>
-                    Time
-                            </Form.Label>
-                            <Form.Control 
-                                as="select" 
-                                value={timeRange} 
-                                onChange={({target}) => setTimeRange(target.value)} 
-                                custom>
-                                {timeOptions.map(
-                                    option => 
-                                        <option key={option.value} value={option.value}>
+                                    as="select" 
+                                    value={timeRange} 
+                                    onChange={({target}) => setTimeRange(target.value)} 
+                                    custom>
+                                    {timeOptions.map(option => 
+                                        <option 
+                                            key={option.value} 
+                                            value={option.value}>
                                             {option.text}
-                                        </option>)}
-                            </Form.Control>
-                        </Form.Group>
+                                        </option>
+                                    )}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col lg={4}>
+                            <Link 
+                                as={Button}
+                                variant="outline-primary"
+                                to='/viterbi/' 
+                                exact 
+                                match={match} 
+                                router={router} 
+                                className="mr-1">
+                                    View public experiments 
+                            </Link>
+                        </Col>
+                    </Form.Row>
+                </Form>
+                <Row>
+                    <Col>
+                        { data.viterbiJobs.edges.length > 0 ? <JobTable
+                            data={data.viterbiJobs} 
+                            setOrder={setOrder} 
+                            order={order} 
+                            setDirection={setDirection} 
+                            direction={direction}
+                            match={match}
+                            router={router}
+                            hasMore={relay.hasMore()}
+                            loadMore={loadMore}
+                            myJobs={true}
+                        /> : <h5>No experiments to show. Try a different search or changing the filters.</h5>}
                     </Col>
-                </Form.Row>
-            </Form>
-            <Row>
-                <Col>
-                    <JobTable
-                        data={data.viterbiJobs} 
-                        setOrder={setOrder} 
-                        order={order} 
-                        setDirection={setDirection} 
-                        direction={direction}
-                        match={match}
-                        router={router}
-                        hasMore={relay.hasMore()}
-                        loadMore={loadMore}
-                        myJobs={true}
-                    />
-                </Col>
-            </Row>
-        </Container>
+                </Row>
+            </Container>
+        </>
     );
 };
 

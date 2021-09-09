@@ -43,7 +43,8 @@
     ],
     "modulePaths": [],
     "moduleNameMapper": {
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+      "\\.svg": "<rootDir>/jest/mock_svg.js"
     },
     "moduleFileExtensions": [
       "web.js",

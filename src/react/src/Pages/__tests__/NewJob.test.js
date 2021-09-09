@@ -10,7 +10,7 @@ describe('new Job Page', () => {
 
     it('should send a mutation when the form is submitted', async () => {
         expect.hasAssertions();
-        const { getByText, getByTestId } = render(<NewJob router={router} />);
+        const { getByText } = render(<NewJob router={router} />);
         fireEvent.click(getByText('Submit your job'));
         const operation = await waitFor(() => environment.mock.getMostRecentOperation());
         environment.mock.resolve(
@@ -22,10 +22,10 @@ describe('new Job Page', () => {
 
     it('should navigate between tabs', () => {
         expect.hasAssertions();
-        const {  getByTestId, getByText } = render(<NewJob />);
+        const {  getByTestId, getAllByText } = render(<NewJob />);
         const dataParametersPane = getByTestId('dataParametersPane');
         expect(dataParametersPane).toHaveAttribute('aria-hidden', 'true');
-        const signalNavButton = getByText('Atom Parameters');
+        const signalNavButton = getAllByText('F Statistic')[1];
         fireEvent.click(signalNavButton);
         expect(dataParametersPane).toHaveAttribute('aria-hidden', 'false');
     });

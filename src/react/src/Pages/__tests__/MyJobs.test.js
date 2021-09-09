@@ -1,7 +1,7 @@
 import React from 'react';
 import { MockPayloadGenerator } from 'relay-test-utils';
 import { QueryRenderer, graphql } from 'react-relay';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import MyJobs from '../MyJobs';
 
 /* global environment, router */
@@ -50,21 +50,27 @@ describe('my Jobs Page', () => {
         }
     };
 
-    it('renders with data', () => {
+    it('renders with data', async () => {
         expect.hasAssertions();
         const { getByText } = render(<TestRenderer />);
-        environment.mock.resolveMostRecentOperation(operation => 
+        const operation = await waitFor(() => environment.mock.getMostRecentOperation());
+        environment.mock.resolve( 
+            operation,
             MockPayloadGenerator.generate(operation, mockReturn)
         );
-        expect(getByText('My Jobs')).toBeInTheDocument();
+        expect(getByText('My experiments')).toBeInTheDocument();
     });
 
-    it('calls refetchConnection when the serach field is updated', () => {
+    it('calls refetchConnection when the serach field is updated', async () => {
         expect.hasAssertions();
         const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>);
-        environment.mock.resolveMostRecentOperation(operation => 
+        const operation = await waitFor(() => environment.mock.getMostRecentOperation());
+
+        environment.mock.resolve( 
+            operation,
             MockPayloadGenerator.generate(operation, mockReturn)
         );
+        
         // When the page first loads it should match the initial mock query
         expect(getByText('TestJob-1')).toBeInTheDocument();
 
@@ -100,10 +106,12 @@ describe('my Jobs Page', () => {
         expect(queryByText('TestJob-1')).not.toBeInTheDocument();
     });
 
-    it('calls refetchConnection when the time range is changed', () => {
+    it('calls refetchConnection when the time range is changed', async () => {
         expect.hasAssertions();
         const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>);
-        environment.mock.resolveMostRecentOperation(operation => 
+        const operation = await waitFor(() =>  environment.mock.getMostRecentOperation());
+        environment.mock.resolve(
+            operation,
             MockPayloadGenerator.generate(operation, mockReturn)
         );
         // When the page first loads it should match the initial mock query

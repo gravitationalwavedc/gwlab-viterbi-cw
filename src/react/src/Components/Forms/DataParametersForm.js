@@ -1,150 +1,142 @@
-import React from 'react';
-import {Button, Col, Row, Form} from 'react-bootstrap';
-import FormCard from './FormCard';
+import React, { useState } from 'react';
+import { Col, Row, Form, InputGroup } from 'react-bootstrap';
 import Input from './Atoms/Input';
+import randomRightAscensionAndDeclination from '../../helpers'; 
+import PageNav from './Atoms/PageNav';
+import initialValues from './initialValues';
+
+const popularTargets = [
+    { title: 'Custom'},
+    { title: 'Default', alpha: initialValues.alpha , delta: initialValues.delta },
+    { title: 'Scorpius X-1', alpha: 4.27569923849971, delta: -0.250624917263256 },
+    { title: 'Surprise me...'}
+];
 
 const DataParametersForm = ({formik, handlePageChange}) => {
-    const realData = formik.values.dataChoice === 'real';
+    const [targetSelect, setTargetSelect] = useState('Default');
+    const [customValues, setCustomValues] = useState({alpha: 2, delta: 4});
+    const [targets, setTargets] = useState({alpha: initialValues.alpha, delta: initialValues.delta});
+
+    const setFormikValues = (alpha, delta) => {
+        const formikAlpha = formik.getFieldHelpers('alpha');
+        const formikDelta = formik.getFieldHelpers('delta');
+        formikAlpha.setValue(alpha);
+        formikDelta.setValue(delta);
+    };
+
+    const handlePopularTargetsChange = (choice) => {
+        setTargetSelect(choice);
+        let newTargets = {alpha: null, delta: null};
+
+        if (choice === 'Custom'){
+            newTargets = customValues;
+        } else if (choice === 'Surprise me...'){
+            newTargets = randomRightAscensionAndDeclination();
+        } else {
+            let popularChoice = popularTargets.reduce(
+                (previous, current) => current.title === choice ? current : previous, null
+            );
+            newTargets = {alpha: popularChoice.alpha, delta: popularChoice.delta};
+        }
+        setTargets(newTargets);
+        setFormikValues(newTargets.alpha, newTargets.delta);
+    };
+
+    const handleCustomTargetChange = (alpha, delta) => {
+        setCustomValues({alpha: alpha, delta: delta});
+        setTargets({alpha: alpha, delta: delta});
+        setTargetSelect('Custom');
+    };
+
     return (
         <React.Fragment>
             <Row>
-                <Col>
-                    <FormCard title="Source Parameters">
-                        {realData &&
-                        <Row>
-                            <Col>
-                                <Form.Group controlId="sourceDataset">
-                                    <Form.Label>Source Dataset</Form.Label>
-                                    <Form.Control
-                                        name="sourceDataset"
-                                        as="select"
-                                        custom
-                                        {...formik.getFieldProps('sourceDataset')}>
-                                        {/*<option value='o1'>O1</option>*/}
-                                        {/*<option value='o2'>O2</option>*/}
-                                        <option value='o3'>O3</option>
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        }
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Start frequency of band (Hz)"
-                                    name="startFrequencyBand"
-                                    type="number"
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Minimum start time (GPS)"
-                                    name="minStartTime"
-                                    type="number"
-                                />
-                            </Col>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Maximum start time (GPS)"
-                                    name="maxStartTime"
-                                    type="number"
-                                />
-                            </Col>
-                        </Row>
-                    </FormCard>
+                <Col md={12}>
+                    <h6>Select target position</h6>
+                </Col>
+                <Col md={3}>
+                    <Form.Group controlId="popularTargetsSelect">
+                        <Form.Label>Popular Targets</Form.Label>
+                        <Form.Control 
+                            value={targetSelect} 
+                            as="select" 
+                            onChange={(e) => handlePopularTargetsChange(e.target.value)} 
+                            custom>
+                            {popularTargets.map(target => 
+                                <option value={target.title} key={target.title}>{target.title}</option>
+                            )}
+                        </Form.Control>
+                    </Form.Group>
                 </Col>
             </Row>
             <Row>
-                <Col>
-                    <FormCard
-                        title="Atom Generation Parameters">
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Orbit projected semi-major axis (a sin i, seconds)"
-                                    name="asini"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Time of ascension (GPS s)"
-                                    name="orbitTp"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Frequency search band"
-                                    name="freqBand"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Right ascension (rad)"
-                                    name="alpha"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Declination (rad)"
-                                    name="delta"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Orbital period (s)"
-                                    name="orbitPeriod"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Coherence time (s)"
-                                    name="driftTime"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Input
-                                    formik={formik}
-                                    title="Frequency step size (Hz)"
-                                    name="dFreq"
-                                    type="number"/>
-                            </Col>
-                        </Row>
-                    </FormCard>
+                <Col md={3}>
+                    <Form.Group>
+                        <Form.Label>Right ascension</Form.Label>
+                        <InputGroup>
+                            <Form.Control
+                                name='alpha'
+                                type='number'
+                                value={targets.alpha}
+                                onChange={(e) => handleCustomTargetChange(e.target.value, targets.delta)}
+                            />
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>rad</InputGroup.Text>
+                            </InputGroup.Prepend>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+                <Col md={3}>
+                    <Form.Group>
+                        <Form.Label>Declination</Form.Label>
+                        <InputGroup>
+                            <Form.Control
+                                name='delta'
+                                type='number'
+                                value={targets.delta}
+                                onChange={(e) => handleCustomTargetChange(targets.alpha, e.target.value)}
+                            />
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>rad</InputGroup.Text>
+                            </InputGroup.Prepend>
+                        </InputGroup>
+                    </Form.Group>
                 </Col>
             </Row>
             <Row>
-                <Col>
-                    <Button onClick={() => handlePageChange('searchParameters')}>Save and continue</Button>
+                <Col md={12} className="form-break">
+                    <h6>Select frequency settings</h6>
                 </Col>
             </Row>
+            <Row>
+                <Col md={3}>
+                    <Input
+                        formik={formik}
+                        title="Band start"
+                        name="startFrequencyBand"
+                        type="number"
+                        units="Hz"
+                    />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={3}>
+                    <Input
+                        formik={formik}
+                        title="Band width"
+                        name="freqBand"
+                        type="number"
+                        units="Hz"/>
+                </Col>
+            </Row>
+            <PageNav
+                handlePageChange={handlePageChange}
+                forward={{key:'searchParameters', label:'Parameters'}}
+                backward={{key: 'data', label: 'Data Settings'}}
+            />
         </React.Fragment>
     );
 };
 
 export default DataParametersForm;
+

@@ -4,7 +4,7 @@ import {harnessApi} from '../../index';
 import Table from 'react-bootstrap/Table';
 import ResultFile from './ResultFile';
 
-const Files = (props) => {
+const Files = ({hidden, jobId}) => {
     const [order, setOrder] = useState('last_updated');
     const [direction, setDirection ] = useState('ascending');
 
@@ -18,9 +18,9 @@ const Files = (props) => {
             setDirection(direction === 'ascending' ? 'descending' : 'ascending');
         }
     };
-    
+
     return <React.Fragment>
-        <Table style={props.hidden ? { display: 'none'} : {}}>
+        <Table style={hidden ? { display: 'none'} : {}}>
             <thead>
                 <tr>
                     <th 
@@ -52,8 +52,8 @@ const Files = (props) => {
                             } 
                           }
                         `}
-                    variables={{jobId: props.data.viterbiJob.id }}
-                    render={({error, props}) => {
+                    variables={{jobId: jobId }}
+                    render={({props, error}) => {
                         if(error) {
                             return <div>{error.message}</div>;
                         } else if (props && props.viterbiResultFiles) {
@@ -61,7 +61,9 @@ const Files = (props) => {
                                 {props.viterbiResultFiles.files.map((e, i) => 
                                     <ResultFile
                                         key={i} 
-                                        file={e} {...props}/>)}
+                                        file={e} 
+                                        {...props}
+                                    />)}
                             </React.Fragment>;
                         }
 

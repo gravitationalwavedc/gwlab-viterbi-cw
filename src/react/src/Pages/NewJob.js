@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import {commitMutation} from 'relay-runtime';
 import {graphql} from 'react-relay';
 import {harnessApi} from '../index';
-import { Container, Col, Row, Tab, Nav } from 'react-bootstrap';
-import { useFormik } from 'formik'; 
-import JobTitle from '../Components/Forms/JobTitle';
+import { Container, Col, Row, Tab, Nav } from 'react-bootstrap'; 
+import { useFormik } from 'formik'; import JobTitle from '../Components/Forms/JobTitle';
 import DataForm from '../Components/Forms/DataForm';
 import DataParametersForm from '../Components/Forms/DataParametersForm';
 import SearchParametersForm from '../Components/Forms/SearchParametersForm';
+import OutputForm from '../Components/Forms/OutputForm';
 import ReviewJob from '../Components/Forms/ReviewJob';
 import initialValues from '../Components/Forms/initialValues';
 import validationSchema from '../Components/Forms/validationSchema';
@@ -90,65 +90,74 @@ const NewJob = ({initialValues, router}) => {
     };
 
     return (
-        <Container fluid>
-            <Row>
-                <Col md={2}/>
-                <Col md={8} style={{minHeight: '110px'}}>
-                    <JobTitle formik={formik} />
-                </Col>
-            </Row>
-            <Tab.Container id="jobForm" activeKey={key} onSelect={(key) => setKey(key)}>
-                <Row>
-                    <Col md={2}>
-                        <Nav className="flex-column">
-                            <Nav.Item>
-                                <Nav.Link eventKey="data">
-                                    <h5>Data</h5>
-                                    <p>Data source type</p>
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="dataParameters">
-                                    <h5>Atom Parameters</h5>
-                                    <p>Atom generation parameters</p>
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="searchParameters">
-                                    <h5>Search Parameters</h5>
-                                    <p>Viterbi search configuration</p>
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="review">
-                                    <h5>Review</h5>
-                                    <p>Finalise and start your job</p>
-                                </Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Col>
-                    <Col md={8}>
-                        <Tab.Content>
-                            <Tab.Pane eventKey="data">
-                                <DataForm formik={formik} handlePageChange={setKey}/>
-                            </Tab.Pane>
-                            <Tab.Pane data-testid="dataParametersPane" eventKey="dataParameters">
-                                <DataParametersForm formik={formik} handlePageChange={setKey}/>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="searchParameters">
-                                <SearchParametersForm formik={formik} handlePageChange={setKey}/>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="review">
-                                <ReviewJob 
-                                    formik={formik} 
-                                    values={formik.values} 
-                                    handleSubmit={formik.handleSubmit}/>
-                            </Tab.Pane>
-                        </Tab.Content>
+        <>
+            <Container fluid>
+                <Row className="form-title-row">
+                    <Col md={{span: 8, offset: 3}}>
+                        <JobTitle formik={formik} />
                     </Col>
                 </Row>
-            </Tab.Container>
-        </Container>
+            </Container>
+            <Container className="form-container" fluid>
+                <Row className="form-row">
+                    <Tab.Container id="jobForm" activeKey={key} onSelect={(key) => setKey(key)}>
+                        <Col md={{ span: 2, offset: 1}}>
+                            <Nav className="flex-column">
+                                <Nav.Item>
+                                    <Nav.Link eventKey="data">
+                                        <p className="text-button">Data Settings</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="dataParameters">
+                                        <p className="caption mb-1">Sky position & frequency</p>
+                                        <p className="text-button">F Statistic</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="searchParameters">
+                                        <p className="caption mb-1">Binary Orbital</p>
+                                        <p className="text-button">Parameters</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="output">
+                                        <p className="text-button">Output</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="review">
+                                        <p className="text-button">Review & Submit</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                            </Nav>
+                        </Col>
+                        <Col md={9}>
+                            <Tab.Content>
+                                <Tab.Pane eventKey="data">
+                                    <DataForm formik={formik} handlePageChange={setKey}/>
+                                </Tab.Pane>
+                                <Tab.Pane data-testid="dataParametersPane" eventKey="dataParameters">
+                                    <DataParametersForm formik={formik} handlePageChange={setKey}/>
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="searchParameters">
+                                    <SearchParametersForm formik={formik} handlePageChange={setKey}/>
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="output">
+                                    <OutputForm formik={formik} handlePageChange={setKey}/>
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="review">
+                                    <ReviewJob 
+                                        formik={formik} 
+                                        values={formik.values} 
+                                        handleSubmit={formik.handleSubmit}/>
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </Col>
+                    </Tab.Container>
+                </Row>
+            </Container>
+        </>
     );
 };
 
