@@ -66,7 +66,7 @@ def create_viterbi_job(user, start, data, data_parameters, search_parameters):
         # Construct the request parameters to the job controller, note that parameters must be a string, not an objects
         data = {
             "parameters": json.dumps(params),
-            "cluster": "ozstar",
+            "cluster": "ozstar_gwlab",
             "bundle": "0992ae26454c2a9204718afed9dc7b3d11d9cbf8"
         }
 
