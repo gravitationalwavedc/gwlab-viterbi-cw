@@ -1,36 +1,37 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import Link from 'found/Link';
-import { HiPencil, HiDuplicate, HiTrash} from 'react-icons/hi';
+import { HiDuplicate, HiTrash, HiDocumentText} from 'react-icons/hi';
 
-const JobCard = ({node, match, router}) => 
+const JobCard = ({node, match, router}) =>
     <Card className="gwlab-job-card">
         <Card.Body>
-            <Card.Title className="h6">{node.name} <span className={`float-right status-${node.jobStatus.name.toLowerCase()}`}>{node.jobStatus.name}</span></Card.Title>
-            <Card.Subtitle className="subtitle-1">{node.description}</Card.Subtitle>
+            <Card.Title>
+                {node.name} 
+            </Card.Title>
+            <Card.Subtitle>{node.description}</Card.Subtitle>
             <Card.Text>
+                <span className={`status-${node.jobStatus.name.toLowerCase()}`}>
+                    {node.jobStatus.name}
+                </span>
                 {node.user}
             </Card.Text>
         </Card.Body>
         <Card.Footer className="text-right">
             <Link 
-                key={node.id}
-                size="sm" 
-                variant="outline-primary" 
                 to={{pathname: '/viterbi/job-results/' + node.id + '/'}} 
                 activeClassName="selected" 
+                className="card-action"
                 exact 
                 match={match} 
                 router={router}>
-                <HiPencil className="mr-1 mb-1" />
+                <HiDocumentText className="mr-1 mb-1" />
                     View
             </Link>
             <Link 
-                key={node.id}
-                size="sm" 
-                variant="outline-primary" 
                 to={{pathname: '/viterbi/job-results/' + node.id + '/'}} 
                 activeClassName="selected" 
+                className="card-action"
                 exact 
                 match={match} 
                 router={router}>
@@ -38,11 +39,9 @@ const JobCard = ({node, match, router}) =>
                 Copy
             </Link>
             <Link 
-                key={node.id}
-                size="sm" 
-                variant="outline-primary" 
                 to={{pathname: '/viterbi/job-results/' + node.id + '/'}} 
                 activeClassName="selected" 
+                className="card-action"
                 exact 
                 match={match} 
                 router={router}>

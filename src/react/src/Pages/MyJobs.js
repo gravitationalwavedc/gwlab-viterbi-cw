@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {createPaginationContainer, graphql} from 'react-relay';
-import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
-import { HiOutlineSearch, HiOutlinePlus } from 'react-icons/hi';
+import { Button, Container, Col, Form, InputGroup, Navbar, Row } from 'react-bootstrap';
+import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'found/Link';
+import EmptyTableMessage from '../Components/EmptyTableMessage';
 import JobTable from '../Components/JobTable';
-import GWLabLines from '../assets/gwlab_lines_3.svg';
+import Banner from '../Components/Banner';
 
 const RECORDS_PER_PAGE = 100;
 
@@ -43,33 +44,9 @@ const MyJobs = ({data, match, router,relay}) => {
 
     return (
         <>
-            <GWLabLines className="gwlab-lines"/>
-            <Container fluid className="banner">
-                <Container>
-                    <Row>
-                        <Col>
-                            <h1> Viterbi</h1>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <p className="body-2">
-                                Perform <nobr>high-priority</nobr> continuous wave searches for <nobr>low-mass </nobr> 
-                                <nobr>x-ray</nobr> binaries using the Viterbi pipeline.
-                            </p>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
-                                New experiment
-                            </Link>
-                        </Col>
-                    </Row>
-                </Container>
-            </Container>
+            <Banner match={match} router={router} />
             <Container >
-                <h4 className="pt-5 mb-4">
+                <h4 className="pt-5 pt-md-5 mb-0">
                     My experiments 
                 </h4>
                 <Form>
@@ -139,9 +116,14 @@ const MyJobs = ({data, match, router,relay}) => {
                             hasMore={relay.hasMore()}
                             loadMore={loadMore}
                             myJobs={true}
-                        /> : <h5>No experiments to show. Try a different search or changing the filters.</h5>}
+                        /> : <EmptyTableMessage />}
                     </Col>
                 </Row>
+                <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
+                    <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
+                                New experiment
+                    </Link>
+                </Navbar>
             </Container>
         </>
     );

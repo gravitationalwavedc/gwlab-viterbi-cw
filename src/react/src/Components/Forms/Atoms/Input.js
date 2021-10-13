@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 
-const Input = ({formik, title, name, type, units, ...rest}) =>
+const Input = ({formik, title, name, type, units, helpText, ...rest}) =>
     <Form.Group controlId={ name }>
         <Form.Label>{ title }</Form.Label>
         <InputGroup>
@@ -17,6 +17,9 @@ const Input = ({formik, title, name, type, units, ...rest}) =>
                 <InputGroup.Text>{units}</InputGroup.Text>
             </InputGroup.Prepend>}
         </InputGroup>
+        <Form.Text>
+            {helpText}
+        </Form.Text>
         <Form.Control.Feedback type='invalid'>
             {formik.errors[name]}
         </Form.Control.Feedback>

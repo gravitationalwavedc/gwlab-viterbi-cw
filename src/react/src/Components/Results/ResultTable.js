@@ -1,16 +1,15 @@
 import React from 'react';
 import {Col, Row, Table} from 'react-bootstrap';
 
-const ResultTable = ({title, subTitle, headings, data}) => 
+const ResultTable = ({title, headings, data, widths}) => 
     <Row>
-        <Col md={6} className="mb-4">
-            <h6>{title}</h6>
-            {subTitle && <h5>{subTitle}</h5>}
-            <Table>
+        <Col className="mb-4" lg={10} xl={8}>
+            <h4>{title}</h4>
+            <Table borderless responsive size='sm'>
                 <thead>
                     <tr>
-                        {headings.map(heading => 
-                            <th key={heading}>
+                        {headings.map((heading, iter) => 
+                            <th key={heading} style={widths ? { width: widths[iter]}: {}}>
                                 {heading}
                             </th>)}
                     </tr>

@@ -6,12 +6,12 @@ import PageNav from './Atoms/PageNav';
 const OutputForm = ({formik, handlePageChange}) =>
     <React.Fragment>
         <Row>
-            <Col md={12}>
-                <h6>Select output</h6>
+            <Col>
+                <h4>Select output</h4>
             </Col>
         </Row>
         <Row>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={6} xl={4}>
                 <Input
                     formik={formik}
                     title="Log likelihood threshold"

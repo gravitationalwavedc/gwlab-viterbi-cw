@@ -10,8 +10,8 @@ describe('new Job Page', () => {
 
     it('should send a mutation when the form is submitted', async () => {
         expect.hasAssertions();
-        const { getByText } = render(<NewJob router={router} />);
-        fireEvent.click(getByText('Submit your job'));
+        const { getAllByText } = render(<NewJob router={router} />);
+        fireEvent.click(getAllByText('Submit')[0]);
         const operation = await waitFor(() => environment.mock.getMostRecentOperation());
         environment.mock.resolve(
             operation,

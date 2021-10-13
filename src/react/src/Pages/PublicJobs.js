@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {createPaginationContainer, graphql} from 'react-relay';
-import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
+import { Button, Container, Col, Form, InputGroup, Navbar, Row } from 'react-bootstrap';
 import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'found/Link';
 import JobTable from '../Components/JobTable';
-import GWLabLines from '../assets/gwlab_lines_3.svg';
+import EmptyTableMessage from '../Components/EmptyTableMessage';
+import Banner from '../Components/Banner';
 
 const RECORDS_PER_PAGE = 100;
 
@@ -13,7 +14,6 @@ const PublicJobs = ({data, match, router, relay}) => {
     const [timeRange, setTimeRange] = useState('all');
     const [order, setOrder] = useState();
     const [direction, setDirection] = useState('descending');
-
     useEffect(() => handleSearchChange(), [search, timeRange, direction, order]);
 
     const handleSearchChange = () => {
@@ -43,35 +43,9 @@ const PublicJobs = ({data, match, router, relay}) => {
 
     return (
         <>
-            <div className="lines">
-                <GWLabLines className="gwlab-lines"/>
-            </div>
-            <Container fluid className="banner">
-                <Container>
-                    <Row>
-                        <Col>
-                            <h1> Viterbi</h1>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <p className="body-2">
-                                Perform <nobr>high-priority</nobr> continuous wave searches for <nobr>low-mass </nobr> 
-                                <nobr>x-ray</nobr> binaries using the Viterbi pipeline.
-                            </p>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
-                                New experiment
-                            </Link>
-                        </Col>
-                    </Row>
-                </Container>
-            </Container>
+            <Banner match={match} router={router} />
             <Container >
-                <h4 className="pt-5 mb-4">
+                <h4 className="pt-5 pt-md-5 mb-0">
                     Experiments
                 </h4>
                 <Form>
@@ -94,7 +68,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                                 </InputGroup>
                             </Form.Group>
                         </Col>
-                        <Col lg={3}>
+                        <Col md={3}>
                             <Form.Group controlId="timeRange">
                                 <Form.Label srOnly>
                               Time
@@ -114,7 +88,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                                 </Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col lg={4}>
+                        <Col lg={4} xs={10}>
                             <Link 
                                 as={Button}
                                 variant="outline-primary"
@@ -140,9 +114,14 @@ const PublicJobs = ({data, match, router, relay}) => {
                             router={router}
                             hasMore={relay.hasMore()}
                             loadMore={loadMore}
-                        /> : <h5>No experiments to show. Try a different search or change the filters.</h5>}
+                        /> : <EmptyTableMessage/>}
                     </Col>
                 </Row>
+                <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
+                    <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
+                                New experiment
+                    </Link>
+                </Navbar>
             </Container>
         </>
     );

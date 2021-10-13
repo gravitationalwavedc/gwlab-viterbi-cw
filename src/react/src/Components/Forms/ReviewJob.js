@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Button, Col, Row } from 'react-bootstrap';
 import ResultTable from '../Results/ResultTable';
+import PageNav from './Atoms/PageNav';
 
-const ReviewJob = ({values, handleSubmit, formik}) => {
+const ReviewJob = ({values, handlePageChange, handleSubmit, formik}) => {
     const [errors, setErrors] = useState([]);
 
     const submitReview = async () => {
@@ -23,7 +24,6 @@ const ReviewJob = ({values, handleSubmit, formik}) => {
             />
             <ResultTable 
                 title='F Statistic'
-                subTitle='Sky position & frequency'
                 headings={['Right ascension', 'Declination', 'Band start', 'Band width']}
                 data={[values.alpha, values.delta, values.startFrequencyBand, values.freqBand]}
             />
@@ -31,35 +31,41 @@ const ReviewJob = ({values, handleSubmit, formik}) => {
                 title='Search Orbital Parameters'
                 headings={['Start', 'Duration']}
                 data={[values.searchStartTime, values.searchTBlock]}
+                widths={['30%', '70%']}
             />
             <ResultTable 
                 title='Search Parameters'
                 headings={['Central A0', 'Band', '#Bins']}
                 data={[values.searchCentralA0, values.searchA0Band, values.searchA0Bins]}
+                widths={['40%', '40%', '10%']}
             />
             <ResultTable 
                 title='Search Time of Ascension'
                 headings={['Central Tp', 'Band', '#Bins']}
                 data={[values.searchCentralOrbitTp, values.searchOrbitTpBand, values.searchOrbitTpBins]}
+                widths={['40%', '40%', '10%']}
             />
             <ResultTable 
                 title='Search Orbital Period'
                 headings={['Central P', 'Band', '#Bins']}
                 data={[values.searchCentralP, values.searchPBand, values.searchPBins]}
+                widths={['40%', '40%', '10%']}
             />
             <ResultTable 
                 title='Output'
                 headings={['Log Likelihood Threshold']}
                 data={[values.searchLLThreshold]}
             />
-            {handleSubmit && <Row className="mb-5">
-                <Col md={3}>
-                    <Button onClick={submitReview}>Submit your job</Button>
-                </Col>
+            {errors && <Row>
                 <Col>
                     <ul>{errors.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
                 </Col>
             </Row>}
+            <PageNav
+                handlePageChange={handlePageChange}
+                backward={{key: 'output', label: 'Output'}}
+                forward={{key: 'submit', label: 'Submit'}}
+                handleSubmit={submitReview}/>
         </React.Fragment>
     );
 };

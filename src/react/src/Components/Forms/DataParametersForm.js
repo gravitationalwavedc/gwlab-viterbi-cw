@@ -52,9 +52,9 @@ const DataParametersForm = ({formik, handlePageChange}) => {
         <React.Fragment>
             <Row>
                 <Col md={12}>
-                    <h6>Select target position</h6>
+                    <h4>Select target position</h4>
                 </Col>
-                <Col md={3}>
+                <Col xs={12} sm={8} md={6} xl={4}>
                     <Form.Group controlId="popularTargetsSelect">
                         <Form.Label>Popular Targets</Form.Label>
                         <Form.Control 
@@ -70,7 +70,7 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                 </Col>
             </Row>
             <Row>
-                <Col md={3}>
+                <Col xs={12} sm={8} md={6} xl={4}>
                     <Form.Group>
                         <Form.Label>Right ascension</Form.Label>
                         <InputGroup>
@@ -86,7 +86,7 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                         </InputGroup>
                     </Form.Group>
                 </Col>
-                <Col md={3}>
+                <Col xs={12} sm={8} md={6} xl={4}>
                     <Form.Group>
                         <Form.Label>Declination</Form.Label>
                         <InputGroup>
@@ -105,11 +105,11 @@ const DataParametersForm = ({formik, handlePageChange}) => {
             </Row>
             <Row>
                 <Col md={12} className="form-break">
-                    <h6>Select frequency settings</h6>
+                    <h4>Select frequency settings</h4>
                 </Col>
             </Row>
             <Row>
-                <Col md={3}>
+                <Col xs={12} sm={8} md={6} xl={4}>
                     <Input
                         formik={formik}
                         title="Band start"
@@ -120,7 +120,7 @@ const DataParametersForm = ({formik, handlePageChange}) => {
                 </Col>
             </Row>
             <Row>
-                <Col md={3}>
+                <Col xs={12} sm={8} md={6} xl={4}>
                     <Input
                         formik={formik}
                         title="Band width"

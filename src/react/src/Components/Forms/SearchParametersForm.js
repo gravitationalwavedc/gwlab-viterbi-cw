@@ -6,49 +6,51 @@ import PageNav from './Atoms/PageNav';
 const SearchParametersForm = ({formik, handlePageChange}) =>
     <React.Fragment>
         <Row>
-            <Col md={12}>
-                <h6>Search orbital parameters</h6>
+            <Col>
+                <h4>Search orbital parameters</h4>
             </Col>
         </Row>
         <Row>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={6} xl={4}>
                 <Input
                     formik={formik}
-                    title="Start time (s)"
+                    title="Start time"
                     name="searchStartTime"
-                    type="number"/>
+                    type="number"
+                    units="Seconds"/>
             </Col>
         </Row>
         <Row>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={6} xl={4}>
                 <Input
                     formik={formik}
-                    title="Duration (s)"
+                    title="Duration"
                     name="searchTBlock"
-                    type="number"/>
+                    type="number"
+                    units="Seconds"/>
             </Col>
         </Row>
         <Row>
-            <Col md={12}>
-                <h6>Search Parameters</h6>
+            <Col>
+                <h4>Search Parameters</h4>
             </Col>
         </Row>
         <Row>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
                     title="Central_A0"
                     name="searchCentralA0"
                     type="number"/>
             </Col>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
                     title="Band"
                     name="searchA0Band"
                     type="number"/>
             </Col>
-            <Col md={1}>
+            <Col xs={3} sm={5} md={3} lg={2}>
                 <Input
                     formik={formik}
                     title="# Bins"
@@ -57,26 +59,26 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
             </Col>
         </Row>
         <Row>
-            <Col md={12}>
-                <h6>Search time of ascension</h6>
+            <Col>
+                <h4>Search time of ascension</h4>
             </Col>
         </Row>
         <Row>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
                     title="Central_Tp"
                     name="searchCentralOrbitTp"
                     type="number"/>
             </Col>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
                     title="Band"
                     name="searchOrbitTpBand"
                     type="number"/>
             </Col>
-            <Col md={1}>
+            <Col xs={3} sm={5} md={3} lg={2}>
                 <Input
                     formik={formik}
                     title="# Bins"
@@ -85,26 +87,26 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
             </Col>
         </Row>
         <Row>
-            <Col md={12}>
-                <h6>Search orbital period</h6>
+            <Col>
+                <h4>Search orbital period</h4>
             </Col>
         </Row>
         <Row>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
                     title="Central_P"
                     name="searchCentralP"
                     type="number"/>
             </Col>
-            <Col md={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
                     title="Band"
                     name="searchPBand"
                     type="number"/>
             </Col>
-            <Col md={1}>
+            <Col xs={3} sm={5} md={3} lg={2}>
                 <Input
                     formik={formik}
                     title="# Bins"
