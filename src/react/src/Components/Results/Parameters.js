@@ -4,6 +4,7 @@ import ReviewJob from '../Forms/ReviewJob';
 
 const Parameters = (props) => {
     const jobData = props.jobData ? props.jobData : props.parameters;
+
     const values = Object.keys(jobData).reduce((result, key) => {
         Object.keys(jobData[key]).map((item) => {
             result[item] = jobData[key][item];
@@ -14,7 +15,7 @@ const Parameters = (props) => {
     if (typeof values['ifo'] === 'string')
         values['ifo'] = JSON.parse(values['ifo']);
 
-    return <ReviewJob values={values} />;
+    return <ReviewJob values={values} noButtons />;
 };
 
 export default createFragmentContainer(Parameters, {

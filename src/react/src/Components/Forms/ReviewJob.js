@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {Button, Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import ResultTable from '../Results/ResultTable';
 import PageNav from './Atoms/PageNav';
 
-const ReviewJob = ({values, handlePageChange, handleSubmit, formik}) => {
+const ReviewJob = ({values, handlePageChange, handleSubmit, formik, noButtons}) => {
     const [errors, setErrors] = useState([]);
 
     const submitReview = async () => {
@@ -61,11 +61,11 @@ const ReviewJob = ({values, handlePageChange, handleSubmit, formik}) => {
                     <ul>{errors.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
                 </Col>
             </Row>}
-            <PageNav
+            {!noButtons && <PageNav
                 handlePageChange={handlePageChange}
                 backward={{key: 'output', label: 'Output'}}
                 forward={{key: 'submit', label: 'Submit'}}
-                handleSubmit={submitReview}/>
+                handleSubmit={submitReview}/>}
         </React.Fragment>
     );
 };
