@@ -34,7 +34,7 @@ services:
     build:
       dockerfile: ./docker/gwlab_viterbi_static.Dockerfile
       context: .
-    image: nexus.gwdc.org.au/docker/gwlab_viterbi_static:0.7
+    image: nexus.gwdc.org.au/docker/gwlab_viterbi_static:0.8
     container_name: gwlab_viterbi_static
     ports:
       - "8000"
