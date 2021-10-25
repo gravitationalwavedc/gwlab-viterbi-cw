@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import Link from 'found/Link';
-import { HiDuplicate, HiTrash, HiDocumentText} from 'react-icons/hi';
+import { HiDuplicate, HiDocumentText} from 'react-icons/hi';
 
 const JobCard = ({node, match, router}) =>
     <Card className="gwlab-job-card">
@@ -29,24 +29,14 @@ const JobCard = ({node, match, router}) =>
                     View
             </Link>
             <Link 
-                to={{pathname: '/viterbi/job-results/' + node.id + '/'}} 
+                to={{pathname: '/viterbi/job-form/duplicate/' + node.id + '/'}} 
                 activeClassName="selected" 
                 className="card-action"
                 exact 
                 match={match} 
                 router={router}>
                 <HiDuplicate className="mr-1 mb-1" />
-                Copy
-            </Link>
-            <Link 
-                to={{pathname: '/viterbi/job-results/' + node.id + '/'}} 
-                activeClassName="selected" 
-                className="card-action"
-                exact 
-                match={match} 
-                router={router}>
-                <HiTrash className="mr-1 mb-1" />
-                Delete
+                Duplicate
             </Link>
         </Card.Footer>
     </Card>;
