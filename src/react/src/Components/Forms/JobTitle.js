@@ -2,7 +2,7 @@ import React from 'react';
 import { HiOutlinePencil, HiOutlineCheck, HiOutlineX} from 'react-icons/hi';
 import EdiText from 'react-editext';
 
-const EditButton = () => <React.Fragment><HiOutlinePencil /> edit</React.Fragment>;
+const EditButton = () => <React.Fragment><HiOutlinePencil style={{margin:'0 0.1rem 0.2rem 0'}} />Edit</React.Fragment>;
 const SaveButton = () => <HiOutlineCheck/>;
 const CancelButton = () => <HiOutlineX/>;
 
@@ -28,7 +28,7 @@ const JobTitle = ({formik}) => (
         />
         {formik.errors.name && 
           <p className="text-danger small">
-              Invalid name. You can use letters, numbers, underscores, and hyphens.
+              {formik.errors.name}
           </p>}
         <EdiText 
             type="text" 

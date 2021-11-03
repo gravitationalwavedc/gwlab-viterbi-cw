@@ -24,32 +24,19 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
             <Col xs={12} sm={8} md={6} xl={4}>
                 <Input
                     formik={formik}
-                    title="Duration"
+                    title="Coherence time"
                     name="searchTBlock"
                     type="number"
-                    units="Seconds"/>
+                    units="Seconds"
+                    helpText="Duration of coherent analysis block."/>
             </Col>
         </Row>
-        <Row>
+        <Row className="form-break">
             <Col>
                 <h4>Search Parameters</h4>
             </Col>
         </Row>
         <Row>
-            <Col xs={12} sm={8} md={4} xl={4}>
-                <Input
-                    formik={formik}
-                    title="Central_A0"
-                    name="searchCentralA0"
-                    type="number"/>
-            </Col>
-            <Col xs={12} sm={8} md={4} xl={4}>
-                <Input
-                    formik={formik}
-                    title="Band"
-                    name="searchA0Band"
-                    type="number"/>
-            </Col>
             <Col xs={3} sm={5} md={3} lg={2}>
                 <Input
                     formik={formik}
@@ -57,27 +44,28 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
                     name="searchA0Bins"
                     type="number"/>
             </Col>
+            <Col xs={12} sm={8} md={4} xl={4}>
+                <Input
+                    formik={formik}
+                    title="Band"
+                    name="searchA0Band"
+                    type="number"
+                    helpText="Only required if using more than 1 bin."/>
+            </Col>
+            <Col xs={12} sm={8} md={4} xl={4}>
+                <Input
+                    formik={formik}
+                    title="Central_A0"
+                    name="searchCentralA0"
+                    type="number"/>
+            </Col>
         </Row>
-        <Row>
+        <Row className="form-break">
             <Col>
                 <h4>Search time of ascension</h4>
             </Col>
         </Row>
         <Row>
-            <Col xs={12} sm={8} md={4} xl={4}>
-                <Input
-                    formik={formik}
-                    title="Central_Tp"
-                    name="searchCentralOrbitTp"
-                    type="number"/>
-            </Col>
-            <Col xs={12} sm={8} md={4} xl={4}>
-                <Input
-                    formik={formik}
-                    title="Band"
-                    name="searchOrbitTpBand"
-                    type="number"/>
-            </Col>
             <Col xs={3} sm={5} md={3} lg={2}>
                 <Input
                     formik={formik}
@@ -85,18 +73,33 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
                     name="searchOrbitTpBins"
                     type="number"/>
             </Col>
+            <Col xs={12} sm={8} md={4} xl={4}>
+                <Input
+                    formik={formik}
+                    title="Band"
+                    name="searchOrbitTpBand"
+                    type="number"
+                    helpText="Only required if using more than 1 bin."/>
+            </Col>
+            <Col xs={12} sm={8} md={4} xl={4}>
+                <Input
+                    formik={formik}
+                    title="Central_Tp"
+                    name="searchCentralOrbitTp"
+                    type="number"/>
+            </Col>
         </Row>
-        <Row>
+        <Row className="form-break">
             <Col>
                 <h4>Search orbital period</h4>
             </Col>
         </Row>
         <Row>
-            <Col xs={12} sm={8} md={4} xl={4}>
+            <Col xs={3} sm={5} md={3} lg={2}>
                 <Input
                     formik={formik}
-                    title="Central_P"
-                    name="searchCentralP"
+                    title="# Bins"
+                    name="searchPBins"
                     type="number"/>
             </Col>
             <Col xs={12} sm={8} md={4} xl={4}>
@@ -104,13 +107,14 @@ const SearchParametersForm = ({formik, handlePageChange}) =>
                     formik={formik}
                     title="Band"
                     name="searchPBand"
-                    type="number"/>
+                    type="number"
+                    helpText="Only required if using more than 1 bin."/>
             </Col>
-            <Col xs={3} sm={5} md={3} lg={2}>
+            <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
                     formik={formik}
-                    title="# Bins"
-                    name="searchPBins"
+                    title="Central_P"
+                    name="searchCentralP"
                     type="number"/>
             </Col>
         </Row>

@@ -48,7 +48,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                 <h4 className="pt-5 pt-md-5 mb-0">
                     Experiments
                 </h4>
-                <Form>
+                <Form onSubmit={e => e.preventDefault()}>
                     <Form.Row>
                         <Col lg={4}>
                             <Form.Group controlId="searchJobs">

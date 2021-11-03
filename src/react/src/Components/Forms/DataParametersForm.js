@@ -7,13 +7,12 @@ import initialValues from './initialValues';
 
 const popularTargets = [
     { title: 'Custom'},
-    { title: 'Default', alpha: initialValues.alpha , delta: initialValues.delta },
     { title: 'Scorpius X-1', alpha: 4.27569923849971, delta: -0.250624917263256 },
     { title: 'Surprise me...'}
 ];
 
 const DataParametersForm = ({formik, handlePageChange}) => {
-    const [targetSelect, setTargetSelect] = useState('Default');
+    const [targetSelect, setTargetSelect] = useState('Scorpius X-1');
     const [customValues, setCustomValues] = useState({alpha: 2, delta: 4});
     const [targets, setTargets] = useState({alpha: initialValues.alpha, delta: initialValues.delta});
 
@@ -45,6 +44,7 @@ const DataParametersForm = ({formik, handlePageChange}) => {
     const handleCustomTargetChange = (alpha, delta) => {
         setCustomValues({alpha: alpha, delta: delta});
         setTargets({alpha: alpha, delta: delta});
+        setFormikValues(alpha, delta);
         setTargetSelect('Custom');
     };
 

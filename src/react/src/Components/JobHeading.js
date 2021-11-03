@@ -4,6 +4,7 @@ import { Row, Col, Button, Container, Toast } from 'react-bootstrap';
 import LabelDropdown from '../Components/Results/LabelDropdown';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
 import moment from 'moment';
+import OzstarLogo from '../assets/ostar_svg.svg';
 
 const JobHeading = ({data, match, router}) => {
     const [saved, setSaved] = useState(false); 
@@ -32,16 +33,19 @@ const JobHeading = ({data, match, router}) => {
               </Toast>
             }
             <Row>
-                <Col md={{span: 9, offset: 3}} xl={{span: 10, offset: 2}} xs={12}>
+                <Col md={3} xl={2} className="text-right">
+                    <OzstarLogo className="review-logo" />
+                </Col>
+                <Col md={9} xl={10} xs={12}>
                     <h1 className="mb-0">
                         {start.name} 
                     </h1>
                     <h5 className="mb-0">{start.description}</h5>
-                    <p>
-                        Created {updated}
-                        <span className={`status-${jobStatus} review-heading`}>
-                            {jobStatus}
-                        </span>
+                    <p className="mb-0">
+                        Created{updated}
+                    </p>
+                    <p className={`status-${jobStatus} review-heading`}>
+                        {jobStatus}
                     </p>
                 </Col>
             </Row>

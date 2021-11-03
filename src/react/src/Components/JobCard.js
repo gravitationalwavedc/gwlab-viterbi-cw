@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import Link from 'found/Link';
 import { HiDuplicate, HiDocumentText} from 'react-icons/hi';
+import OzstarLogo from '../assets/ostar_svg.svg';
 
 const JobCard = ({node, match, router}) =>
     <Card className="gwlab-job-card">
@@ -11,6 +12,7 @@ const JobCard = ({node, match, router}) =>
             </Card.Title>
             <Card.Subtitle>{node.description}</Card.Subtitle>
             <Card.Text>
+                <OzstarLogo style={{position: 'absolute', top: '1rem', right: '1rem', height: '2.2rem'}} />
                 <span className={`status-${node.jobStatus.name.toLowerCase()}`}>
                     {node.jobStatus.name}
                 </span>
