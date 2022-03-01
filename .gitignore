@@ -13,3 +13,6 @@ src/react/junit.xml
 src/react/data/schema.json
 src/react/dist
 .vimspector.json
+db.lock
+db.pickle
+__pycache__/
