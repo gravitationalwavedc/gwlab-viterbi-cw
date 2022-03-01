@@ -1,11 +1,9 @@
 import json
-import math
 import os
 
 from core.misc import working_directory
 from db import get_unique_job_id, update_job
 from scheduler.slurm import slurm_submit
-from settings import scheduler_env
 
 
 def submit_template(wk_dir, job_name):

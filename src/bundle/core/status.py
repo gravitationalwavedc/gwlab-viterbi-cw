@@ -1,7 +1,7 @@
 import os
 
 from db import get_job_by_id, update_job, delete_job
-from scheduler.slurm import slurm_status, SLURM_STATUS
+from scheduler.slurm import slurm_status
 from scheduler.status import JobStatus
 
 

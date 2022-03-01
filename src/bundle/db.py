@@ -17,7 +17,7 @@ def _read_db():
     try:
         with open(database_filename, 'rb') as f:
             return pickle.load(f)
-    except:
+    except Exception:
         return {}
 
 

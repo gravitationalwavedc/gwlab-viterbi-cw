@@ -1,4 +1,3 @@
-import logging
 import subprocess
 
 from .status import JobStatus
@@ -44,7 +43,7 @@ def slurm_submit(script, working_directory):
     stdout = None
     try:
         stdout = subprocess.check_output(command, shell=True)
-    except:
+    except Exception:
         # Record the command and the output
         print("Error: Command `{}` returned `{}`".format(command, stdout))
         return None
@@ -56,7 +55,7 @@ def slurm_submit(script, working_directory):
     # todo: Handle errors
     try:
         return int(stdout.strip().split()[-1])
-    except:
+    except Exception:
         return None
 
 
@@ -89,7 +88,7 @@ def slurm_status(job_id):
             if int(bits[0]) == int(job_id):
                 _status = bits[1].decode("utf-8")
                 break
-        except:
+        except Exception:
             continue
 
     print("Got job status {} for job {}".format(_status, job_id))
@@ -99,8 +98,7 @@ def slurm_status(job_id):
         return None, None
 
     # Check for general failure
-    if _status in ['BOOT_FAIL', 'CANCELLED', 'DEADLINE', 'FAILED', 'NODE_FAIL', 'PREEMPTED',
-                  'REVOKED']:
+    if _status in ['BOOT_FAIL', 'CANCELLED', 'DEADLINE', 'FAILED', 'NODE_FAIL', 'PREEMPTED', 'REVOKED']:
         return JobStatus.ERROR, SLURM_STATUS[_status.split(' ')[0]]
 
     # Check for cancelled job
