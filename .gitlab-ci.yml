@@ -2,23 +2,29 @@ default:
     image:
       name: ubuntu:20.04
       entrypoint: ["/usr/bin/env"]
+  
     before_script:
       - apt -y update
       - apt -y install apt-utils
       - apt -y install net-tools python3.8 python3-pip git curl
       - apt -y upgrade
       - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-  django-tests:
+  
+  
+django-tests:
     stage: test
     script:
       - cd src/
       - pip3 install -r requirements.txt
       - python3 development-manage.py jenkins --enable-coverage --coverage-rcfile=.coveragerc
+  
     artifacts:
       reports:
         cobertura: src/reports/coverage.xml
         junit: src/reports/junit.xml
-  npm-tests:
+  
+  
+npm-tests:
     stage: test
     script:
       - cd src/
@@ -30,11 +36,14 @@ default:
       - npm install
       - npm run relay
       - npm run test-ci
+  
     artifacts:
       reports:
         cobertura: src/react/coverage/cobertura-coverage.xml
         junit: src/react/junit.xml
-  code-quality:
+  
+  
+code-quality:
     image: docker:stable
     variables:
       DOCKER_DRIVER: overlay2
@@ -52,10 +61,13 @@ default:
     artifacts:
       reports:
         codequality: gl-code-quality-report.json
-  flake8:
+  
+  
+flake8:
     script:
       - pip3 install flake8-gl-codeclimate
       - flake8 --exit-zero --format gl-codeclimate --output-file gl-code-quality-report.json src/
     artifacts:
       reports:
         codequality: gl-code-quality-report.json
+  
