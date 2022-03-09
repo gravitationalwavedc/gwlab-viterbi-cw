@@ -70,8 +70,3 @@ flake8:
     artifacts:
       reports:
         codequality: gl-code-quality-report.json
-<<<<<<< HEAD
-  
-=======
-  
->>>>>>> Fixing yaml?
