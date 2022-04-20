@@ -12,7 +12,7 @@ const Files = ({hidden, jobId}) => {
         // This is very inelegant
         if (order !== clickedColumn) {
             setOrder(clickedColumn);
-            setDirection('ascending');        
+            setDirection('ascending');
         } else {
             setOrder(order);
             setDirection(direction === 'ascending' ? 'descending' : 'ascending');
@@ -53,17 +53,26 @@ const Files = ({hidden, jobId}) => {
                           }
                         `}
                     variables={{jobId: jobId }}
-                    render={({props, error}) => {
-                        if(error) {
-                            return <div>{error.message}</div>;
-                        } else if (props && props.viterbiResultFiles) {
+                    render={(_result) => {
+                        const _error = _result.error;
+                        const _props = _result.props;
+
+                        if(_error) {
+                            return <tr><td colSpan={3}><div>{_error.message}</div></td></tr>;
+                        } else if (_props && _props.viterbiResultFiles) {
                             return <React.Fragment>
-                                {props.viterbiResultFiles.files.map((e, i) => 
-                                    <ResultFile
-                                        key={i} 
-                                        file={e} 
-                                        {...props}
-                                    />)}
+                                {
+                                    _props.viterbiResultFiles.files.map(
+                                        (e, i) =>
+                                            <ResultFile
+                                                key={i}
+                                                file={e}
+                                                jobId={jobId}
+                                                {..._props}
+                                            />
+                                    )
+                                }
+
                             </React.Fragment>;
                         }
 

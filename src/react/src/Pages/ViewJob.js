@@ -39,7 +39,7 @@ const ViewJob = ({ data, match, router, ...rest}) => (
                             </Col>
                         </Row>
                     </Tab.Container>
-                    <Files {...rest} hidden style={{display:'none'}}/>
+                    <Files jobId={data.viterbiJob.id} {...rest} hidden style={{display:'none'}}/>
                 </Container>
             </Container></> : 
             <Error404 message="Job not found" />}
