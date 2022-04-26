@@ -1,5 +1,4 @@
 import json
-import logging
 
 import responses
 from django.test import TestCase

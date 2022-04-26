@@ -1,12 +1,7 @@
-import logging
-import uuid
-
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 from graphql_relay.node.node import to_global_id
-from viterbi.models import ViterbiJob, FileDownloadToken
+from viterbi.models import ViterbiJob
 from viterbi.tests.testcases import ViterbiTestCase
 from unittest import mock
 

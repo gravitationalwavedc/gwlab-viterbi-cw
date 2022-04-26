@@ -2,8 +2,6 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import override_settings
 from django.utils import timezone
 from graphql_relay import to_global_id
 
@@ -59,7 +57,6 @@ class TestResultFilesAndGenerateFileDownloadIds(ViterbiTestCase):
                 }
             }
         """
-
 
     def request_file_list_mock(*args, **kwargs):
         return True, [
