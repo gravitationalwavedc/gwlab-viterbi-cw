@@ -7,6 +7,7 @@ from django.conf import settings
 
 from viterbi.models import ViterbiJob
 from viterbi.utils.jobs.request_file_download_id import request_file_download_id, request_file_download_ids
+from viterbi.tests.test_utils import silence_errors
 
 
 class TestFileDownloadIds(TestCase):
@@ -17,99 +18,88 @@ class TestFileDownloadIds(TestCase):
         self.addCleanup(self.responses.stop)
         self.addCleanup(self.responses.reset)
 
-        self.job = ViterbiJob.objects.create(
-            user_id=1234,
-            ini_string="detectors=['H1']"
+        self.job = ViterbiJob.objects.create(user_id=1234)
+
+    @silence_errors
+    def test_request_file_download_id(self):
+        # Set up responses before any call to request
+        # See https://github.com/getsentry/responses/pull/375
+        self.responses.add(
+            responses.POST,
+            f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
+            status=400
         )
 
-    def test_request_file_download_id(self):
-        try:
-            logging.disable(logging.CRITICAL)
+        return_result = 'val1'
+        self.responses.add(
+            responses.POST,
+            f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
+            body=json.dumps({"fileIds": [return_result]}),
+            status=200
+        )
 
-            # Set up responses before any call to request
-            # See https://github.com/getsentry/responses/pull/375
-            self.responses.add(
-                responses.POST,
-                f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
-                status=400
-            )
+        # Test job not submitted
+        self.job.job_controller_id = None
+        self.job.save()
 
-            return_result = 'val1'
-            self.responses.add(
-                responses.POST,
-                f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
-                body=json.dumps({"fileIds": [return_result]}),
-                status=200
-            )
+        result = request_file_download_id(self.job, 'test_path')
 
-            # Test job not submitted
-            self.job.job_controller_id = None
-            self.job.save()
+        self.assertEqual(result, (False, "Job not submitted"))
 
-            result = request_file_download_id(self.job, 'test_path')
+        # Test submitted job, invalid return code
+        self.job.job_controller_id = 4321
+        self.job.save()
 
-            self.assertEqual(result, (False, "Job not submitted"))
+        result = request_file_download_id(self.job, 'test_path')
 
-            # Test submitted job, invalid return code
-            self.job.job_controller_id = 4321
-            self.job.save()
+        self.assertEqual(result, (False, "Error getting job file download url"))
 
-            result = request_file_download_id(self.job, 'test_path')
+        # Test submitted job, successful return
+        self.job.job_controller_id = 4321
+        self.job.save()
 
-            self.assertEqual(result, (False, "Error getting job file download url"))
+        result = request_file_download_id(self.job, 'test_path')
 
-            # Test submitted job, successful return
-            self.job.job_controller_id = 4321
-            self.job.save()
+        self.assertEqual(result, (True, return_result))
 
-            result = request_file_download_id(self.job, 'test_path')
-
-            self.assertEqual(result, (True, return_result))
-        finally:
-            logging.disable(logging.NOTSET)
-
+    @silence_errors
     def test_request_file_download_ids(self):
-        try:
-            logging.disable(logging.CRITICAL)
+        # Set up responses before any call to request
+        # See https://github.com/getsentry/responses/pull/375
+        self.responses.add(
+            responses.POST,
+            f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
+            status=400
+        )
 
-            # Set up responses before any call to request
-            # See https://github.com/getsentry/responses/pull/375
-            self.responses.add(
-                responses.POST,
-                f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
-                status=400
-            )
+        return_result = ['val1', 'val2', 'val3']
+        self.responses.add(
+            responses.POST,
+            f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
+            body=json.dumps({"fileIds": return_result}),
+            status=200
+        )
 
-            return_result = ['val1', 'val2', 'val3']
-            self.responses.add(
-                responses.POST,
-                f"{settings.GWCLOUD_JOB_CONTROLLER_API_URL}/file/",
-                body=json.dumps({"fileIds": return_result}),
-                status=200
-            )
+        # Test job not submitted
+        self.job.job_controller_id = None
+        self.job.save()
 
-            # Test job not submitted
-            self.job.job_controller_id = None
-            self.job.save()
+        result = request_file_download_ids(self.job, 'test_path')
 
-            result = request_file_download_ids(self.job, 'test_path')
+        self.assertEqual(result, (False, "Job not submitted"))
 
-            self.assertEqual(result, (False, "Job not submitted"))
+        # Test submitted job, invalid return code
+        self.job.job_controller_id = 4321
+        self.job.save()
 
-            # Test submitted job, invalid return code
-            self.job.job_controller_id = 4321
-            self.job.save()
+        result = request_file_download_ids(self.job, 'test_path')
 
-            result = request_file_download_ids(self.job, 'test_path')
+        self.assertEqual(result, (False, "Error getting job file download url"))
 
-            self.assertEqual(result, (False, "Error getting job file download url"))
+        # Test submitted job, successful return
+        self.job.job_controller_id = 4321
+        self.job.save()
 
-            # Test submitted job, successful return
-            self.job.job_controller_id = 4321
-            self.job.save()
+        result = request_file_download_ids(self.job, 'test_path')
 
-            result = request_file_download_ids(self.job, 'test_path')
-
-            self.assertEqual(result, (True, return_result))
-        finally:
-            logging.disable(logging.NOTSET)
+        self.assertEqual(result, (True, return_result))
