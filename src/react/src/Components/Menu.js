@@ -17,7 +17,7 @@ const Menu = () => (
                         New Experiment
                     </Link>
                 </Nav>
-            </Navbar.Collapse>;
+            </Navbar.Collapse>
         </Container>
     </Navbar>
 );

@@ -1,16 +1,20 @@
+from decimal import Decimal
+
 import graphene
 from django_filters import FilterSet, OrderingFilter
 from graphene import relay
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
+from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql_relay.node.node import from_global_id, to_global_id
 
-from .models import ViterbiJob, Label, Data, Search
+from .models import ViterbiJob, Label, Data, Search, FileDownloadToken
 from .status import JobStatus
 from .types import OutputStartType, JobStatusType, AbstractDataType, AbstractSearchType
 from .utils.db_search.db_search import perform_db_search
 from .utils.derive_job_status import derive_job_status
+from .utils.jobs.request_file_download_id import request_file_download_ids
 from .utils.jobs.request_job_filter import request_job_filter
 from .views import create_viterbi_job, update_viterbi_job
 
@@ -193,8 +197,8 @@ class UserDetails(graphene.ObjectType):
 class ViterbiResultFile(graphene.ObjectType):
     path = graphene.String()
     is_dir = graphene.Boolean()
-    file_size = graphene.Int()
-    download_id = graphene.String()
+    file_size = graphene.Decimal()
+    download_token = graphene.String()
 
 
 class ViterbiResultFiles(graphene.ObjectType):
@@ -289,26 +293,23 @@ class Query(object):
         if not success:
             raise Exception("Error getting file list. " + str(files))
 
-        # Build the resulting file list and send it back to the client
-        result = []
-        for f in files:
-            download_id = ""
-            if not f["isDir"]:
-                # todo: Optimize how file download ids are generated. An id for every file every time
-                # todo: the page is loaded is not effective at all
-                # Create a file download id for this file
-                success, download_id = job.get_file_download_id(f["path"])
-                if not success:
-                    raise Exception("Error creating file download url. " + str(download_id))
+        # Generate download tokens for the list of files
+        paths = [f['path'] for f in filter(lambda x: not x['isDir'], files)]
+        tokens = FileDownloadToken.create(job, paths)
 
-            result.append(
-                ViterbiResultFile(
-                    path=f["path"],
-                    is_dir=f["isDir"],
-                    file_size=f["fileSize"],
-                    download_id=download_id
-                )
+        # Generate a dict that can be used to query the generated tokens
+        token_dict = {tk.path: tk.token for tk in tokens}
+
+        # Build the resulting file list and send it back to the client
+        result = [
+            ViterbiResultFile(
+                path=f["path"],
+                is_dir=f["isDir"],
+                file_size=Decimal(f["fileSize"]),
+                download_token=token_dict.get(f["path"], None)
             )
+            for f in files
+        ]
 
         return ViterbiResultFiles(files=result)
 
@@ -367,6 +368,7 @@ class ViterbiJobMutation(relay.ClientIDMutation):
     result = graphene.Field(ViterbiJobCreationResult)
 
     @classmethod
+    @login_required
     def mutate_and_get_payload(cls, root, info, start, data, data_parameters, search_parameters):
         # Create the viterbi job
         viterbi_job = create_viterbi_job(info.context.user, start, data, data_parameters, search_parameters)
@@ -389,6 +391,7 @@ class UpdateViterbiJobMutation(relay.ClientIDMutation):
     result = graphene.String()
 
     @classmethod
+    @login_required
     def mutate_and_get_payload(cls, root, info, **kwargs):
         job_id = kwargs.pop("job_id")
 
@@ -401,19 +404,46 @@ class UpdateViterbiJobMutation(relay.ClientIDMutation):
         )
 
 
-class UniqueNameMutation(relay.ClientIDMutation):
+class GenerateFileDownloadIds(relay.ClientIDMutation):
     class Input:
-        name = graphene.String()
+        job_id = graphene.ID(required=True)
+        download_tokens = graphene.List(graphene.String, required=True)
 
-    result = graphene.String()
+    result = graphene.List(graphene.String)
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, name):
+    @login_required
+    def mutate_and_get_payload(cls, root, info, job_id, download_tokens):
+        user = info.context.user
 
-        return UniqueNameMutation(result=name)
+        # Get the job these file downloads are for
+        job = ViterbiJob.get_by_id(from_global_id(job_id)[1], user)
+
+        # Verify the download tokens and get the paths
+        paths = FileDownloadToken.get_paths(job, download_tokens)
+
+        # Check that all tokens were found
+        if None in paths:
+            raise GraphQLError("At least one token was invalid or expired.")
+
+        # Request the list of file download ids from the list of paths
+        # Only the original job author may generate a file download id
+        success, result = request_file_download_ids(
+            job,
+            paths
+        )
+
+        # Report the error if there is one
+        if not success:
+            raise GraphQLError(result)
+
+        # Return the list of file download ids
+        return GenerateFileDownloadIds(
+            result=result
+        )
 
 
 class Mutation(graphene.ObjectType):
     new_viterbi_job = ViterbiJobMutation.Field()
     update_viterbi_job = UpdateViterbiJobMutation.Field()
-    is_name_unique = UniqueNameMutation.Field()
+    generate_file_download_ids = GenerateFileDownloadIds.Field()
