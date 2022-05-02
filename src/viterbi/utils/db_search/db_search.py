@@ -68,7 +68,7 @@ def perform_db_search(user, kwargs):
             "POST", f"{settings.GWCLOUD_DB_SEARCH_API_URL}",
             data={'query': query},
             headers={
-                "Authorization": 'JWT ' + jwt_enc.decode()
+                "Authorization": 'JWT ' + jwt_enc
             }
         )
 
