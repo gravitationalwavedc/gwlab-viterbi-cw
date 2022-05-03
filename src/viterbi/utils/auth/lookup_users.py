@@ -56,5 +56,5 @@ def request_lookup_users(ids, user_id):
         result = json.loads(result.content)
 
         return True, result["data"]["usernameLookup"]
-    except:
+    except Exception:
         return False, "Error filtering users"
