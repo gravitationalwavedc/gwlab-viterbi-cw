@@ -134,7 +134,8 @@ class ViterbiJobNode(DjangoObjectType):
                 "number": status_number,
                 "date": status_date.strftime("%Y-%m-%d %H:%M:%S UTC")
             }
-        except Exception:
+        except Exception as e:
+            print(e)
             return {
                 "name": "Unknown",
                 "number": 0,

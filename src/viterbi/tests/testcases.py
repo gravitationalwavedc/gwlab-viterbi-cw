@@ -43,3 +43,17 @@ class ViterbiTestCase(testcases.TestCase):
     GRAPHQL_SCHEMA = schema
     GRAPHQL_URL = "/graphql"
     client_class = ViterbiJSONWebTokenClient
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # We always want to see the full diff when an error occurs.
+        self.maxDiff = None
+
+    def assertResponseHasNoErrors(self, resp, msg=None):
+        """Semi-borrowed from graphene_django.utils.testing
+        They also check status_code, which we don't have access to"""
+        self.assertNotIn("errors", list(resp.to_dict().keys()), msg or resp)
+
+    def assertResponseHasErrors(self, resp, msg=None):
+        """Borrowed from graphene_django.utils.testing"""
+        self.assertIn("errors", list(resp.to_dict().keys()), msg or resp)
