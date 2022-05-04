@@ -12,6 +12,7 @@ from graphql_relay.node.node import from_global_id, to_global_id
 from .models import ViterbiJob, Label, Data, Search, FileDownloadToken
 from .status import JobStatus
 from .types import OutputStartType, JobStatusType, AbstractDataType, AbstractSearchType
+from .utils.auth.lookup_users import request_lookup_users
 from .utils.db_search.db_search import perform_db_search
 from .utils.derive_job_status import derive_job_status
 from .utils.jobs.request_file_download_id import request_file_download_ids
@@ -89,6 +90,7 @@ class ViterbiJobNode(DjangoObjectType):
         convert_choices_to_enum = False
         interfaces = (relay.Node,)
 
+    user = graphene.String()
     job_status = graphene.Field(JobStatusType)
     last_updated = graphene.String()
     start = graphene.Field(OutputStartType)
@@ -97,6 +99,12 @@ class ViterbiJobNode(DjangoObjectType):
     @classmethod
     def get_queryset(parent, queryset, info):
         return ViterbiJob.viterbi_job_filter(queryset, info)
+
+    def resolve_user(parent, info):
+        success, users = request_lookup_users([parent.user_id], info.context.user.user_id)
+        if success and users:
+            return f"{users[0]['firstName']} {users[0]['lastName']}"
+        return "Unknown User"
 
     def resolve_last_updated(parent, info):
         return parent.last_updated.strftime("%Y-%m-%d %H:%M:%S UTC")
@@ -126,7 +134,8 @@ class ViterbiJobNode(DjangoObjectType):
                 "number": status_number,
                 "date": status_date.strftime("%Y-%m-%d %H:%M:%S UTC")
             }
-        except Exception:
+        except Exception as e:
+            print(e)
             return {
                 "name": "Unknown",
                 "number": 0,

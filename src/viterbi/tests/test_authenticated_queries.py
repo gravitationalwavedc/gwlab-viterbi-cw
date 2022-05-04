@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from graphql_relay.node.node import to_global_id
 from viterbi.models import ViterbiJob
 from viterbi.tests.testcases import ViterbiTestCase
+from viterbi.tests.test_utils import silence_errors
 from unittest import mock
 
 User = get_user_model()
@@ -10,10 +11,7 @@ User = get_user_model()
 
 class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
     def setUp(self):
-        self.maxDiff = 9999
-
         self.user = User.objects.create(username="buffy", first_name="buffy", last_name="summers")
-        self.client.authenticate(self.user)
 
     def perform_db_search_mock(*args, **kwargs):
         return True, [
@@ -45,48 +43,39 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         ]
 
+    @silence_errors
     def test_viterbi_job_query(self):
         """
         viterbiJob node query should return a single job for an autheniticated user."
         """
         job = ViterbiJob.objects.create(user_id=self.user.id)
         global_id = to_global_id("ViterbiJobNode", job.id)
-        response = self.client.execute(
-            f"""
+        query = f"""
             query {{
                 viterbiJob(id:"{global_id}"){{
                     id
-                    name
                     userId
-                    description
-                    jobControllerId
-                    private
-                    lastUpdated
-                    start {{
-                        name
-                        description
-                        private
-                    }}
                 }}
             }}
             """
-        )
+        # Check fails without authenticated user
+        response = self.client.execute(query)
+        self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
+
+        # Try again with authenticated user
+        self.client.authenticate(self.user)
+        response = self.client.execute(query)
         expected = {
             "viterbiJob": {
                 "id": "Vml0ZXJiaUpvYk5vZGU6MQ==",
-                "name": "",
                 "userId": 1,
-                "description": None,
-                "jobControllerId": None,
-                "private": False,
-                "lastUpdated": job.last_updated.strftime("%Y-%m-%d %H:%M:%S UTC"),
-                "start": {"name": "", "description": None, "private": False},
             }
         }
         self.assertDictEqual(
             expected, response.data, "viterbiJob query returned unexpected data."
         )
 
+    @silence_errors
     def test_viterbi_jobs_query(self):
         """
         viterbiJobs query should return a list of personal jobs for an autheniticated user.
@@ -106,8 +95,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
         )
         # This job shouldn't appear in the list because it belongs to another user.
         ViterbiJob.objects.create(user_id=4, name="Test3", job_controller_id=3)
-        response = self.client.execute(
-            """
+        query = """
             query {
                 viterbiJobs{
                     edges {
@@ -120,7 +108,12 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 }
             }
             """
-        )
+        response = self.client.execute(query)
+        self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
+
+        # Try again with authenticated user
+        self.client.authenticate(self.user)
+        response = self.client.execute(query)
         expected = {
             "viterbiJobs": {
                 "edges": [
@@ -133,6 +126,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             response.data, expected, "viterbiJobs query returned unexpected data."
         )
 
+    @silence_errors
     @mock.patch('viterbi.schema.perform_db_search', side_effect=perform_db_search_mock)
     def test_public_viterbi_jobs_query(self, perform_db_search):
         ViterbiJob.objects.create(
@@ -143,8 +137,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
         )
         # This job shouldn't appear in the list because it's private.
         ViterbiJob.objects.create(user_id=4, name="Test3", job_controller_id=3, private=True)
-        response = self.client.execute(
-            """
+        query = """
             query {
                 publicViterbiJobs(search:"", timeRange:"all") {
                     edges {
@@ -162,7 +155,12 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 }
             }
             """
-        )
+        response = self.client.execute(query)
+        self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
+
+        # Try again with authenticated user
+        self.client.authenticate(self.user)
+        response = self.client.execute(query)
         expected = {
             'publicViterbiJobs': {
                 'edges': [
