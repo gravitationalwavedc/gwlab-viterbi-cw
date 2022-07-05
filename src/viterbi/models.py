@@ -306,3 +306,10 @@ class SearchParameter(models.Model):
 
     def __str__(self):
         return '{} - {} ({})'.format(self.name, self.value, self.search)
+
+
+class ViterbiSummaryResults(models.Model):
+    job = models.OneToOneField(ViterbiJob, related_name='summary_results', on_delete=models.CASCADE)
+
+    plot_data = models.TextField()
+    table_data = models.TextField()

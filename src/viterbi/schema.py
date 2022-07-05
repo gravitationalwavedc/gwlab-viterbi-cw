@@ -9,7 +9,7 @@ from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql_relay.node.node import from_global_id, to_global_id
 
-from .models import ViterbiJob, Label, Data, Search, FileDownloadToken
+from .models import ViterbiJob, Label, Data, Search, FileDownloadToken, ViterbiSummaryResults
 from .status import JobStatus
 from .types import OutputStartType, JobStatusType, AbstractDataType, AbstractSearchType
 from .utils.auth.lookup_users import request_lookup_users
@@ -17,7 +17,7 @@ from .utils.db_search.db_search import perform_db_search
 from .utils.derive_job_status import derive_job_status
 from .utils.jobs.request_file_download_id import request_file_download_ids
 from .utils.jobs.request_job_filter import request_job_filter
-from .views import create_viterbi_job, update_viterbi_job
+from .views import create_viterbi_job, update_viterbi_job, get_viterbi_summary_results
 
 
 def parameter_resolvers(name):
@@ -220,6 +220,15 @@ class ViterbiResultFiles(graphene.ObjectType):
     files = graphene.List(ViterbiResultFile)
 
 
+class ViterbiSummaryResultsType(DjangoObjectType):
+    class Meta:
+        model = ViterbiSummaryResults
+        fields = ("table_data", "plot_data")
+
+    class Input:
+        job_id = graphene.ID()
+
+
 class ViterbiPublicJobNode(graphene.ObjectType):
     user = graphene.String()
     name = graphene.String()
@@ -247,6 +256,7 @@ class Query(object):
     all_labels = graphene.List(LabelType)
 
     viterbi_result_files = graphene.Field(ViterbiResultFiles, job_id=graphene.ID(required=True))
+    viterbi_summary_results = graphene.Field(ViterbiSummaryResultsType, job_id=graphene.ID(required=True))
 
     gwclouduser = graphene.Field(UserDetails)
 
@@ -321,6 +331,15 @@ class Query(object):
         ]
 
         return ViterbiResultFiles(files=result)
+
+    @login_required
+    def resolve_viterbi_summary_results(self, info, **kwargs):
+        # Get the model id of the viterbi job
+        _, job_id = from_global_id(kwargs.get("job_id"))
+
+        # Try to look up the job with the id provided
+        job = ViterbiJob.get_by_id(job_id, info.context.user)
+        return get_viterbi_summary_results(job)
 
 
 class StartInput(graphene.InputObjectType):
