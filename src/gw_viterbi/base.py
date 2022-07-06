@@ -167,3 +167,5 @@ GWCLOUD_AUTH_API_URL = "http://localhost:8000/graphql"
 
 # The expiry of FileDownloadTokens (in seconds)
 FILE_DOWNLOAD_TOKEN_EXPIRY = 60*60*24
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

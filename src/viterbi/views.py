@@ -7,7 +7,10 @@ from django.conf import settings
 from django.db import transaction
 
 # from .forms import ViterbiJobForm
-from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search
+from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search, ViterbiSummaryResults
+from .utils.jobs.request_file_download_id import request_file_download_ids
+from .utils.check_job_completed import check_job_completed
+from .utils.get_download_url import get_download_url
 
 
 def create_viterbi_job(user, start, data, data_parameters, search_parameters):
@@ -113,3 +116,73 @@ def update_viterbi_job(job_id, user, private=None, labels=None):
         return 'Job saved!'
     else:
         raise Exception('You must own the job to change the privacy!')
+
+
+def candidates_to_table_data(job, candidate_file_data):
+    logL_threshold = float(job.search_parameter.get(name='search_l_l_threshold').value)
+
+    candidate_dicts = []
+    for candidate_data in candidate_file_data.strip().split('\n'):
+        candidate = candidate_data.split()
+        candidate_dicts.append({
+            'orbit_period': float(candidate[0]),
+            'asini': float(candidate[1]),
+            'orbit_tp': float(candidate[2]),
+            'logL': float(candidate[3]),
+            'score': float(candidate[4]),
+            'candidate_frequency': float(candidate[5]),
+        })
+    return {'candidates': candidate_dicts, 'logL_threshold': logL_threshold}
+
+
+def path_to_plot_data(job, path_file_data):
+    start_time = float(job.search_parameter.get(name='search_start_time').value)
+    t_block = float(job.search_parameter.get(name='search_t_block').value)
+
+    path_f, path_t = [], []
+    for i, path_data in enumerate(path_file_data.strip().split('\n')):
+        path_f.append(float(path_data))
+        path_t.append(start_time + i*t_block)
+    return {'frequency': path_f, 'time': path_t}
+
+
+def get_viterbi_summary_results(job):
+    # If job not completed, obviously don't bother
+    if not check_job_completed(job):
+        return None
+
+    # If job has already had results model generated, return that
+    if hasattr(job, 'summary_result'):
+        return job.summary_result
+
+    # Otherwise, generate results page data
+    # Fetch the file list from the job controller
+    success, files = job.get_file_list()
+    if not success:
+        raise Exception("Error getting file list. " + str(files))
+
+    # Grab the candidates and best path files, and generate download ids
+    candidate_file = next(filter(lambda f: 'results_a0_phase_loglikes_scores.dat' in f['path'], files))
+    path_file = next(filter(lambda f: 'results_path.dat' in f['path'], files))
+    paths = [candidate_file['path'], path_file['path']]
+    success, f_ids = request_file_download_ids(job, paths)
+
+    if not success:
+        raise Exception(f_ids)
+
+    # Download the files
+    candidate_file_url = get_download_url(f_ids[0])
+    path_file_url = get_download_url(f_ids[1])
+
+    candidate_file_data = requests.get(candidate_file_url).text
+    path_file_data = requests.get(path_file_url).text
+
+    # Make results model so we don't need to download and process it every time the page is rendered
+    results = ViterbiSummaryResults(
+        job=job,
+        table_data=json.dumps(candidates_to_table_data(job, candidate_file_data)),
+        plot_data=json.dumps(path_to_plot_data(job, path_file_data))
+    )
+    results.save()
+
+    return results

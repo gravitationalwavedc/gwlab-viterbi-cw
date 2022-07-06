@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search
+from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search, ViterbiSummaryResults
 
 
 # Register your models here.
@@ -40,7 +40,7 @@ class LabelAdmin(admin.ModelAdmin):
 
 @admin.register(ViterbiJob)
 class ViterbiJobAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'private', 'job_controller_id', 'labels']
+    fields = ['name', 'description', 'private', 'job_controller_id']
     filter_horizontal = ('labels',)
     readonly_fields = ('creation_time', 'last_updated')
     inlines = (
@@ -49,3 +49,8 @@ class ViterbiJobAdmin(admin.ModelAdmin):
         InlineDataParameterAdmin,
         InlineSearchParameterAdmin
     )
+
+
+@admin.register(ViterbiSummaryResults)
+class ViterbiSummaryResultsAdmin(admin.ModelAdmin):
+    fields = ['job', 'table_data', 'plot_data']
