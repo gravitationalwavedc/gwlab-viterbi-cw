@@ -10,6 +10,7 @@ from django.db import transaction
 from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search, ViterbiSummaryResults
 from .utils.jobs.request_file_download_id import request_file_download_ids
 from .utils.check_job_completed import check_job_completed
+from .utils.get_download_url import get_download_url
 
 
 def create_viterbi_job(user, start, data, data_parameters, search_parameters):
@@ -170,8 +171,8 @@ def get_viterbi_summary_results(job):
         raise Exception(f_ids)
 
     # Download the files
-    candidate_file_url = settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=' + f_ids[0]
-    path_file_url = settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=' + f_ids[1]
+    candidate_file_url = get_download_url(f_ids[0])
+    path_file_url = get_download_url(f_ids[1])
 
     candidate_file_data = requests.get(candidate_file_url).text
     path_file_data = requests.get(path_file_url).text

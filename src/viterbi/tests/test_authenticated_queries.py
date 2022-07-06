@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from graphql_relay.node.node import to_global_id
-from viterbi.models import ViterbiJob
+from viterbi.models import ViterbiJob, ViterbiSummaryResults
 from viterbi.tests.testcases import ViterbiTestCase
 from viterbi.tests.test_utils import silence_errors
 from unittest import mock
@@ -189,6 +189,36 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                         }
                     }
                 ]
+            }
+        }
+        self.assertDictEqual(response.data, expected, "publicViterbiJobs query returned unexpected data.")
+
+    @silence_errors
+    @mock.patch('viterbi.schema.get_viterbi_summary_results')
+    def test_viterbi_summary_results_query(self, get_viterbi_summary_results_mock):
+        job = ViterbiJob.objects.create(user_id=self.user.id)
+        test_table_data, test_plot_data = 'test_table_data', 'test_plot_data'
+        vsr = ViterbiSummaryResults.objects.create(job=job, table_data=test_table_data, plot_data=test_plot_data)
+        get_viterbi_summary_results_mock.return_value = vsr
+        global_id = to_global_id("ViterbiJobNode", job.id)
+        query = f"""
+            query {{
+                viterbiSummaryResults(jobId:"{global_id}"){{
+                    tableData
+                    plotData
+                }}
+            }}
+            """
+        response = self.client.execute(query)
+        self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
+
+        # Try again with authenticated user
+        self.client.authenticate(self.user)
+        response = self.client.execute(query)
+        expected = {
+            'viterbiSummaryResults': {
+                'tableData': test_table_data,
+                'plotData': test_plot_data
             }
         }
         self.assertDictEqual(response.data, expected, "publicViterbiJobs query returned unexpected data.")

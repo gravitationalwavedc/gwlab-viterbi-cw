@@ -309,7 +309,7 @@ class SearchParameter(models.Model):
 
 
 class ViterbiSummaryResults(models.Model):
-    job = models.OneToOneField(ViterbiJob, related_name='summary_results', on_delete=models.CASCADE)
+    job = models.OneToOneField(ViterbiJob, related_name='summary_result', on_delete=models.CASCADE)
 
     plot_data = models.TextField()
     table_data = models.TextField()
