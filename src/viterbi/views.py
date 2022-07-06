@@ -152,8 +152,8 @@ def get_viterbi_summary_results(job):
         return None
 
     # If job has already had results model generated, return that
-    if hasattr(job, 'summary_results'):
-        return job.summary_results
+    if hasattr(job, 'summary_result'):
+        return job.summary_result
 
     # Otherwise, generate results page data
     # Fetch the file list from the job controller
