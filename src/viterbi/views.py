@@ -125,26 +125,24 @@ def candidates_to_table_data(job, candidate_file_data):
     for candidate_data in candidate_file_data.strip().split('\n'):
         candidate = candidate_data.split()
         candidate_dicts.append({
-            'orbit_period': float(candidate[0]),
+            'orbitPeriod': float(candidate[0]),
             'asini': float(candidate[1]),
-            'orbit_tp': float(candidate[2]),
+            'orbitTp': float(candidate[2]),
             'logL': float(candidate[3]),
             'score': float(candidate[4]),
-            'candidate_frequency': float(candidate[5]),
+            'frequency': float(candidate[5]),
         })
-    return {'candidates': candidate_dicts, 'logL_threshold': logL_threshold}
+    return {'candidates': candidate_dicts, 'logLThreshold': logL_threshold}
 
 
 def path_to_plot_data(job, path_file_data):
     start_time = float(job.search_parameter.get(name='search_start_time').value)
     t_block = float(job.search_parameter.get(name='search_t_block').value)
 
-    path_f, path_t = [], []
-    for i, path_data in enumerate(path_file_data.strip().split('\n')):
-        path_f.append(float(path_data))
-        path_t.append(start_time + i*t_block)
-    return {'frequency': path_f, 'time': path_t}
-
+    return [
+        {'frequency': float(path_data), 'time': start_time + i*t_block}
+        for i, path_data in enumerate(path_file_data.strip().split('\n'))
+    ]
 
 def get_viterbi_summary_results(job):
     # If job not completed, obviously don't bother

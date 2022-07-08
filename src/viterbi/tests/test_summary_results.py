@@ -29,23 +29,23 @@ class TestCandidateToTableData(TestCase):
         self.table_data = {
             'candidates': [
                 {
-                    'orbit_period': 11,
+                    'orbitPeriod': 11,
                     'asini': 12,
-                    'orbit_tp': 13,
+                    'orbitTp': 13,
                     'logL': 14,
                     'score': 15,
-                    'candidate_frequency': 16,
+                    'frequency': 16,
                 },
                 {
-                    'orbit_period': 21,
+                    'orbitPeriod': 21,
                     'asini': 22,
-                    'orbit_tp': 23,
+                    'orbitTp': 23,
                     'logL': 24,
                     'score': 25,
-                    'candidate_frequency': 26,
+                    'frequency': 26,
                 }
             ],
-            'logL_threshold': 1
+            'logLThreshold': 1
         }
 
     def test_path_to_plot_data(self):
@@ -81,14 +81,20 @@ class TestPathToPlotData(TestCase):
 
     def setUp(self):
         self.path_data = "1\n2\n3\n4\n5"
-        self.plot_data = {'frequency': [1, 2, 3, 4, 5], 'time': [1, 3, 5, 7, 9]}
+        self.plot_data = [
+            {'frequency': 1, 'time': 1},
+            {'frequency': 2, 'time': 3},
+            {'frequency': 3, 'time': 5},
+            {'frequency': 4, 'time': 7},
+            {'frequency': 5, 'time': 9}
+        ]
 
     def test_path_to_plot_data(self):
         """
         Check that get_viterbi_summary_results returns None if job is incomplete
         """
         plot_data = path_to_plot_data(self.job, self.path_data)
-        self.assertDictEqual(plot_data, self.plot_data)
+        self.assertEqual(plot_data, self.plot_data)
 
 
 @patch("viterbi.views.path_to_plot_data", return_value='plot_data')
