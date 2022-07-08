@@ -144,6 +144,7 @@ def path_to_plot_data(job, path_file_data):
         for i, path_data in enumerate(path_file_data.strip().split('\n'))
     ]
 
+
 def get_viterbi_summary_results(job):
     # If job not completed, obviously don't bother
     if not check_job_completed(job):
