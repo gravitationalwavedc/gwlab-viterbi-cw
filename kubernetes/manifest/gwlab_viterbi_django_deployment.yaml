@@ -29,7 +29,7 @@ spec:
             - secretRef:
                 name: common
           name: gwlab-viterbi-django
-          image: nexus.gwdc.org.au/docker/gwlab_viterbi_django:0.12
+          image: nexus.gwdc.org.au/docker/gwlab_viterbi_django:0.13
           ports:
             - name: http
               containerPort: 8000

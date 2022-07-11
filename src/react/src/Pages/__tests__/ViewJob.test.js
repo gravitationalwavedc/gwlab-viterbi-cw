@@ -2,6 +2,12 @@ import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import { MockPayloadGenerator } from 'relay-test-utils';
 import { render, waitFor } from '@testing-library/react';
+import { 
+    testViterbiSummaryTableData,
+    testViterbiSummaryPlotData,
+    mockResizeObserver,
+    restoreResizeObserver
+} from '../../test_helper';
 import ViewJob from '../ViewJob';
 import 'regenerator-runtime/runtime';
 
@@ -84,6 +90,12 @@ describe('view job page', () => {
                     }
                 }]
             };
+        },
+        ViterbiSummaryResultsType() {
+            return {
+                tableData: JSON.stringify(testViterbiSummaryTableData),
+                plotData: JSON.stringify(testViterbiSummaryPlotData)
+            };
         }
     };
 
@@ -106,6 +118,7 @@ describe('view job page', () => {
 
     it('should render the actual page', async () => {
         expect.hasAssertions();
+        mockResizeObserver();
         const { getByText, getAllByText } = render(<ViewJobRenderer />);
         await waitFor(() => environment.mock.resolveMostRecentOperation(operation =>
             MockPayloadGenerator.generate(operation, mockViterbiViewJobReturn)
@@ -115,6 +128,7 @@ describe('view job page', () => {
         ));
         expect(getByText('my-rad-job')).toBeInTheDocument();
         expect(getAllByText('a_cool_path')[0]).toBeInTheDocument();
+        restoreResizeObserver();
     });
 
 });

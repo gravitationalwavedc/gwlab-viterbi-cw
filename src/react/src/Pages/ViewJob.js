@@ -5,6 +5,7 @@ import Files from '../Components/Results/Files';
 import Parameters from '../Components/Results/Parameters';
 import JobHeading from '../Components/JobHeading';
 import Error404 from '../Error404';
+import Summary from '../Components/Results/Summary';
 
 const ViewJob = ({ data, match, router, ...rest}) => (
     <>
@@ -21,6 +22,11 @@ const ViewJob = ({ data, match, router, ...rest}) => (
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
+                                        <Nav.Link eventKey="summary">
+                                            <p className="text-button">Summary</p>
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
                                         <Nav.Link eventKey="results">
                                             <p className="text-button">Results</p>
                                         </Nav.Link>
@@ -31,6 +37,9 @@ const ViewJob = ({ data, match, router, ...rest}) => (
                                 <Tab.Content>
                                     <Tab.Pane eventKey="parameters">
                                         <Parameters jobData={data.viterbiJob} {...rest}/>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="summary">
+                                        <Summary data={data} {...rest}/>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="results">
                                         <Files jobId={data.viterbiJob.id} {...rest}/>
@@ -68,6 +77,7 @@ export default createFragmentContainer(ViewJob,
                     }
                     ...Parameters_jobData
                 }
+                ...Summary_data @arguments(jobId: $jobId)
                 ...LabelDropdown_data @arguments(jobId: $jobId)
             }
         `,

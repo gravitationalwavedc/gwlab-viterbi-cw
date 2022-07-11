@@ -481,8 +481,67 @@ const testResultFiles = {
     }
 };
 
+const testViterbiSummaryTableData = {
+    'candidates': [
+        {
+            'logL': 11,
+            'score': 12,
+            'frequency': 13,
+            'asini': 14,
+            'orbitTp': 15,
+            'orbitPeriod': 16,
+        },
+        {
+            'logL': 21,
+            'score': 22,
+            'frequency': 23,
+            'asini': 24,
+            'orbitTp': 25,
+            'orbitPeriod': 26,
+        }
+    ],
+    'logLThreshold': 20
+};
+
+const testViterbiSummaryPlotData = [
+    {
+        'frequency': 1,
+        'time': 1
+    },
+    {
+        'frequency': 2,
+        'time': 2
+    },
+    {
+        'frequency': 3,
+        'time': 3
+    }
+];
+
+
+// The next two functions are to mitigate issues with recharts resizing observer
+// Essentially stolen from https://github.com/maslianok/react-resize-detector/issues/145
+const mockResizeObserver = () => {
+    /* eslint-disable */
+    delete window.ResizeObserver;
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      }));
+};
+  
+const restoreResizeObserver = () => {
+    window.ResizeObserver = ResizeObserver;
+    jest.restoreAllMocks();
+};
+
 export {
     testViterbiJobs,
     testViewJob,
-    testResultFiles
+    testResultFiles,
+    testViterbiSummaryTableData,
+    testViterbiSummaryPlotData,
+    mockResizeObserver,
+    restoreResizeObserver
 };
