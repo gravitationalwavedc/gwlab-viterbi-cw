@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, Row, Form, InputGroup } from 'react-bootstrap';
 import Input from './Atoms/Input';
 import randomRightAscensionAndDeclination from '../../helpers'; 
 import PageNav from './Atoms/PageNav';
 import initialValues from './initialValues';
+import _ from 'lodash';
+import Select from './Atoms/Select';
 
 const popularTargets = [
     { title: 'Custom'},
@@ -11,10 +13,36 @@ const popularTargets = [
     { title: 'Surprise me...'}
 ];
 
+const calculateBins = (driftTime) => {
+    const fdrift = 1.0 / ( 2.0 * driftTime);
+    const log2_min = Math.ceil(Math.log2(0.1 / fdrift));
+    const log2_max = Math.floor(Math.log2(2.0 / fdrift));
+    const log_nbins = _.range(log2_min, log2_max+1);
+
+    return log_nbins.map(value => {
+        const bandwidth = 2**value * fdrift;
+        return {
+            value: bandwidth,
+            label: `${bandwidth.toFixed(8)}`
+        };
+    });
+};
+
 const DataParametersForm = ({formik, handlePageChange}) => {
     const [targetSelect, setTargetSelect] = useState('Scorpius X-1');
     const [customValues, setCustomValues] = useState({alpha: 2, delta: 4});
     const [targets, setTargets] = useState({alpha: initialValues.alpha, delta: initialValues.delta});
+    const [bandwidthOptions, setBandwidthOptions] = useState(calculateBins(initialValues.driftTime));
+
+    useEffect(() => {
+        const options = formik.values.driftTime 
+            ? calculateBins(formik.values.driftTime)
+            : [{value: '', label: null}];
+        setBandwidthOptions(options);
+        formik.setFieldValue('freqBand', options.slice(-1)[0].value);
+    }, [formik.values.driftTime]);
+
+    const nBins = Math.log2(2 * formik.values.driftTime * formik.values.freqBand);
 
     const setFormikValues = (alpha, delta) => {
         const formikAlpha = formik.getFieldHelpers('alpha');
@@ -121,12 +149,13 @@ const DataParametersForm = ({formik, handlePageChange}) => {
             </Row>
             <Row>
                 <Col xs={12} sm={8} md={6} xl={4}>
-                    <Input
+                    <Select
                         formik={formik}
                         title="Band width"
                         name="freqBand"
-                        type="number"
-                        units="Hz"/>
+                        units="Hz"
+                        options={bandwidthOptions}
+                        helpText={<>This bandwidth gives 2<sup>{nBins}</sup> bins</>}/>
                 </Col>
             </Row>
             <PageNav

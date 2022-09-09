@@ -13,29 +13,17 @@ const PageNav = ({handlePageChange, forward, backward, handleSubmit }) => {
         }
     };
 
-    return (
-        <>
-            <Row className="d-none d-md-flex justify-content-between mt-4">
-                <Col md={5} lg={4} xl={3}>
-                    { backward && <Button variant="tertiary" onClick={() => handlePageChange(backward.key)}>
-                        <HiChevronLeft/>{backward.label}
-                    </Button>}
-                </Col>
-                <Col md={5} lg={4} xl={3}>
-                    <Button onClick={handleForward}>
-                        {forward.label}{!isSubmitForm && <HiChevronRight/>}
-                    </Button>
-                </Col>
-            </Row>
-
-            <Navbar fixed="bottom" className="justify-content-center d-md-none top-shadow">
-                { backward && <Button variant="tertiary" onClick={() => handlePageChange(backward.key)}>
-                    <HiChevronLeft/>{backward.label}
-                </Button>}
-                <Button onClick={handleForward}>
-                    {forward.label}{!isSubmitForm && <HiChevronRight/>}
-                </Button>
-            </Navbar>
-        </>);
+    return <Row className="d-none d-md-flex justify-content-between mt-4">
+        <Col md={5} lg={4} xl={3}>
+            { backward && <Button variant="tertiary" onClick={() => handlePageChange(backward.key)}>
+                <HiChevronLeft/>{backward.label}
+            </Button>}
+        </Col>
+        <Col md={5} lg={4} xl={3}>
+            <Button onClick={handleForward}>
+                {forward.label}{!isSubmitForm && <HiChevronRight/>}
+            </Button>
+        </Col>
+    </Row>;
 };
 export default PageNav;
