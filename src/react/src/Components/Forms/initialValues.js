@@ -13,7 +13,7 @@ const initialValues = {
     minStartTime: 1238166483,
     maxStartTime: 1254582483,
     asini: 0.01844,
-    freqBand: 1.2136296,
+    freqBand: 1.2136296296296296,
     alpha: 4.974817413935078,
     delta: -0.4349442914295658,
     orbitTp: 1238161512.786,
