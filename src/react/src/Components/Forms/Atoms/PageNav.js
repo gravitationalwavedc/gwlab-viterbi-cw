@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Row, Navbar } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 
 const PageNav = ({handlePageChange, forward, backward, handleSubmit }) => {
