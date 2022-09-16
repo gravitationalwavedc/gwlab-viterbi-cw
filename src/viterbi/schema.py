@@ -15,6 +15,7 @@ from .types import OutputStartType, JobStatusType, AbstractDataType, AbstractSea
 from .utils.auth.lookup_users import request_lookup_users
 from .utils.db_search.db_search import perform_db_search
 from .utils.derive_job_status import derive_job_status
+from .utils.derive_job_running_time import derive_job_running_time
 from .utils.jobs.request_file_download_id import request_file_download_ids
 from .utils.jobs.request_job_filter import request_job_filter
 from .views import create_viterbi_job, update_viterbi_job, get_viterbi_summary_results
@@ -92,6 +93,7 @@ class ViterbiJobNode(DjangoObjectType):
 
     user = graphene.String()
     job_status = graphene.Field(JobStatusType)
+    job_running_time = graphene.String()
     last_updated = graphene.String()
     start = graphene.Field(OutputStartType)
     labels = graphene.List(LabelType)
@@ -141,6 +143,19 @@ class ViterbiJobNode(DjangoObjectType):
                 "number": 0,
                 "data": "Unknown"
             }
+
+    def resolve_job_running_time(parent, info):
+        try:
+            # Get job details from the job controller
+            _, jc_jobs = request_job_filter(
+                info.context.user.user_id,
+                ids=[parent.job_controller_id]
+            )
+
+            return derive_job_running_time(jc_jobs[0]["history"])
+        except Exception as e:
+            print(e)
+            return "Unknown"
 
 
 class DataType(DjangoObjectType, AbstractDataType):

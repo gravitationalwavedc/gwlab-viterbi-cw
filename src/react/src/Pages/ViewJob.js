@@ -75,6 +75,7 @@ export default createFragmentContainer(ViewJob,
                       number
                       date
                     }
+                    jobRunningTime
                     ...Parameters_jobData
                 }
                 ...Summary_data @arguments(jobId: $jobId)

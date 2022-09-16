@@ -42,8 +42,13 @@ const JobHeading = ({data, match, router}) => {
                     </h1>
                     <h5 className="mb-0">{start.description}</h5>
                     <p className="mb-0">
-                        Created{updated}
+                        Created: {updated}
                     </p>
+                    {
+                        data.viterbiJob.jobRunningTime && <p className="mb-0">
+                            Running time: {data.viterbiJob.jobRunningTime}
+                        </p>
+                    }
                     <p className={`status-${jobStatus} review-heading`}>
                         {jobStatus}
                     </p>
