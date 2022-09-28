@@ -14,8 +14,9 @@ def cancel(details, job_data):
 
     slurm_ids_file = Path(job['working_directory']) / 'submit' / 'slurm_ids'
 
-    with open(slurm_ids_file) as f:
-        for line in f.readlines():
-            slurm_cancel(line.split()[1])
+    if slurm_ids_file.exists():
+        with open(slurm_ids_file) as f:
+            for line in f.readlines():
+                slurm_cancel(line.split()[1])
 
     return True
