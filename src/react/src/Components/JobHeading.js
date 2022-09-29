@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'found/Link';
+import { commitMutation, graphql } from 'react-relay';
+import { harnessApi } from '../index';
 import { Row, Col, Button, Container, Toast } from 'react-bootstrap';
-import LabelDropdown from '../Components/Results/LabelDropdown';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
 import moment from 'moment';
 import OzstarLogo from '../assets/ostar_svg.svg';
+import CheckButton from './CheckButton';
 
 const JobHeading = ({data, match, router}) => {
     const [saved, setSaved] = useState(false); 
@@ -18,6 +20,27 @@ const JobHeading = ({data, match, router}) => {
     const { start, lastUpdated, userId } = data.viterbiJob;
     const updated = moment.utc(lastUpdated, 'YYYY-MM-DD HH:mm:ss UTC').local().format('llll');
     const jobStatus = data.viterbiJob.jobStatus.name.toLowerCase();
+
+    const cancelJob = () => {
+        commitMutation(harnessApi.getEnvironment('viterbi'), {
+            mutation: graphql`mutation JobHeadingCancelJobMutation($jobId: ID!){
+                cancelViterbiJob(input: {jobId: $jobId}) {
+                    result
+                }
+            }`,
+            variables: {
+                jobId: data.viterbiJob.id,
+            },
+            onCompleted: (response, errors) => {
+                if (errors) {
+                    console.log(errors);
+                } else {
+                    console.log(response);
+                }
+            },
+        });
+    };
+
 
     return (
         <Container className="pt-5">
@@ -56,7 +79,6 @@ const JobHeading = ({data, match, router}) => {
             </Row>
             <Row className="mb-4">
                 <Col md={{span: 9, offset: 3}} xl={{span: 10, offset: 2}} xs={12}>
-                    <LabelDropdown jobId={match.params.jobId} data={data} onUpdate={onSave} />
                     <Link as={Button} to={{
                         pathname: '/viterbi/job-form/duplicate/',
                         state: {
@@ -65,6 +87,15 @@ const JobHeading = ({data, match, router}) => {
                     }} activeClassName="selected" exact match={match} router={router}>
                       Duplicate job
                     </Link>
+                    {
+                        jobStatus == 'running' && <CheckButton
+                            content="Cancel Job"
+                            cancelContent="Job cancellation cannot be undone"
+                            onClick={cancelJob}
+                            variant="danger"
+                            className="ml-2"
+                        />
+                    }
                     <PrivacyToggle 
                         userId={userId} 
                         jobId={match.params.jobId} 

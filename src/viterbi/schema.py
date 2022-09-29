@@ -18,7 +18,7 @@ from .utils.derive_job_status import derive_job_status
 from .utils.derive_job_running_time import derive_job_running_time
 from .utils.jobs.request_file_download_id import request_file_download_ids
 from .utils.jobs.request_job_filter import request_job_filter
-from .views import create_viterbi_job, update_viterbi_job, get_viterbi_summary_results
+from .views import create_viterbi_job, cancel_viterbi_job, update_viterbi_job, get_viterbi_summary_results
 
 
 def parameter_resolvers(name):
@@ -425,6 +425,26 @@ class ViterbiJobMutation(relay.ClientIDMutation):
         )
 
 
+class CancelViterbiJobMutation(relay.ClientIDMutation):
+    class Input:
+        job_id = graphene.ID(required=True)
+
+    result = graphene.String()
+
+    @classmethod
+    @login_required
+    def mutate_and_get_payload(cls, root, info, **kwargs):
+        job_id = kwargs.pop("job_id")
+
+        # Update privacy of viterbi job
+        message = cancel_viterbi_job(from_global_id(job_id)[1], info.context.user, **kwargs)
+
+        # Return the viterbi job id to the client
+        return CancelViterbiJobMutation(
+            result=message
+        )
+
+
 class UpdateViterbiJobMutation(relay.ClientIDMutation):
     class Input:
         job_id = graphene.ID(required=True)
@@ -488,5 +508,6 @@ class GenerateFileDownloadIds(relay.ClientIDMutation):
 
 class Mutation(graphene.ObjectType):
     new_viterbi_job = ViterbiJobMutation.Field()
+    cancel_viterbi_job = CancelViterbiJobMutation.Field()
     update_viterbi_job = UpdateViterbiJobMutation.Field()
     generate_file_download_ids = GenerateFileDownloadIds.Field()

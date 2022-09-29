@@ -45,7 +45,7 @@ describe('the data parameters form component', () => {
             }}
         />
     );
-    const mockViterbiJobHeadingReturn = {
+    const mockViterbiJobHeadingReturn = (jobStatus='Error') => ({
         ViterbiJobNode() {
             return {
                 id:'QmlsYnlKb2JOb2RlOjY=',
@@ -57,7 +57,7 @@ describe('the data parameters form component', () => {
                     private:true
                 },
                 jobStatus: {
-                    name:'Error',
+                    name:jobStatus,
                     number:'400',
                     date:'2020-10-05 04:49:58 UTC'
                 },
@@ -72,7 +72,7 @@ describe('the data parameters form component', () => {
                 }]
             };
         },
-    };
+    });
 
     it('should render loading', async () => {
         expect.hasAssertions();
@@ -84,9 +84,23 @@ describe('the data parameters form component', () => {
         expect.hasAssertions();
         render(<TestRenderer/>);
         await waitFor(() => environment.mock.resolveMostRecentOperation(operation =>
-            MockPayloadGenerator.generate(operation, mockViterbiJobHeadingReturn)
+            MockPayloadGenerator.generate(operation, mockViterbiJobHeadingReturn())
         ));
         expect(screen.queryByText('my-rad-job')).toBeInTheDocument();
         expect(screen.queryByText('a really cool description')).toBeInTheDocument();
+    });
+    
+    it('check cancel job button visible when job is running', async () => {
+        expect.hasAssertions();
+        render(<TestRenderer/>);
+        await waitFor(() => environment.mock.resolveMostRecentOperation(operation =>
+            MockPayloadGenerator.generate(operation, mockViterbiJobHeadingReturn('Running'))
+        ));
+        expect(screen.queryByText('Cancel Job')).toBeInTheDocument();
+        render(<TestRenderer/>);
+        await waitFor(() => environment.mock.resolveMostRecentOperation(operation =>
+            MockPayloadGenerator.generate(operation, mockViterbiJobHeadingReturn('Completed'))
+        ));
+        expect(screen.queryByText('Cancel Job')).not.toBeInTheDocument();
     });
 });
