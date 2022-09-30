@@ -1,1 +1,3 @@
 filelock
+aiohttp
+aiohttp-xmlrpc

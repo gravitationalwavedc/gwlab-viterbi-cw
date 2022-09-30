@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'found/Link';
-import { commitMutation, graphql } from 'react-relay';
+import { commitMutation, createRefetchContainer, graphql } from 'react-relay';
 import { harnessApi } from '../index';
 import { Row, Col, Button, Container, Toast } from 'react-bootstrap';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
@@ -8,7 +8,7 @@ import moment from 'moment';
 import OzstarLogo from '../assets/ostar_svg.svg';
 import CheckButton from './CheckButton';
 
-const JobHeading = ({data, match, router}) => {
+const JobHeading = ({jobData, match, router, relay}) => {
     const [saved, setSaved] = useState(false); 
     const [showNotification, setShowNotification] = useState(false);
 
@@ -17,9 +17,9 @@ const JobHeading = ({data, match, router}) => {
         setShowNotification(true);
     };
 
-    const { start, lastUpdated, userId } = data.viterbiJob;
+    const { start, lastUpdated, userId } = jobData;
     const updated = moment.utc(lastUpdated, 'YYYY-MM-DD HH:mm:ss UTC').local().format('llll');
-    const jobStatus = data.viterbiJob.jobStatus.name.toLowerCase();
+    const jobStatus = jobData.jobStatus.name.toLowerCase();
 
     const cancelJob = () => {
         commitMutation(harnessApi.getEnvironment('viterbi'), {
@@ -29,13 +29,18 @@ const JobHeading = ({data, match, router}) => {
                 }
             }`,
             variables: {
-                jobId: data.viterbiJob.id,
+                jobId: jobData.id,
             },
             onCompleted: (response, errors) => {
                 if (errors) {
                     console.log(errors);
                 } else {
-                    console.log(response);
+                    relay.refetch(
+                        {jobId: jobData.id},
+                        null,
+                        () => console.log(response),
+                        {force: true}
+                    );
                 }
             },
         });
@@ -68,8 +73,8 @@ const JobHeading = ({data, match, router}) => {
                         Created: {updated}
                     </p>
                     {
-                        data.viterbiJob.jobRunningTime && <p className="mb-0">
-                            Running time: {data.viterbiJob.jobRunningTime}
+                        jobData.jobRunningTime && <p className="mb-0">
+                            Running time: {jobData.jobRunningTime}
                         </p>
                     }
                     <p className={`status-${jobStatus} review-heading`}>
@@ -88,7 +93,8 @@ const JobHeading = ({data, match, router}) => {
                       Duplicate job
                     </Link>
                     {
-                        jobStatus == 'running' && <CheckButton
+                        // Job status is Queued or Running
+                        [40, 50].includes(jobData.jobStatus.number) && <CheckButton
                             content="Cancel Job"
                             cancelContent="Job cancellation cannot be undone"
                             onClick={cancelJob}
@@ -106,4 +112,33 @@ const JobHeading = ({data, match, router}) => {
         </Container>);
 };
 
-export default JobHeading;
+// export default JobHeading;
+export default createRefetchContainer(JobHeading,
+    {
+        jobData: graphql`
+            fragment JobHeading_jobData on ViterbiJobNode {
+                id
+                userId
+                lastUpdated
+                start {
+                    name
+                    description
+                    ...PrivacyToggle_data
+                }
+                jobStatus {
+                    name
+                    number
+                    date
+                }
+                jobRunningTime
+            }
+        `,
+    },
+    graphql`
+        query JobHeadingRefetchQuery($jobId: ID!){
+            viterbiJob (id: $jobId){
+                ...JobHeading_jobData
+            }
+        }
+    `
+);

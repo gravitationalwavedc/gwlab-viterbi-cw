@@ -9,7 +9,7 @@ import Summary from '../Components/Results/Summary';
 
 const ViewJob = ({ data, match, router, ...rest}) => (
     <>
-        {data.viterbiJob ? <><JobHeading data={data} match={match} router={router} />
+        {data.viterbiJob ? <><JobHeading jobData={data.viterbiJob} match={match} router={router} />
             <Container className="form-container pb-5 pt-5" fluid>
                 <Container>
                     <Tab.Container id="jobResultsTabs" defaultActiveKey="parameters">
@@ -63,19 +63,7 @@ export default createFragmentContainer(ViewJob,
             ){
                 viterbiJob (id: $jobId) {
                     id
-                    userId
-                    lastUpdated
-                    start {
-                        name
-                        description
-                        ...PrivacyToggle_data
-                    }
-                    jobStatus {
-                      name
-                      number
-                      date
-                    }
-                    jobRunningTime
+                    ...JobHeading_jobData
                     ...Parameters_jobData
                 }
                 ...Summary_data @arguments(jobId: $jobId)

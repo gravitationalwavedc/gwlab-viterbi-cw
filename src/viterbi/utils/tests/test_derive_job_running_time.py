@@ -138,6 +138,7 @@ class TestTimedeltaToString(TestCase):
             (timedelta(days=2, hours=3), '2 days and 3 hours'),
             (timedelta(days=1, hours=1, minutes=1), '1 day, 1 hour and 1 minute'),
             (timedelta(days=2, hours=3, minutes=4), '2 days, 3 hours and 4 minutes'),
+            (timedelta(days=-1), '0 minutes'),
         ]
 
     def test_derive_job_running_time(self):
