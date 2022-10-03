@@ -4,7 +4,6 @@ import { MockPayloadGenerator } from 'relay-test-utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import 'regenerator-runtime/runtime';
 import JobHeading from '../JobHeading';
-import userEvent from '@testing-library/user-event';
 
 /* global environment router */
 
