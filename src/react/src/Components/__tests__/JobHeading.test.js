@@ -99,6 +99,6 @@ describe('the data parameters form component', () => {
                 date:'2020-10-05 04:49:58 UTC'
             }))
         ));
-        expect(screen.queryByText('Cancel Job')).not.toBeInTheDocument();
+        expect(screen.queryByText('Stop Job')).not.toBeInTheDocument();
     });
 });

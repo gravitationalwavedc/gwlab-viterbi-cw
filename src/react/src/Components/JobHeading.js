@@ -20,6 +20,7 @@ const JobHeading = ({jobData, match, router, relay}) => {
     const { start, lastUpdated, userId } = jobData;
     const updated = moment.utc(lastUpdated, 'YYYY-MM-DD HH:mm:ss UTC').local().format('llll');
     const jobStatus = jobData.jobStatus.name.toLowerCase();
+    const cancelStatuses = [40, 50]; // These correspond to Queued and Running statuses
 
     const cancelJob = () => {
         commitMutation(harnessApi.getEnvironment('viterbi'), {
@@ -32,14 +33,10 @@ const JobHeading = ({jobData, match, router, relay}) => {
                 jobId: jobData.id,
             },
             onCompleted: (response, errors) => {
-                if (errors) {
-                    console.log(errors);
-                } else {
+                // TODO: Handle the errors better
+                if (!errors) {
                     relay.refetch(
                         {jobId: jobData.id},
-                        null,
-                        () => console.log(response),
-                        {force: true}
                     );
                 }
             },
@@ -93,10 +90,15 @@ const JobHeading = ({jobData, match, router, relay}) => {
                       Duplicate job
                     </Link>
                     {
-                        // Job status is Queued or Running
-                        [40, 50].includes(jobData.jobStatus.number) && <CheckButton
-                            content="Cancel Job"
-                            cancelContent="Job cancellation cannot be undone"
+                        cancelStatuses.includes(jobData.jobStatus.number) && <CheckButton
+                            buttonContent="Cancel Job"
+                            modalTitle="Are you sure you want to permanently stop this job?"
+                            modalContent={<div>
+                                When a job is cancelled, it can&apos;t be started again!<br/>
+                                You will have to create a completely new job with the same parameters.
+                            </div>}
+                            yesContent="Stop Job"
+                            noContent="Keep Job"
                             onClick={cancelJob}
                             variant="danger"
                             className="ml-2"

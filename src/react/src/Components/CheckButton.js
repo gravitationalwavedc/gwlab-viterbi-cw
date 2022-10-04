@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Button, Container, Overlay, Popover, Row } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 
-const CheckButton = ({ content, cancelContent, onClick, ...props}) => {
+const CheckButton = ({ buttonContent, modalTitle, modalContent, yesContent, noContent, onClick, ...props}) => {
     const [open, setOpen] = useState(false);
-    const target = useRef(null);
 
     const handleYes = () => {
         setOpen(false);
@@ -12,33 +11,34 @@ const CheckButton = ({ content, cancelContent, onClick, ...props}) => {
 
     return (
         <React.Fragment>
-            <Button ref={target} onClick={() => setOpen(true)} {...props} onBlur={() => setOpen(false)}>
-                {content}
+            <Button onClick={() => setOpen(true)} {...props}>
+                {buttonContent}
             </Button>
-            <Overlay
-                placement='right'
-                target={target.current}
+            <Modal
+                size="lg"
+                aria-labelledby="checkbutton-modal"
+                centered
                 show={open}
+                onHide={() => setOpen(false)}
+                contentClassName="border-primary"
             >
-                {
-                    (props) => (
-                        <Popover {...props} id="button-popover">
-                            <Popover.Title as='h3' className='bg-light'>Are you sure?</Popover.Title>
-                            <Popover.Content>
-                                <Container>
-                                    <Row className='text text-secondary'>
-                                        {cancelContent}
-                                    </Row>
-                                    <Row>
-                                        <Button variant='outline-success' onClick={() => handleYes()}>Yes</Button>
-                                        <Button variant='text text-danger' onClick={() => setOpen(false)}>No</Button>
-                                    </Row>
-                                </Container>
-                            </Popover.Content>
-                        </Popover>
-                    )
-                }
-            </Overlay>
+                <Modal.Header closeButton className="border-0">
+                    <Modal.Title id="checkbutton-modal">
+                        {modalTitle}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalContent}
+                </Modal.Body>
+                <Modal.Footer className="d-flex justify-content-between border-0">
+                    <Button variant='outline-primary' onClick={() => setOpen(false)}>
+                        {noContent}
+                    </Button>
+                    <Button variant='outline-primary' onClick={() => handleYes()}>
+                        {yesContent}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </React.Fragment>
     );
 };
