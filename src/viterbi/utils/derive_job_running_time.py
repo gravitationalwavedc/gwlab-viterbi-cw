@@ -10,6 +10,9 @@ def timedelta_to_string(delta):
     :param delta: The timedelta object
     """
     total_seconds = int(delta.total_seconds())
+    if total_seconds <= 0:
+        return "0 minutes"
+
     days, remainder = divmod(total_seconds, 86400)
     hours, remainder = divmod(remainder, 3600)
     minutes, _ = divmod(remainder, 60)
