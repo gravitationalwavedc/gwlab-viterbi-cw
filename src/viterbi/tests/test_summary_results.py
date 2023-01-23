@@ -99,9 +99,9 @@ class TestPathToPlotData(TestCase):
 
 @patch("viterbi.views.path_to_plot_data", return_value='plot_data')
 @patch("viterbi.views.candidates_to_table_data", return_value='table_data')
-@patch("viterbi.views.request_file_download_ids")
+@patch("viterbi.utils.download_by_path.request_file_download_ids")
 @patch("viterbi.views.ViterbiJob.get_file_list")
-@patch("viterbi.views.check_job_completed", return_value=True)
+@patch("viterbi.utils.download_by_path.check_job_completed", return_value=True)
 class TestViterbiSummaryResults(TestCase):
     @classmethod
     def setUpTestData(cls):
