@@ -271,7 +271,7 @@ def get_candidate_data(job):
     return candidates
 
 
-def submit_candidates(info, job, job_user):
+def submit_candidates(job, job_user, headers={}):
     query = """
         mutation NewCandidatesMutation($input: NewCandidatesMutationInput!) {
             newCandidates(input: $input) {
@@ -286,15 +286,15 @@ def submit_candidates(info, job, job_user):
         "input": {
             "name": f"ViterbiGroup-{datetime.now().strftime('%H%M%S-%d%m%y')}",
             "description": f"This group of candidates comes from the results of the Viterbi job {job.name}, "
-                           f"run by {job_user['username']}.",
+                           f"run by {job_user}.",
             "candidates": get_candidate_data(job)
         }
     }
 
     result = requests.request(
-        method=info.context.method,
+        method="POST",
         url=settings.GWLAB_GWCANDIDATE_GRAPHQL_URL,
-        headers=info.context.headers,
+        headers=headers,
         json={
             "query": query,
             "variables": variables

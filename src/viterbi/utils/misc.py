@@ -1,12 +1,21 @@
 import math
+from .consts import (
+    O1_START,
+    O1_END,
+    O2_START,
+    O2_END,
+    O3_START,
+    O3_END
+)
 
 
 def source_dataset_from_time(time):
-    if 1126051217 <= time <= 1137254417:
+    time = float(time)
+    if O1_START <= time <= O1_END:
         return 'o1'
-    elif 1164556817 <= time <= 1187733618:
+    elif O2_START <= time <= O2_END:
         return 'o2'
-    elif 1238166018 <= time <= 1269363618:  # I believe this range covers O3a and O3b
+    elif O3_START <= time <= O3_END:
         return 'o3'
     else:
         return None

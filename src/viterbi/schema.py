@@ -527,7 +527,10 @@ class GenerateCandidates(relay.ClientIDMutation):
         job = ViterbiJob.get_by_id(from_global_id(job_id)[1], user)
         success, users = request_lookup_users([job.user_id], user.user_id)
 
-        group_id = submit_candidates(info, job, users[0])
+        if not (success and users):
+            raise Exception('Error getting job user.')
+        
+        group_id = submit_candidates(job, users[0]['username'], headers=info.context.headers)
 
         # Return the list of file download ids
         return GenerateCandidates(
