@@ -7,6 +7,7 @@ import PrivacyToggle from '../Components/Results/PrivacyToggle';
 import moment from 'moment';
 import OzstarLogo from '../assets/ostar_svg.svg';
 import CheckButton from './CheckButton';
+import { RedirectException } from 'found';
 
 const JobHeading = ({jobData, match, router, relay}) => {
     const [saved, setSaved] = useState(false); 
@@ -40,6 +41,24 @@ const JobHeading = ({jobData, match, router, relay}) => {
                     );
                 }
             },
+        });
+    };
+
+    const generateCandidates = () => {
+        commitMutation(harnessApi.getEnvironment('viterbi'), {
+            mutation: graphql`mutation JobHeadingGenerateCandidatesMutation($jobId: ID!) {
+                generateCandidates(input: {jobId: $jobId}) {
+                    groupId
+                }
+            }`,
+            variables: {
+                jobId: jobData.id,
+            },
+            onCompleted: (response, errors) => {
+                if (!errors) {
+                    router.push(`/gwcandidate/candidate-group/${response.generateCandidates.groupId}`);
+                }
+            }
         });
     };
 
@@ -104,6 +123,20 @@ const JobHeading = ({jobData, match, router, relay}) => {
                             className="ml-2"
                         />
                     }
+                    {
+                        jobData.jobStatus.number === 500 && <CheckButton
+                            buttonContent="Create candidates"
+                            modalTitle="Are you sure you want to create a candidate group?"
+                            modalContent={<div>
+                                Creating a candidate group will take you to GWCandidate.<br/>
+                                Candidates will be created from the results files of this job.
+                            </div>}
+                            yesContent="Create Candidates"
+                            noContent="Cancel"
+                            onClick={generateCandidates}
+                            className="ml-2"
+                        />
+                    }
                     <PrivacyToggle 
                         userId={userId} 
                         jobId={match.params.jobId} 
@@ -114,7 +147,6 @@ const JobHeading = ({jobData, match, router, relay}) => {
         </Container>);
 };
 
-// export default JobHeading;
 export default createRefetchContainer(JobHeading,
     {
         jobData: graphql`

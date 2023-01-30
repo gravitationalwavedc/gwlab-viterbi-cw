@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route} from 'found';
+import {Route, Redirect} from 'found';
 import MyJobs from './Pages/MyJobs';
 import PublicJobs from './Pages/PublicJobs';
 import {graphql} from 'react-relay';
@@ -93,6 +93,7 @@ function getRoutes() {
                 })}
                 render={handleRender}
             />
+            {/* <Redirect path='gwcandidate' */}
         </Route>
     );
 }

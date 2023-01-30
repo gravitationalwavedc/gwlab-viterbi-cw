@@ -169,3 +169,6 @@ GWCLOUD_AUTH_API_URL = "http://localhost:8000/graphql"
 FILE_DOWNLOAD_TOKEN_EXPIRY = 60*60*24
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# GWCandidate URL
+GWLAB_GWCANDIDATE_GRAPHQL_URL = "http://localhost:8005/graphql"
