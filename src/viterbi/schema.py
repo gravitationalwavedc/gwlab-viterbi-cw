@@ -529,7 +529,7 @@ class GenerateCandidates(relay.ClientIDMutation):
 
         if not (success and users):
             raise Exception('Error getting job user.')
-        print(users[0])
+
         group_id = submit_candidates(
             job,
             f"{users[0]['firstName']} {users[0]['lastName']}",
