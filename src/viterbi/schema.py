@@ -529,8 +529,12 @@ class GenerateCandidates(relay.ClientIDMutation):
 
         if not (success and users):
             raise Exception('Error getting job user.')
-        
-        group_id = submit_candidates(job, users[0]['username'], headers=info.context.headers)
+
+        group_id = submit_candidates(
+            job,
+            f"{users[0]['firstName']} {users[0]['lastName']}",
+            headers=info.context.headers
+        )
 
         # Return the list of file download ids
         return GenerateCandidates(

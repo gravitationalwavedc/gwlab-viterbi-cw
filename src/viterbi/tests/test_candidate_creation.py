@@ -163,7 +163,7 @@ class TestGenerateCandidatesMutation(ViterbiTestCase):
 
     @silence_errors
     @patch("viterbi.schema.submit_candidates", return_value='test_group_id')
-    @patch("viterbi.schema.request_lookup_users", return_value=(True, [{'username': 'Bill Nye'}]))
+    @patch("viterbi.schema.request_lookup_users", return_value=(True, [{'firstName': 'Bill', 'lastName': 'Nye'}]))
     def test_generate_candidates(self, *args):
         response = self.client.execute(self.query, self.variables)
         self.assertResponseHasErrors(response, "Mutation returned no errors even though user was not authenticated")
