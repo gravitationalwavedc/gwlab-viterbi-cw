@@ -4,10 +4,8 @@ import { Col, Row } from 'react-bootstrap';
 import ResultTable from '../Results/ResultTable';
 import PageNav from './Atoms/PageNav';
 
-const ReviewJob = ({values, handlePageChange, handleSubmit, noButtons}) => {
+const ReviewJob = ({values, handlePageChange, handleSubmit, validateForm, noButtons}) => {
     const [errors, setErrors] = useState([]);
-
-    const {validateForm} = useFormikContext();
 
     const submitReview = async () => {
         const errors = await validateForm();

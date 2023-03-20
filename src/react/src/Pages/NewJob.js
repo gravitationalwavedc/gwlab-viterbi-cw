@@ -91,7 +91,7 @@ const NewJob = ({initialValues, router}) => {
             validationSchema={validationSchema}
         >
             {
-                ({values, handleSubmit}) => (
+                ({values, handleSubmit, validateForm}) => (
                     <>
 
                         <Container>
@@ -154,7 +154,8 @@ const NewJob = ({initialValues, router}) => {
                                                     <ReviewJob 
                                                         values={values} 
                                                         handlePageChange={setKey}
-                                                        handleSubmit={handleSubmit}/>
+                                                        handleSubmit={handleSubmit}
+                                                        validateForm={validateForm}/>
                                                 </Tab.Pane>
                                             </Tab.Content>
                                         </Col>
