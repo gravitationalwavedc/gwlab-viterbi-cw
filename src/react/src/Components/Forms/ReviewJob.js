@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
+import { useFormikContext } from 'formik';
 import { Col, Row } from 'react-bootstrap';
 import ResultTable from '../Results/ResultTable';
 import PageNav from './Atoms/PageNav';
 
-const ReviewJob = ({values, handlePageChange, handleSubmit, formik, noButtons}) => {
+const ReviewJob = ({values, handlePageChange, handleSubmit, noButtons}) => {
     const [errors, setErrors] = useState([]);
 
+    const {validateForm} = useFormikContext();
+
     const submitReview = async () => {
-        const errors = await formik.validateForm();
+        const errors = await validateForm();
         setErrors(Object.values(errors));
 
         if (Object.keys(errors).length === 0 && errors.constructor === Object) {

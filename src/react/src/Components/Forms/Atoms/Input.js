@@ -1,16 +1,17 @@
 import React from 'react';
+import { useField } from 'formik';
 import { Form, InputGroup } from 'react-bootstrap';
 
-const Input = ({formik, title, name, type, units, helpText, ...rest}) =>
-    <Form.Group controlId={ name }>
+const Input = ({title, name, type, units, helpText, ...rest}) => {
+    const [field, {error, touched}] = useField(name);
+    return <Form.Group controlId={ name }>
         <Form.Label>{ title }</Form.Label>
         <InputGroup>
             <Form.Control 
-                name={ name }
+                {...field} 
                 type={ type } 
-                isValid={formik.touched[name] && !formik.errors[name]}
-                isInvalid={!!formik.errors[name]}
-                {...formik.getFieldProps(name)} 
+                isValid={touched && !error}
+                isInvalid={!!error}
                 {...rest} />
             {units && 
             <InputGroup.Prepend>
@@ -21,9 +22,10 @@ const Input = ({formik, title, name, type, units, helpText, ...rest}) =>
             {helpText}
         </Form.Text>
         <Form.Control.Feedback type='invalid'>
-            {formik.errors[name]}
+            {error}
         </Form.Control.Feedback>
     </Form.Group>;
+};
 
 
 export default Input;

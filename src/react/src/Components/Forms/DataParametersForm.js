@@ -6,6 +6,7 @@ import PageNav from './Atoms/PageNav';
 import initialValues from './initialValues';
 import _ from 'lodash';
 import Select from './Atoms/Select';
+import { useFormikContext } from 'formik';
 
 const popularTargets = [
     { title: 'Custom'},
@@ -28,27 +29,27 @@ const calculateBins = (driftTime) => {
     });
 };
 
-const DataParametersForm = ({formik, handlePageChange}) => {
+const DataParametersForm = ({handlePageChange}) => {
     const [targetSelect, setTargetSelect] = useState('Scorpius X-1');
     const [customValues, setCustomValues] = useState({alpha: 2, delta: 4});
     const [targets, setTargets] = useState({alpha: initialValues.alpha, delta: initialValues.delta});
     const [bandwidthOptions, setBandwidthOptions] = useState(calculateBins(initialValues.driftTime));
 
+    const {values, setFieldValue} = useFormikContext();
+
     useEffect(() => {
-        const options = formik.values.driftTime 
-            ? calculateBins(formik.values.driftTime)
+        const options = values.driftTime 
+            ? calculateBins(values.driftTime)
             : [{value: '', label: null}];
         setBandwidthOptions(options);
-        formik.setFieldValue('freqBand', options.slice(-1)[0].value);
-    }, [formik.values.driftTime]);
+        setFieldValue('freqBand', options.slice(-1)[0].value);
+    }, [values.driftTime]);
 
-    const nBins = Math.log2(2 * formik.values.driftTime * formik.values.freqBand);
+    const nBins = Math.log2(2 * values.driftTime * values.freqBand);
 
     const setFormikValues = (alpha, delta) => {
-        const formikAlpha = formik.getFieldHelpers('alpha');
-        const formikDelta = formik.getFieldHelpers('delta');
-        formikAlpha.setValue(alpha);
-        formikDelta.setValue(delta);
+        setFieldValue('alpha', alpha);
+        setFieldValue('delta', delta);
     };
 
     const handlePopularTargetsChange = (choice) => {
@@ -139,7 +140,6 @@ const DataParametersForm = ({formik, handlePageChange}) => {
             <Row>
                 <Col xs={12} sm={8} md={6} xl={4}>
                     <Input
-                        formik={formik}
                         title="Band start"
                         name="startFrequencyBand"
                         type="number"
@@ -150,7 +150,6 @@ const DataParametersForm = ({formik, handlePageChange}) => {
             <Row>
                 <Col xs={12} sm={8} md={6} xl={4}>
                     <Select
-                        formik={formik}
                         title="Band width"
                         name="freqBand"
                         units="Hz"

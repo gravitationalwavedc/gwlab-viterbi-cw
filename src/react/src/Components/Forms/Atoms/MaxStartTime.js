@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useFormikContext } from 'formik';
 import { Button, Col, Form, Row, InputGroup } from 'react-bootstrap';
 import Input from './Input';
 
-const MaxStartTime = ({formik, duration }) => {
+const MaxStartTime = ({ duration }) => {
     const [useDuration, setUseDuration] = useState(false);
+
+    const {values, setFieldValue} = useFormikContext();
 
     const convertSecondsToDays = (seconds) => {
         const days =  seconds/ (3600 * 24);
@@ -12,10 +15,9 @@ const MaxStartTime = ({formik, duration }) => {
     };
 
     const handleDurationChange = (durationValue) => {
-        const { setValue } = formik.getFieldHelpers('maxStartTime');
-        const startTime = formik.values.minStartTime;
+        const startTime = values.minStartTime;
         const newEndTime = startTime + parseFloat(durationValue);
-        setValue(newEndTime);
+        setFieldValue('maxStartTime', newEndTime);
     };
 
     return (
@@ -24,7 +26,6 @@ const MaxStartTime = ({formik, duration }) => {
                 <Row>
                     <Col xs={12} sm={8} md={6} xl={4}>
                         <Input
-                            formik={formik}
                             title="End"
                             name="maxStartTime"
                             type="number"
@@ -55,7 +56,7 @@ const MaxStartTime = ({formik, duration }) => {
                                 </InputGroup.Prepend>
                             </InputGroup>
                             <Form.Text>
-                                <p>End time is { formik.values.maxStartTime } GPS.</p>
+                                <p>End time is { values.maxStartTime } GPS.</p>
                             </Form.Text>
                         </Form.Group>
                         <Button 

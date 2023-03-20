@@ -93,7 +93,6 @@ function getRoutes() {
                 })}
                 render={handleRender}
             />
-            {/* <Redirect path='gwcandidate' */}
         </Route>
     );
 }
