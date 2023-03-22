@@ -1,19 +1,21 @@
 import React from 'react';
-import { HiOutlinePencil, HiOutlineCheck, HiOutlineX} from 'react-icons/hi';
+import { useFormikContext } from 'formik';
+import { HiOutlinePencil, HiOutlineCheck, HiOutlineX } from 'react-icons/hi';
 import EdiText from 'react-editext';
 
 const EditButton = () => <React.Fragment><HiOutlinePencil style={{margin:'0 0.1rem 0.2rem 0'}} />Edit</React.Fragment>;
 const SaveButton = () => <HiOutlineCheck/>;
 const CancelButton = () => <HiOutlineX/>;
 
-const JobTitle = ({formik}) => (
-    <React.Fragment>
+const JobTitle = () => {
+    const {values, setFieldValue, errors} = useFormikContext();
+    return <React.Fragment>
         <EdiText 
             type="text" 
             name="name"
-            value={formik.values.name}
+            value={values.name}
             viewProps={{className: 'h2'}}
-            onSave={(value) => formik.setFieldValue('name', value)}
+            onSave={(value) => setFieldValue('name', value)}
             hint="You can use letters, numbers, underscores, and hyphens."
             editButtonContent={<EditButton/>}
             editButtonClassName="edit-button"
@@ -26,15 +28,15 @@ const JobTitle = ({formik}) => (
             submitOnUnfocus
             submitOnEnter
         />
-        {formik.errors.name && 
+        {errors.name && 
           <p className="text-danger small">
-              {formik.errors.name}
+              {errors.name}
           </p>}
         <EdiText 
             type="text" 
             name="description"
-            value={formik.values.description}
-            onSave={(value) => formik.setFieldValue('description', value)}
+            value={values.description}
+            onSave={(value) => setFieldValue('description', value)}
             editButtonContent={<EditButton/>}
             editButtonClassName="edit-button"
             saveButtonContent={<SaveButton />}
@@ -46,6 +48,6 @@ const JobTitle = ({formik}) => (
             submitOnUnfocus
             submitOnEnter
         />
-    </React.Fragment>
-);
+    </React.Fragment>;
+};
 export default JobTitle;

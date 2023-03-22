@@ -1,17 +1,19 @@
 import React from 'react';
+import { useField } from 'formik';
 import { Form, InputGroup } from 'react-bootstrap';
 
-const Select = ({ formik, title, name, options, units, helpText, ...rest }) => 
-    <Form.Group controlId={ name }>
+const Select = ({ title, name, options, units, helpText, ...rest }) => {
+    const [field, {error, touched}] = useField(name);
+
+    return <Form.Group controlId={ name }>
         <Form.Label>{ title }</Form.Label>
         <InputGroup>
             <Form.Control 
-                name={ name }
+                {...field} 
                 as='select'
                 custom
-                // isValid={formik.touched[name] && !formik.errors[name]}
-                // isInvalid={!!formik.errors[name]}
-                {...formik.getFieldProps(name)} 
+                isValid={touched && !error}
+                isInvalid={!!error}
                 {...rest}
             >
                 {options.map(({label, value}) =>
@@ -34,8 +36,9 @@ const Select = ({ formik, title, name, options, units, helpText, ...rest }) =>
             {helpText}
         </Form.Text>
         <Form.Control.Feedback type='invalid'>
-            {formik.errors[name]}
+            {error}
         </Form.Control.Feedback>
     </Form.Group>;
+};
 
 export default Select;

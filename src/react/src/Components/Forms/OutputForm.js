@@ -3,7 +3,7 @@ import { Col, Row } from 'react-bootstrap';
 import Input from './Atoms/Input';
 import PageNav from './Atoms/PageNav';
 
-const OutputForm = ({formik, handlePageChange}) =>
+const OutputForm = ({handlePageChange}) =>
     <React.Fragment>
         <Row>
             <Col>
@@ -13,7 +13,6 @@ const OutputForm = ({formik, handlePageChange}) =>
         <Row>
             <Col xs={12} sm={8} md={6} xl={4}>
                 <Input
-                    formik={formik}
                     title="Log likelihood threshold"
                     name="searchLLThreshold"
                     type="number"/>

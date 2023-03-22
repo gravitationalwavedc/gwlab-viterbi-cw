@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useFormikContext } from 'formik';
 import { Col, Row } from 'react-bootstrap';
 import Input from './Atoms/Input';
 import PageNav from './Atoms/PageNav';
 import MaxStartTime from './Atoms/MaxStartTime';
 
 
-const DataForm = ({formik, handlePageChange}) => {
+const DataForm = ({handlePageChange}) => {
     const [duration, setDuration] = useState(0);
+    const {values} = useFormikContext();
 
     useEffect(() => {
-        setDuration(formik.values.maxStartTime - formik.values.minStartTime);
-    }, [formik.values.maxStartTime, formik.values.minStartTime]);
+        setDuration(values.maxStartTime - values.minStartTime);
+    }, [values.maxStartTime, values.minStartTime]);
 
 
     const calculateBlocks = (driftTime, duration) => Math.floor(duration / driftTime);
@@ -23,7 +25,6 @@ const DataForm = ({formik, handlePageChange}) => {
                 </Col>
                 <Col xs={12} sm={8} md={6} xl={4}>
                     <Input
-                        formik={formik}
                         title="Start"
                         name="minStartTime"
                         type="number"
@@ -31,16 +32,15 @@ const DataForm = ({formik, handlePageChange}) => {
                     />
                 </Col>
             </Row>
-            <MaxStartTime formik={formik} duration={duration} setDuration={setDuration} />
+            <MaxStartTime duration={duration} setDuration={setDuration} />
             <Row>
                 <Col xs={12} sm={8} md={6} xl={4}>
                     <Input
-                        formik={formik}
                         title="Coherence (drift) time"
                         name="driftTime"
                         type="number"
                         units="Seconds"
-                        helpText={`${ calculateBlocks(formik.values.driftTime, duration) } blocks.`}
+                        helpText={`${ calculateBlocks(values.driftTime, duration) } blocks.`}
                     />
                 </Col>
             </Row>

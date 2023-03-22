@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import 'regenerator-runtime/runtime';
 import DataParametersForm from '../DataParametersForm';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import initialValues from '../initialValues';
 import userEvent from '@testing-library/user-event';
 import Input from '../Atoms/Input';
@@ -10,33 +10,33 @@ import Input from '../Atoms/Input';
 describe('the data parameters form component', () => {
     const mockPageChange = jest.fn();
 
-    const TestRenderer = () => {
-        const formik = useFormik({
-            initialValues: initialValues,
-        });
-        return <DataParametersForm formik={formik} handlePageChange={mockPageChange} />;
-    };
+    const formikWrapper = ({children}) => <Formik initialValues={initialValues}>
+        {children}
+    </Formik>;
 
-    const TestRendererWithInput = () => {
-        const formik = useFormik({
-            initialValues: initialValues,
-        });
-        return <>
-            <Input formik={formik} name='driftTime' title='Drift Time' />
-            <DataParametersForm formik={formik} handlePageChange={mockPageChange} />;
-        </>;
-    };
-    
+    const renderTest = async () => await waitFor(() => render(
+        <DataParametersForm handlePageChange={mockPageChange} />,
+        {wrapper: formikWrapper}
+    ));
+
+    const renderTestWithInput = () => render(
+        <>
+            <Input name='driftTime' title='Drift Time' />
+            <DataParametersForm handlePageChange={mockPageChange} />;
+        </>,
+        {wrapper: formikWrapper}
+    );
+
     it('should render', async () => {
         expect.hasAssertions();
-        await waitFor(() => render(<TestRenderer/>));
+        await renderTest();
         expect(screen.queryByText('Select target position')).toBeInTheDocument();
         expect(screen.queryByText('Select frequency settings')).toBeInTheDocument();
     });
     
     it('should update bandwidth options based on frequency band', async () => {
         expect.hasAssertions();
-        await waitFor(() => render(<TestRendererWithInput/>));
+        renderTestWithInput();
         const driftTimeInput = screen.queryByLabelText('Drift Time');
         const bandwidthSelect = screen.queryByLabelText('Band width');
 
@@ -64,14 +64,14 @@ describe('the data parameters form component', () => {
     
     it('should allow backwards page change', async () => {
         expect.hasAssertions();
-        await waitFor(() => render(<TestRenderer/>));
+        await renderTest();
         await waitFor(() => userEvent.click(screen.queryByRole('button', {name: 'Data Settings'})));
         expect(mockPageChange).toHaveBeenCalledWith('data');
     });
 
     it('should allow forwards page change', async () => {
         expect.hasAssertions();
-        await waitFor(() => render(<TestRenderer/>));
+        await renderTest();
         await waitFor(() => userEvent.click(screen.queryByRole('button', {name: 'Parameters'})));
         expect(mockPageChange).toHaveBeenCalledWith('searchParameters');
     });

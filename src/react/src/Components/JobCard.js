@@ -31,7 +31,12 @@ const JobCard = ({node, match, router}) =>
                     View
             </Link>
             <Link 
-                to={{pathname: '/viterbi/job-form/duplicate/' + node.id + '/'}} 
+                to={{
+                    pathname: '/viterbi/job-form/duplicate/',
+                    state: {
+                        jobId: node.id
+                    }
+                }}
                 activeClassName="selected" 
                 className="card-action"
                 exact 
