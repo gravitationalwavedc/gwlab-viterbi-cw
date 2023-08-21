@@ -153,13 +153,13 @@ class TestViterbiSummaryResults(TestCase):
         download_ids_mock.return_value = (True, [self.test_id1, self.test_id2])
         self.responses.add(
             responses.GET,
-            f"https://gwcloud.org.au/job/apiv1/file/?fileId={self.test_id1}",
+            f"https://jobcontroller.adacs.org.au/job/apiv1/file/?fileId={self.test_id1}",
             body=self.candidate_data,
             status=200
         )
         self.responses.add(
             responses.GET,
-            f"https://gwcloud.org.au/job/apiv1/file/?fileId={self.test_id2}",
+            f"https://jobcontroller.adacs.org.au/job/apiv1/file/?fileId={self.test_id2}",
             body=self.path_data,
             status=200
         )
