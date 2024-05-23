@@ -39,7 +39,8 @@ const SearchParametersForm = ({handlePageChange}) =>
                 <Input
                     title="# Bins"
                     name="searchA0Bins"
-                    type="number"/>
+                    type="number"
+                    step="1"/>
             </Col>
             <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
@@ -65,7 +66,8 @@ const SearchParametersForm = ({handlePageChange}) =>
                 <Input
                     title="# Bins"
                     name="searchOrbitTpBins"
-                    type="number"/>
+                    type="number"
+                    step="1"/>
             </Col>
             <Col xs={12} sm={8} md={4} xl={4}>
                 <Input
@@ -91,7 +93,8 @@ const SearchParametersForm = ({handlePageChange}) =>
                 <Input
                     title="# Bins"
                     name="searchPBins"
-                    type="number"/>
+                    type="number"
+                    step="1"/>
             </Col>
             <Col xs={12} sm={8} md={4} xl={4}>
                 <Input

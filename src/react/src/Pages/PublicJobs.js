@@ -6,12 +6,13 @@ import Link from 'found/Link';
 import JobTable from '../Components/JobTable';
 import EmptyTableMessage from '../Components/EmptyTableMessage';
 import Banner from '../Components/Banner';
+import { useHistoryState } from '../hooks';
 
 const RECORDS_PER_PAGE = 100;
 
 const PublicJobs = ({data, match, router, relay}) => {
-    const [search, setSearch] = useState('');
-    const [timeRange, setTimeRange] = useState('all');
+    const [search, setSearch] = useHistoryState('search', '');
+    const [timeRange, setTimeRange] = useHistoryState('timeRange', 'all');
     const [order, setOrder] = useState();
     const [direction, setDirection] = useState('descending');
     useEffect(() => handleSearchChange(), [search, timeRange, direction, order]);

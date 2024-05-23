@@ -35,11 +35,19 @@ global.router = {
     addNavigationListener: jest.fn(),
 };
 
+global.match = {
+    location: {
+        state: {}
+    }
+};
+
 global.TestRouter = ({children}) => {
-    const routerContext = {router: router, match: {}};
+    const routerContext = {router: global.router, match: global.match};
     return <RouterContext.Provider value={routerContext}>
         {children}
     </RouterContext.Provider>;
 };
+
+global.TestRouter.displayName = 'TestRouter';
 
 global.environment = environment;
