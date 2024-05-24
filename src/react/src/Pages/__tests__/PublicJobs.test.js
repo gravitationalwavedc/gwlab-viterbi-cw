@@ -4,7 +4,7 @@ import { QueryRenderer, graphql } from 'react-relay';
 import { render, fireEvent } from '@testing-library/react';
 import PublicJobs from '../PublicJobs';
 
-/* global environment, router */
+/* global environment, TestRouter, router, match */
 
 describe('public Job Page', () => {
 
@@ -26,7 +26,7 @@ describe('public Job Page', () => {
             }}
             render={({ error, props }) => {
                 if (props) {
-                    return <PublicJobs data={props} match={{}} router={router}/>;
+                    return <PublicJobs data={props} match={match} router={router}/>;
                 } else if (error) {
                     return error.message;
                 }
@@ -51,7 +51,7 @@ describe('public Job Page', () => {
 
     it('renders', () => {
         expect.hasAssertions();
-        const { getByText } = render(<TestRenderer />);
+        const { getByText } = render(<TestRenderer />, {wrapper: TestRouter});
         environment.mock.resolveMostRecentOperation(operation => 
             MockPayloadGenerator.generate(operation, mockReturn)
         );
@@ -60,7 +60,7 @@ describe('public Job Page', () => {
 
     it('calls refetchConnection when the serach field is updated', () => {
         expect.hasAssertions();
-        const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>);
+        const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>, {wrapper: TestRouter});
         environment.mock.resolveMostRecentOperation(operation => 
             MockPayloadGenerator.generate(operation, mockReturn)
         );
@@ -100,7 +100,7 @@ describe('public Job Page', () => {
 
     it('calls refetchConnection when the time range is changed', () => {
         expect.hasAssertions();
-        const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>);
+        const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>, {wrapper: TestRouter});
         environment.mock.resolveMostRecentOperation(operation => 
             MockPayloadGenerator.generate(operation, mockReturn)
         );

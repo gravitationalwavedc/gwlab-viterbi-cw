@@ -34,6 +34,41 @@ describe('the data parameters form component', () => {
         expect(screen.queryByText('Select frequency settings')).toBeInTheDocument();
     });
     
+    it('should maintain choice of custom alpha and delta when switching to popular target and back', async () => {
+        expect.hasAssertions();
+        await renderTest();
+
+        const popularTargetsSelect = screen.queryByLabelText('Popular Targets');
+        const alphaInput = screen.queryByLabelText('Right ascension');
+        const deltaInput = screen.queryByLabelText('Declination');
+
+        // Check initial values are as expected
+        expect(alphaInput.value).toBe(initialValues.alpha.toString());
+        expect(deltaInput.value).toBe(initialValues.delta.toString());
+
+        // Change values in inputs
+        const customAlpha = '1234';
+        const customDelta = '5678';
+        await waitFor(() => userEvent.clear(alphaInput));
+        await waitFor(() => userEvent.type(alphaInput, customAlpha));
+        await waitFor(() => userEvent.clear(deltaInput));
+        await waitFor(() => userEvent.type(deltaInput, customDelta));
+
+        // Then change the select option to overwrite the alpha and delta with target
+        await waitFor(() => userEvent.selectOptions(popularTargetsSelect, 'Scorpius X-1'));
+        expect(alphaInput.value).toBe('4.27569923849971');
+        expect(deltaInput.value).toBe('-0.250624917263256');
+
+        // Change the select option back to custom to overwrite the alpha and delta with original custom valuse
+        await waitFor(() => userEvent.selectOptions(popularTargetsSelect, 'Custom'));
+        expect(alphaInput.value).not.toBe('4.27569923849971');
+        expect(deltaInput.value).not.toBe('-0.250624917263256');
+        expect(alphaInput.value).not.toBe(initialValues.alpha.toString());
+        expect(deltaInput.value).not.toBe(initialValues.delta.toString());
+        expect(alphaInput.value).toBe(customAlpha);
+        expect(deltaInput.value).toBe(customDelta);
+    });
+    
     it('should update bandwidth options based on frequency band', async () => {
         expect.hasAssertions();
         renderTestWithInput();
@@ -59,7 +94,6 @@ describe('the data parameters form component', () => {
             expect(newOption.value).toBe(expectedNewOptions[index].value);
             expect(newOption.label).toBe(expectedNewOptions[index].label);
         });
-        
     });
     
     it('should allow backwards page change', async () => {

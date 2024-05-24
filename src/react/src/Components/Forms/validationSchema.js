@@ -24,13 +24,13 @@ let validationSchema = Yup.object().shape({
     searchTBlock: Yup.number().required(),
     searchCentralA0: Yup.number().required(),
     searchA0Band: Yup.number().required(),
-    searchA0Bins: Yup.number().required(),
+    searchA0Bins: Yup.number().integer().positive().required(),
     searchCentralP: Yup.number().required(),
     searchPBand: Yup.number().required(),
-    searchPBins: Yup.number().required(),
+    searchPBins: Yup.number().integer().positive().required(),
     searchCentralOrbitTp: Yup.number().required(),
     searchOrbitTpBand: Yup.number().required(),
-    searchOrbitTpBins: Yup.number().required(),
+    searchOrbitTpBins: Yup.number().integer().positive().required(),
     searchLLThreshold: Yup.number().required()
 });
 

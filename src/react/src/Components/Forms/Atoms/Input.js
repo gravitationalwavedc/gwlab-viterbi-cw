@@ -21,7 +21,7 @@ const Input = ({title, name, type, units, helpText, ...rest}) => {
         <Form.Text>
             {helpText}
         </Form.Text>
-        <Form.Control.Feedback type='invalid'>
+        <Form.Control.Feedback type='invalid' className='d-block'>
             {error}
         </Form.Control.Feedback>
     </Form.Group>;
