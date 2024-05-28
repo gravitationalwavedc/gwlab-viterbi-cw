@@ -16,7 +16,7 @@ const Banner = ({match, router}) =>
                     </Col>
                     <Col md={8} className="mb-4">
                         <h5>
-                                Perform <nobr>high-priority</nobr> continuous wave searches for <nobr>low-mass </nobr> 
+                            Perform <nobr>high-priority</nobr> continuous wave searches for <nobr>low-mass </nobr> 
                             <nobr>x-ray</nobr> binaries using the Viterbi pipeline.
                         </h5>
                     </Col>
@@ -24,7 +24,7 @@ const Banner = ({match, router}) =>
                 <Row>
                     <Col>
                         <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
-                                New experiment
+                            New job
                         </Link>
                     </Col>
                 </Row>

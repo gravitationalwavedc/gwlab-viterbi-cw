@@ -47,14 +47,14 @@ const MyJobs = ({data, match, router,relay}) => {
             <Banner match={match} router={router} />
             <Container >
                 <h4 className="pt-5 pt-md-5 mb-0">
-                    My experiments 
+                    My jobs 
                 </h4>
                 <Form>
                     <Form.Row>
                         <Col lg={4}>
                             <Form.Group controlId="searchJobs">
                                 <Form.Label srOnly>
-                              Search
+                                    Search
                                 </Form.Label>
                                 <InputGroup>
                                     <InputGroup.Prepend>
@@ -72,7 +72,7 @@ const MyJobs = ({data, match, router,relay}) => {
                         <Col lg={3}>
                             <Form.Group controlId="timeRange">
                                 <Form.Label srOnly>
-                              Time
+                                    Time
                                 </Form.Label>
                                 <Form.Control 
                                     as="select" 
@@ -97,31 +97,36 @@ const MyJobs = ({data, match, router,relay}) => {
                                 exact 
                                 match={match} 
                                 router={router} 
-                                className="mr-1">
-                                    View public experiments 
+                                className="mr-1"
+                            >
+                                View public jobs 
                             </Link>
                         </Col>
                     </Form.Row>
                 </Form>
                 <Row>
                     <Col>
-                        { data.viterbiJobs.edges.length > 0 ? <JobTable
-                            data={data.viterbiJobs} 
-                            setOrder={setOrder} 
-                            order={order} 
-                            setDirection={setDirection} 
-                            direction={direction}
-                            match={match}
-                            router={router}
-                            hasMore={relay.hasMore()}
-                            loadMore={loadMore}
-                            myJobs={true}
-                        /> : <EmptyTableMessage />}
+                        {
+                            data.viterbiJobs.edges.length > 0
+                                ? <JobTable
+                                    data={data.viterbiJobs} 
+                                    setOrder={setOrder} 
+                                    order={order} 
+                                    setDirection={setDirection} 
+                                    direction={direction}
+                                    match={match}
+                                    router={router}
+                                    hasMore={relay.hasMore()}
+                                    loadMore={loadMore}
+                                    myJobs={true}
+                                />
+                                : <EmptyTableMessage />
+                        }
                     </Col>
                 </Row>
                 <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
                     <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
-                                New experiment
+                        New job
                     </Link>
                 </Navbar>
             </Container>

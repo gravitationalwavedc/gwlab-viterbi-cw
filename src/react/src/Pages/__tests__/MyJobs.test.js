@@ -58,7 +58,7 @@ describe('my Jobs Page', () => {
             operation,
             MockPayloadGenerator.generate(operation, mockReturn)
         );
-        expect(getByText('My experiments')).toBeInTheDocument();
+        expect(getByText('My jobs')).toBeInTheDocument();
     });
 
     it('calls refetchConnection when the serach field is updated', async () => {
