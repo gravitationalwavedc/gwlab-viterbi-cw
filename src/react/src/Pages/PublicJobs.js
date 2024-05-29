@@ -47,14 +47,14 @@ const PublicJobs = ({data, match, router, relay}) => {
             <Banner match={match} router={router} />
             <Container >
                 <h4 className="pt-5 pt-md-5 mb-0">
-                    Experiments
+                    Jobs
                 </h4>
                 <Form onSubmit={e => e.preventDefault()}>
                     <Form.Row>
                         <Col lg={4}>
                             <Form.Group controlId="searchJobs">
                                 <Form.Label srOnly>
-                              Search
+                                    Search
                                 </Form.Label>
                                 <InputGroup>
                                     <InputGroup.Prepend>
@@ -72,7 +72,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                         <Col md={3}>
                             <Form.Group controlId="timeRange">
                                 <Form.Label srOnly>
-                              Time
+                                    Time
                                 </Form.Label>
                                 <Form.Control 
                                     as="select" 
@@ -97,30 +97,35 @@ const PublicJobs = ({data, match, router, relay}) => {
                                 exact 
                                 match={match} 
                                 router={router} 
-                                className="mr-1">
-                                    View my experiments
+                                className="mr-1"
+                            >
+                                View my jobs
                             </Link>
                         </Col>
                     </Form.Row>
                 </Form>
                 <Row>
                     <Col>
-                        { data.publicViterbiJobs.edges.length > 0 ? <JobTable
-                            data={data.publicViterbiJobs}
-                            setOrder={setOrder} 
-                            order={order} 
-                            setDirection={setDirection} 
-                            direction={direction}
-                            match={match}
-                            router={router}
-                            hasMore={relay.hasMore()}
-                            loadMore={loadMore}
-                        /> : <EmptyTableMessage/>}
+                        {
+                            data.publicViterbiJobs.edges.length > 0
+                                ? <JobTable
+                                    data={data.publicViterbiJobs}
+                                    setOrder={setOrder} 
+                                    order={order} 
+                                    setDirection={setDirection} 
+                                    direction={direction}
+                                    match={match}
+                                    router={router}
+                                    hasMore={relay.hasMore()}
+                                    loadMore={loadMore}
+                                />
+                                : <EmptyTableMessage/>
+                        }
                     </Col>
                 </Row>
                 <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
                     <Link as={Button} to='/viterbi/job-form/' exact match={match} router={router}>
-                                New experiment
+                        New job
                     </Link>
                 </Navbar>
             </Container>

@@ -11,10 +11,10 @@ const Menu = () => (
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
                     <Link className="nav-link" to='/viterbi' exact>
-                        Experiments
+                        Jobs
                     </Link>
                     <Link className="nav-link" to='/viterbi/job-form' exact>
-                        New Experiment
+                        New Job
                     </Link>
                 </Nav>
             </Navbar.Collapse>

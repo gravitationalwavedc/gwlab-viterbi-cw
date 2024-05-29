@@ -55,7 +55,7 @@ describe('public Job Page', () => {
         environment.mock.resolveMostRecentOperation(operation => 
             MockPayloadGenerator.generate(operation, mockReturn)
         );
-        expect(getByText('Experiments')).toBeInTheDocument();
+        expect(getByText('Jobs')).toBeInTheDocument();
     });
 
     it('calls refetchConnection when the serach field is updated', () => {
