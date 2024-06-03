@@ -4,18 +4,24 @@ import { HiOutlinePencil, HiOutlineCheck, HiOutlineX } from 'react-icons/hi';
 import EdiText from 'react-editext';
 
 const EditButton = () => <React.Fragment><HiOutlinePencil style={{margin:'0 0.1rem 0.2rem 0'}} />Edit</React.Fragment>;
-const SaveButton = () => <HiOutlineCheck/>;
+const SaveButton = () => <HiOutlineCheck data-testid='saveButton'/>;
 const CancelButton = () => <HiOutlineX/>;
 
 const JobTitle = () => {
-    const {values, setFieldValue, errors} = useFormikContext();
+    const {values, setFieldValue, setFieldTouched, errors, touched} = useFormikContext();
+    const showNameError = errors.name && touched.name;
+    const showDescriptionError = errors.description && touched.description;
+    const handleSave = (fieldName, value) => {
+        setFieldValue(fieldName, value);
+        setFieldTouched(fieldName);
+    };
     return <React.Fragment>
         <EdiText 
             type="text" 
             name="name"
             value={values.name}
             viewProps={{className: 'h2'}}
-            onSave={(value) => setFieldValue('name', value)}
+            onSave={(value) => handleSave('name', value)}
             hint="You can use letters, numbers, underscores, and hyphens."
             editButtonContent={<EditButton/>}
             editButtonClassName="edit-button"
@@ -28,15 +34,16 @@ const JobTitle = () => {
             submitOnUnfocus
             submitOnEnter
         />
-        {errors.name && 
-          <p className="text-danger small">
-              {errors.name}
-          </p>}
+        {
+            showNameError && <p className="text-danger small" data-testid="nameError">
+                {errors.name}
+            </p>
+        }
         <EdiText 
             type="text" 
             name="description"
             value={values.description}
-            onSave={(value) => setFieldValue('description', value)}
+            onSave={(value) => handleSave('description', value)}
             editButtonContent={<EditButton/>}
             editButtonClassName="edit-button"
             saveButtonContent={<SaveButton />}
@@ -48,6 +55,11 @@ const JobTitle = () => {
             submitOnUnfocus
             submitOnEnter
         />
+        {
+            showDescriptionError && <p className="text-danger small" data-testid="descriptionError">
+                {errors.description}
+            </p>
+        }
     </React.Fragment>;
 };
 export default JobTitle;
