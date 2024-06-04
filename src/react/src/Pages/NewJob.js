@@ -88,7 +88,7 @@ const NewJob = ({initialValues, router}) => {
         <Formik
             initialValues={initialValues}
             onSubmit={values => handleJobSubmission(values)}
-            validationSchema={validationSchema}
+            validationSchema={validationSchema(initialValues)}
         >
             {
                 ({values, handleSubmit, validateForm}) => (
