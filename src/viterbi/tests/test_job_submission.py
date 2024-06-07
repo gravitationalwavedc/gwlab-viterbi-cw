@@ -54,8 +54,6 @@ class TestJobSubmission(ViterbiTestCase):
                     "dFreq": "5.78703704e-07",
                 },
                 "searchParameters": {
-                    "searchStartTime": "1238166483",
-                    "searchTBlock": "864000",
                     "searchCentralA0": "0.01844",
                     "searchA0Band": "0.00012",
                     "searchA0Bins": "1",
@@ -156,11 +154,11 @@ class TestJobSubmission(ViterbiTestCase):
 
         self.assertEqual(
             search_param.get(name='search_start_time').value,
-            _params["searchParameters"]['searchStartTime']
+            _params["dataParameters"]['minStartTime']
         )
         self.assertEqual(
             search_param.get(name='search_t_block').value,
-            _params["searchParameters"]['searchTBlock']
+            _params["dataParameters"]['driftTime']
         )
         self.assertEqual(
             search_param.get(name='search_central_a0').value,

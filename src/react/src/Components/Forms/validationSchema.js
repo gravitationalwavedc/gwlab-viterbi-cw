@@ -34,8 +34,6 @@ let validationSchema = (initialValues) => Yup.object().shape({
     driftTime: Yup.number().required(),
     dFreq: Yup.number().required(),
 
-    searchStartTime: Yup.number().required(),
-    searchTBlock: Yup.number().required(),
     searchCentralA0: Yup.number().required(),
     searchA0Band: Yup.number().required(),
     searchA0Bins: Yup.number().integer().positive().required(),
