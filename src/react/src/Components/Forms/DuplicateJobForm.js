@@ -45,8 +45,6 @@ export default createFragmentContainer(DuplicateJobForm,
                     dFreq
                 }
                 search {
-                    searchStartTime
-                    searchTBlock
                     searchCentralA0
                     searchA0Band
                     searchA0Bins

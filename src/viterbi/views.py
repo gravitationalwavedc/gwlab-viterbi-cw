@@ -50,6 +50,17 @@ def create_viterbi_job(user, start, data, data_parameters, search_parameters):
         for key, val in search_parameters.items():
             SearchParameter(job=viterbi_job, search=job_search, name=key, value=val).save()
 
+        # Use data parameters to fill in search time and coherence time
+        # This used to be in the forms, but the fields were somewhat doubled up
+        # Fixing it here requires no changes to the bundle, nor the model json
+        # It's also more easily reversible if needed
+        SearchParameter(
+            job=viterbi_job, search=job_search, name='search_start_time', value=data_parameters['min_start_time']
+        ).save()
+        SearchParameter(
+            job=viterbi_job, search=job_search, name='search_t_block', value=data_parameters['drift_time']
+        ).save()
+
         # Submit the job to the job controller
 
         # Create the jwt token

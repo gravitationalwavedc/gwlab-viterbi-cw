@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { useFormikContext } from 'formik';
 import { Col, Row } from 'react-bootstrap';
 import ResultTable from '../Results/ResultTable';
 import PageNav from './Atoms/PageNav';
@@ -29,26 +28,23 @@ const ReviewJob = ({values, handlePageChange, handleSubmit, validateForm, noButt
                 data={[values.alpha, values.delta, values.startFrequencyBand, values.freqBand]}
             />
             <ResultTable 
-                title='Search Orbital Parameters'
+                title='Search Range'
                 headings={['Start', 'Duration']}
                 data={[values.searchStartTime, values.searchTBlock]}
                 widths={['30%', '70%']}
             />
             <ResultTable 
-                title='Search Parameters'
-                headings={['Central A0', 'Band', '#Bins']}
+                headings={['Central Orbital Semi-major Axis', 'Band', '#Bins']}
                 data={[values.searchCentralA0, values.searchA0Band, values.searchA0Bins]}
                 widths={['40%', '40%', '10%']}
             />
             <ResultTable 
-                title='Search Time of Ascension'
-                headings={['Central Tp', 'Band', '#Bins']}
+                headings={['Central Time of Ascension', 'Band', '#Bins']}
                 data={[values.searchCentralOrbitTp, values.searchOrbitTpBand, values.searchOrbitTpBins]}
                 widths={['40%', '40%', '10%']}
             />
             <ResultTable 
-                title='Search Orbital Period'
-                headings={['Central P', 'Band', '#Bins']}
+                headings={['Central Orbital Period', 'Band', '#Bins']}
                 data={[values.searchCentralP, values.searchPBand, values.searchPBins]}
                 widths={['40%', '40%', '10%']}
             />

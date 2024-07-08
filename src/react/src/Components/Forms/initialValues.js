@@ -22,8 +22,6 @@ const initialValues = {
     dFreq: 5.78703704e-07,
 
     // Search Parameters Page
-    searchStartTime: 1238166483,
-    searchTBlock: 864000,
     searchCentralA0: 0.01844,
     searchA0Band: 0.00012,
     searchA0Bins: 1,

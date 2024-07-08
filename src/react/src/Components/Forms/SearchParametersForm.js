@@ -7,31 +7,12 @@ const SearchParametersForm = ({handlePageChange}) =>
     <React.Fragment>
         <Row>
             <Col>
-                <h4>Search orbital parameters</h4>
-            </Col>
-        </Row>
-        <Row>
-            <Col xs={12} sm={8} md={6} xl={4}>
-                <Input
-                    title="Start time"
-                    name="searchStartTime"
-                    type="number"
-                    units="Seconds"/>
-            </Col>
-        </Row>
-        <Row>
-            <Col xs={12} sm={8} md={6} xl={4}>
-                <Input
-                    title="Coherence time"
-                    name="searchTBlock"
-                    type="number"
-                    units="Seconds"
-                    helpText="Duration of coherent analysis block."/>
+                <h4>Search Range</h4>
             </Col>
         </Row>
         <Row className="form-break">
             <Col>
-                <h4>Search Parameters</h4>
+                <div>Orbit projected semi-major axis</div>
             </Col>
         </Row>
         <Row>
@@ -58,7 +39,7 @@ const SearchParametersForm = ({handlePageChange}) =>
         </Row>
         <Row className="form-break">
             <Col>
-                <h4>Search time of ascension</h4>
+                <div>Time of ascension</div>
             </Col>
         </Row>
         <Row>
@@ -85,7 +66,7 @@ const SearchParametersForm = ({handlePageChange}) =>
         </Row>
         <Row className="form-break">
             <Col>
-                <h4>Search orbital period</h4>
+                <div>Orbital period</div>
             </Col>
         </Row>
         <Row>
