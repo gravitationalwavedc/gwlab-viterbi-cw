@@ -1,0 +1,56 @@
+.card.gwlab-job-card {
+   margin: 1px 2px 16px 1px;
+
+   .card-subtitle {
+      margin-bottom: 1rem;
+      margin-top: -0.6rem;
+
+      @include media-breakpoint-down(sm) {
+         margin-top: 1rem;
+      }
+
+   }
+
+   .card-body {
+      box-shadow: $shadow-base;
+   }
+
+   .card-footer {
+      background-color: unset;
+      border: none;
+      padding-top: 8px;
+      padding-right: 8px;
+
+      a:not(:last-child) {
+         margin-right: 1rem;
+      }
+   }
+
+   [class^="status-"],
+   [class*=" status-"] {
+      font-variant: small-caps;
+      font-size: 1.4rem;
+      position: absolute;
+      bottom: 69px;
+      right: 16px;
+   }
+
+   .card-action {
+      font-variant: small-caps;
+      font-family: $font-family-display;
+   }
+}
+
+.jobs-container {
+   @include media-breakpoint-down(sm) {
+      margin-bottom: 86px;
+   }
+}
+
+.status-completed {
+   color: $accent-green;
+}
+
+.status-submitted {
+   color: $orange-600;
+}

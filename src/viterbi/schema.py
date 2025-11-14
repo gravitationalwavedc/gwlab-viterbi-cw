@@ -6,7 +6,7 @@ from graphene import relay
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
 from graphql import GraphQLError
-from graphql_jwt.decorators import login_required
+from .utils.decorators import login_required
 from graphql_relay.node.node import from_global_id, to_global_id
 
 from .models import ViterbiJob, Label, Data, Search, FileDownloadToken, ViterbiSummaryResults
@@ -109,7 +109,7 @@ class ViterbiJobNode(DjangoObjectType):
         return ViterbiJob.viterbi_job_filter(queryset, info)
 
     def resolve_user(parent, info):
-        success, users = request_lookup_users([parent.user_id], info.context.user.user_id)
+        success, users = request_lookup_users([parent.user_id], info.context.user.id)
         if success and users:
             return f"{users[0]['firstName']} {users[0]['lastName']}"
         return "Unknown User"
@@ -131,7 +131,7 @@ class ViterbiJobNode(DjangoObjectType):
         try:
             # Get job details from the job controller
             _, jc_jobs = request_job_filter(
-                info.context.user.user_id,
+                info.context.user.id,
                 ids=[parent.job_controller_id]
             )
 
@@ -154,7 +154,7 @@ class ViterbiJobNode(DjangoObjectType):
         try:
             # Get job details from the job controller
             _, jc_jobs = request_job_filter(
-                info.context.user.user_id,
+                info.context.user.id,
                 ids=[parent.job_controller_id]
             )
 
@@ -525,7 +525,7 @@ class GenerateCandidates(relay.ClientIDMutation):
 
         # Get the job the for which to collect candidate data
         job = ViterbiJob.get_by_id(from_global_id(job_id)[1], user)
-        success, users = request_lookup_users([job.user_id], user.user_id)
+        success, users = request_lookup_users([job.user_id], user.id)
 
         if not (success and users):
             raise Exception('Error getting job user.')

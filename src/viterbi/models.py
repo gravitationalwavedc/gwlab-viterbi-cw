@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from viterbi.utils.jobs.request_file_list import request_file_list
 from viterbi.utils.jobs.request_job_status import request_job_status
+from viterbi.utils.auth.is_ligo_user import is_ligo_user
 from .variables import viterbi_parameters
 
 
@@ -111,11 +112,11 @@ class ViterbiJob(models.Model):
         job = cls.objects.get(id=bid)
 
         # Ligo jobs may only be accessed by ligo users
-        if job.is_ligo_job and not user.is_ligo:
+        if job.is_ligo_job and not is_ligo_user(user):
             raise Exception("Permission Denied")
 
         # Users can only access the job if it is public or the user owns the job
-        if job.private and user.user_id != job.user_id:
+        if job.private and user.id != job.user_id:
             raise Exception("Permission Denied")
 
         return job
@@ -129,7 +130,7 @@ class ViterbiJob(models.Model):
         :param user_job_filter: The UserViterbiJobFilter instance
         :return: The queryset filtered by the requesting user
         """
-        return qs.filter(user_id=user_job_filter.request.user.user_id)
+        return qs.filter(user_id=user_job_filter.request.user.id)
 
     @classmethod
     def public_viterbi_job_filter(cls, qs, public_job_filter):
@@ -158,7 +159,7 @@ class ViterbiJob(models.Model):
             raise Exception("You must be logged in to perform this action.")
 
         # Users may not view ligo jobs if they are not a ligo user
-        if info.context.user.is_ligo:
+        if is_ligo_user(info.context.user):
             return queryset
         else:
             return queryset.exclude(is_ligo_job=True)

@@ -8,25 +8,26 @@ from django.db import transaction
 
 # from .forms import ViterbiJobForm
 from .models import ViterbiJob, DataParameter, Label, SearchParameter, Data, Search, ViterbiSummaryResults
+from .utils.auth.is_ligo_user import is_ligo_user
 from .utils.download_by_path import download_by_path
 from .utils.misc import phase_from_p_tasc, source_dataset_from_time
 
 
 def create_viterbi_job(user, start, data, data_parameters, search_parameters):
-    # validate_form = ViterbiJobForm(data={**start, **data, **signal, **sampler})
+        # validate_form = ViterbiJobForm(data={**start, **data, **signal, **sampler})
     # should be making use of cleaned_data below
 
     # Right now, it is not possible to create a non-ligo job
-    if not user.is_ligo:
+    if not is_ligo_user(user):
         raise Exception("User must be ligo")
 
     with transaction.atomic():
         viterbi_job = ViterbiJob(
-            user_id=user.user_id,
+            user_id=user.id,
             name=start.name,
             description=start.description,
             private=start.private,
-            is_ligo_job=True
+            is_ligo_job=getattr(user, 'is_ligo', False)  # Set based on user's LIGO status
         )
         viterbi_job.save()
 
@@ -66,7 +67,7 @@ def create_viterbi_job(user, start, data, data_parameters, search_parameters):
         # Create the jwt token
         jwt_enc = jwt.encode(
             {
-                'userId': user.user_id,
+                'userId': user.id,
                 'exp': datetime.now() + timedelta(days=30)
             },
             settings.JOB_CONTROLLER_JWT_SECRET,
@@ -114,13 +115,13 @@ def create_viterbi_job(user, start, data, data_parameters, search_parameters):
 def cancel_viterbi_job(job_id, user):
     viterbi_job = ViterbiJob.get_by_id(job_id, user)
 
-    if not user.user_id == viterbi_job.user_id:
+    if not user.id == viterbi_job.user_id:
         raise Exception('You must own the job to cancel it!')
 
     # Create the jwt token
     jwt_enc = jwt.encode(
         {
-            'userId': user.user_id,
+            'userId': user.id,
             'exp': datetime.now() + timedelta(days=30)
         },
         settings.JOB_CONTROLLER_JWT_SECRET,
@@ -156,7 +157,7 @@ def cancel_viterbi_job(job_id, user):
 def update_viterbi_job(job_id, user, private=None, labels=None):
     viterbi_job = ViterbiJob.get_by_id(job_id, user)
 
-    if user.user_id == viterbi_job.user_id:
+    if user.id == viterbi_job.user_id:
         if labels is not None:
             viterbi_job.labels.set(Label.filter_by_name(labels))
 

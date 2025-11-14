@@ -18,6 +18,14 @@ GWCLOUD_DB_SEARCH_API_URL = "http://gwcloud-db-search:8000/graphql"
 # GWCandidate URL
 GWLAB_GWCANDIDATE_GRAPHQL_URL = "http://gwlab-gwcandidate-django:8000/graphql"
 
+# On both login and logout, redirect to the frontend react app
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+# adacs-sso settings
+ADACS_SSO_CLIENT_NAME = "gwlab_viterbi"
+ADACS_SSO_AUTH_HOST = "https://sso.adacs.org.au"
+
 try:
     from .environment import *
 except ImportError:

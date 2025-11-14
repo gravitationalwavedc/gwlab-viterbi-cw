@@ -4,6 +4,8 @@ import json
 import jwt
 import requests
 from django.conf import settings
+from viterbi.utils.auth.is_ligo_user import is_ligo_user
+from viterbi.utils.auth import is_ligo_user
 
 
 def perform_db_search(user, kwargs):
@@ -17,7 +19,7 @@ def perform_db_search(user, kwargs):
     # Create the jwt token
     jwt_enc = jwt.encode(
         {
-            'userId': user.user_id,
+            'userId': user.id,
             'exp': datetime.datetime.now() + datetime.timedelta(days=30)
         },
         settings.DB_SEARCH_SERVICE_JWT_SECRET,
@@ -28,7 +30,7 @@ def perform_db_search(user, kwargs):
     search_params += f", timeRange: \"{kwargs.get('time_range', '')}\""
     # Fetch one extra record to trigger "hasNextPage"
     search_params += f", count: {kwargs.get('first', 0) + 1}"
-    search_params += f", excludeLigoJobs: {'false' if user.is_ligo else 'true'}"
+    search_params += f", excludeLigoJobs: {'false' if is_ligo_user(user) else 'true'}"
 
     query = f"""
     query {{

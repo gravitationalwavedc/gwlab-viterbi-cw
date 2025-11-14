@@ -1,4 +1,4 @@
-FROM python:3.8-bullseye
+FROM python:3.12-bullseye
 ENV PYTHONUNBUFFERED 1
 
 # Update the container and install the required packages

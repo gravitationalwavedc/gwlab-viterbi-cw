@@ -4,6 +4,7 @@ import responses
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from adacs_sso_plugin.adacs_user import AUTHENTICATION_METHODS
 from viterbi.models import ViterbiJob
 from viterbi.tests.testcases import ViterbiTestCase
 
@@ -12,8 +13,9 @@ User = get_user_model()
 
 class TestJobSubmission(ViterbiTestCase):
     def setUp(self):
+        from adacs_sso_plugin.constants import AUTHENTICATION_METHODS
         self.user = User.objects.create(username="buffy", first_name="buffy", last_name="summers")
-        self.client.authenticate(self.user, is_ligo=True)
+        self.authenticate(self.user, authentication_method=AUTHENTICATION_METHODS["LIGO_SHIBBOLETH"])
 
         self.responses = responses.RequestsMock()
         self.responses.start()
@@ -68,7 +70,7 @@ class TestJobSubmission(ViterbiTestCase):
             }
         }
 
-        response = self.client.execute(
+        response = self.query(
             """
             mutation NewJobMutation($input: ViterbiJobMutationInput!) {
                 newViterbiJob(input: $input) {
@@ -78,8 +80,12 @@ class TestJobSubmission(ViterbiTestCase):
                 }
             }
             """,
-            params
+            variables=params
         )
+
+        # Debug: print errors if any
+        if response.errors:
+            print(f"GraphQL Errors: {response.errors}")
 
         expected = {
             'newViterbiJob': {

@@ -2,10 +2,18 @@ from django.test import TestCase
 from django.utils import timezone
 from django.conf import settings
 
-from gw_viterbi.jwt_tools import GWCloudUser
 from viterbi.models import ViterbiJob, Data, Label, FileDownloadToken
 from viterbi.variables import viterbi_parameters
 from viterbi.views import update_viterbi_job
+
+
+class MockUser:
+    """Mock user class to replace GWCloudUser for testing"""
+    def __init__(self, username, user_id=1):
+        self.username = username
+        self.id = user_id
+        self.is_authenticated = True
+        self.is_active = True
 
 
 class TestViterbiJobModel(TestCase):
@@ -25,8 +33,7 @@ class TestViterbiJobModel(TestCase):
         """
         self.assertEqual(self.job.private, False)
 
-        user = GWCloudUser('bill')
-        user.user_id = 1
+        user = MockUser('bill', user_id=1)
 
         update_viterbi_job(self.job.id, user, True, [])
 
@@ -40,13 +47,12 @@ class TestViterbiJobModel(TestCase):
 
         self.assertFalse(self.job.labels.exists())
 
-        user = GWCloudUser('bill')
-        user.user_id = 1
+        user = MockUser('bill', user_id=1)
 
         update_viterbi_job(self.job.id, user, False, ['Bad Run', 'Review Requested'])
 
         self.job.refresh_from_db()
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             self.job.labels.all(),
             list(map(repr, Label.objects.filter(name__in=['Bad Run', 'Review Requested']))),
             ordered=False

@@ -1,0 +1,79 @@
+@import url('https://use.typekit.net/epr1fqs.css');
+
+// GWLab fonts
+$font-family-sans-serif: 'lemon-sans-next', sans-serif;
+$font-family-display: 'lemon-sans-next-condensed', sans-serif;
+
+html {
+   font-size: 18px;
+}
+
+h1.title-display, .h1.title-display {
+   font-family: $font-family-display;
+   font-size: 8rem !important;
+   font-weight: 600 !important;
+}
+
+h1 {
+   font-family: $font-family-display;
+   font-size: 2.5rem;
+}
+
+h2, .h2 {
+   font-weight: 300 !important;
+}
+
+h4, .h4 {
+   font-weight: 600 !important;
+}
+
+h5, .h5 {
+   font-weight: 400 !important;
+   font-size: 1.35rem !important;
+}
+
+h6, .h6 {
+   font-weight: 700 !important;
+}
+
+.h6.subtitle-1 {
+   font-weight: 300 !important;
+}
+
+.text-button {
+    font-weight: 400px;
+    font-variant: small-caps !important;
+}
+
+.caption {
+    font-weight: 400px;
+    font-size: 13px !important;
+    line-height: 15.6px !important;
+    letter-spacing: 0.4px;
+}
+
+.text-overline {
+   font-weight: 400;
+   font-size: 10px;
+   line-height: 12px;
+   letter-spacing: 1.5px;
+}
+
+p.body-2 {
+   font-weight: normal;
+   font-size: 15px;
+   line-height: 18px;
+   letter-spacing: 0.25px;
+}
+
+.btn {
+   font-weight: 600 !important;
+   font-size: 1.1rem;
+   font-family: $font-family-display;
+   font-variant: small-caps;
+}
+
+.review-heading {
+   font-variant: small-caps;
+   font-size: 1.5rem !important;
+}

@@ -149,7 +149,7 @@ class TestGenerateCandidatesMutation(ViterbiTestCase):
     def setUp(self):
         self.user = User.objects.create(username="billnye", first_name="Bill", last_name="Nye")
 
-        self.query = """
+        self.query_string = """
             mutation JobHeadingGenerateCandidatesMutation($jobId: ID!) {
                 generateCandidates(input: {jobId: $jobId}) {
                     groupId
@@ -165,12 +165,12 @@ class TestGenerateCandidatesMutation(ViterbiTestCase):
     @patch("viterbi.schema.submit_candidates", return_value='test_group_id')
     @patch("viterbi.schema.request_lookup_users", return_value=(True, [{'firstName': 'Bill', 'lastName': 'Nye'}]))
     def test_generate_candidates(self, *args):
-        response = self.client.execute(self.query, self.variables)
+        response = self.query(self.query_string, variables=self.variables)
         self.assertResponseHasErrors(response, "Mutation returned no errors even though user was not authenticated")
 
-        self.client.authenticate(self.user)
+        self.authenticate(self.user)
 
-        response = self.client.execute(self.query, self.variables)
+        response = self.query(self.query_string, variables=self.variables)
 
         expected = {
             'generateCandidates': {
@@ -179,14 +179,14 @@ class TestGenerateCandidatesMutation(ViterbiTestCase):
         }
 
         self.assertDictEqual(
-            expected, response.data, "generate candidates mutation returned unexpected data."
+            expected, response.json()['data'], "generate candidates mutation returned unexpected data."
         )
 
     @silence_errors
     @patch("viterbi.schema.submit_candidates")
     @patch("viterbi.schema.request_lookup_users", return_value=(False, []))
     def test_generate_candidates_no_user(self, *args):
-        self.client.authenticate(self.user)
+        self.authenticate(self.user)
 
-        response = self.client.execute(self.query, self.variables)
+        response = self.query(self.query_string, variables=self.variables)
         self.assertResponseHasErrors(response, "Mutation returned no errors even though user was not found")

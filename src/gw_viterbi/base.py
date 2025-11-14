@@ -22,7 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '^zzul@u)rxayk67^%3kf^59!pw&-vfv0lnv6#6h)w6!eyjzz!g'
 JOB_CONTROLLER_JWT_SECRET = SECRET_KEY
-AUTH_SERVICE_JWT_SECRET = SECRET_KEY
 DB_SEARCH_SERVICE_JWT_SECRET = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -42,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'viterbi.apps.ViterbiConfig',
     'graphene_django',
-    'django_jenkins'
+    'django_jenkins',
+    'adacs_sso_plugin'
 ]
 
 MIDDLEWARE = [
@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'adacs_sso_plugin.middleware.ADACSSSOMiddleware',
 ]
 
 ROOT_URLCONF = 'gw_viterbi.urls'
@@ -133,33 +134,19 @@ EMAIL_PORT = 25
 
 GRAPHENE = {
     'SCHEMA': 'gw_viterbi.schema.schema',
-    'SCHEMA_OUTPUT': 'react/data/schema.json',  # defaults to schema.json,
+    'SCHEMA_OUTPUT': 'react/data/schema.graphql',  # defaults to schema.json,
     'SCHEMA_INDENT': 2,  # Defaults to None (displays all data on a single line),
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
 }
 
-AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
+AUTHENTICATION_BACKENDS = ["adacs_sso_plugin.backend.ADACSSSOBackend"]
 
+# On both login and logout, redirect to the frontend react app
+LOGIN_REDIRECT_URL = "http://localhost:3000/"
+LOGOUT_REDIRECT_URL = "http://localhost:3000/"
 
-def jwt_get_user_by_payload_override(payload):
-    from .jwt_tools import jwt_get_user_by_payload
-    return jwt_get_user_by_payload(payload)
-
-
-GRAPHQL_JWT = {
-    # Our implementation of JWT_PAYLOAD_GET_USERNAME_HANDLER returns a full user object rather than just a username
-    'JWT_PAYLOAD_GET_USERNAME_HANDLER': jwt_get_user_by_payload_override,
-    # Internally this usually takes a username returned by JWT_PAYLOAD_GET_USERNAME_HANDLER, but as we're returning
-    # the full user object from JWT_PAYLOAD_GET_USERNAME_HANDLER, we don't do any processing, and simply just return
-    # the passed user object.
-    'JWT_GET_USER_BY_NATURAL_KEY_HANDLER': lambda x: x,
-    'JWT_VERIFY_EXPIRATION': True
-}
+# Redirect Django's default login URL to SSO login
+LOGIN_URL = "/sso/login/"
+LOGOUT_URL = "/sso/logout/"
 
 # URL of the job controller - note: No trailing slash
 GWCLOUD_JOB_CONTROLLER_API_URL = "https://jobcontroller.adacs.org.au/job/apiv1"
