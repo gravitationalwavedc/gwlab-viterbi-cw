@@ -6,48 +6,28 @@
 #
 adacs-sso-plugin @ git+https://gitlab.com/CAS-eResearch/internal/adacs-sso-plugin.git@v0.3.2
     # via -r requirements.in
-amqp==5.3.1
-    # via kombu
 asgiref==3.10.0
     # via
     #   django
     #   django-cors-headers
-billiard==4.2.2
-    # via celery
 black==25.11.0
     # via -r requirements.in
 build==1.3.0
     # via pip-tools
-celery==5.5.3
-    # via -r requirements.in
 certifi==2025.11.12
     # via requests
 cffi==2.0.0
     # via cryptography
 charset-normalizer==3.4.4
     # via requests
-click==8.3.0
+click==8.3.1
     # via
     #   black
-    #   celery
-    #   click-didyoumean
-    #   click-plugins
-    #   click-repl
     #   pip-tools
-click-didyoumean==0.3.1
-    # via celery
-click-plugins==1.1.1.2
-    # via celery
-click-repl==0.3.0
-    # via celery
-contourpy==1.3.3
-    # via matplotlib
 coverage==4.5.4
     # via -r requirements.in
 cryptography==46.0.3
     # via jwcrypto
-cycler==0.12.1
-    # via matplotlib
 django==5.2.8
     # via
     #   -r requirements.in
@@ -64,13 +44,9 @@ django4-jenkins==1.0.0
     # via -r requirements.in
 flake8==7.3.0
     # via -r requirements.in
-fonttools==4.60.1
-    # via matplotlib
 graphene==3.4.3
     # via graphene-django
 graphene-django==3.2.3
-    # via -r requirements.in
-graphene-file-upload==1.3.0
     # via -r requirements.in
 graphql-core==3.2.7
     # via
@@ -81,47 +57,28 @@ graphql-relay==3.2.0
     # via
     #   graphene
     #   graphene-django
-h5py==3.15.1
-    # via -r requirements.in
 idna==3.11
     # via requests
 jwcrypto==1.5.6
     # via python-jwt
-kiwisolver==1.4.9
-    # via matplotlib
-kombu==5.5.4
-    # via celery
-matplotlib==3.10.7
-    # via -r requirements.in
 mccabe==0.7.0
     # via flake8
 mypy-extensions==1.1.0
     # via black
-numpy==2.3.4
-    # via
-    #   contourpy
-    #   h5py
-    #   matplotlib
 packaging==25.0
     # via
     #   black
     #   build
-    #   kombu
-    #   matplotlib
 pathspec==0.12.1
     # via black
 pep8==1.7.1
     # via -r requirements.in
-pillow==12.0.0
-    # via matplotlib
 pip-tools==7.5.2
     # via -r requirements.in
 platformdirs==4.5.0
     # via black
 promise==2.3
     # via graphene-django
-prompt-toolkit==3.0.52
-    # via click-repl
 pycodestyle==2.14.0
     # via flake8
 pycparser==2.23
@@ -134,17 +91,12 @@ pyhumps==3.8.0
     # via -r requirements.in
 pyjwt==2.10.1
     # via adacs-sso-plugin
-pyparsing==3.2.5
-    # via matplotlib
 pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
 python-dateutil==2.9.0.post0
-    # via
-    #   celery
-    #   graphene
-    #   matplotlib
+    # via graphene
 python-decouple==3.8
     # via -r requirements.in
 python-jwt==4.1.0
@@ -162,7 +114,6 @@ responses==0.25.8
     # via -r requirements.in
 six==1.17.0
     # via
-    #   graphene-file-upload
     #   promise
     #   python-dateutil
 sqlparse==0.5.3
@@ -173,19 +124,10 @@ typing-extensions==4.15.0
     # via
     #   graphene
     #   jwcrypto
-tzdata==2025.2
-    # via kombu
 urllib3==2.5.0
     # via
     #   requests
     #   responses
-vine==5.1.0
-    # via
-    #   amqp
-    #   celery
-    #   kombu
-wcwidth==0.2.14
-    # via prompt-toolkit
 wheel==0.45.1
     # via pip-tools
 
