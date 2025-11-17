@@ -17,11 +17,10 @@ class TestResultFilesAndGenerateFileDownloadIds(ViterbiTestCase):
     def setUp(self):
         self.maxDiff = 9999
 
-        self.user = User.objects.create(username="buffy", first_name="buffy", last_name="summers")
-        self.client.authenticate(self.user)
+        self.django_user = User.objects.create(username="buffy", first_name="buffy", last_name="summers")
 
         self.job = ViterbiJob.objects.create(
-            user_id=self.user.id,
+            user_id=self.django_user.id,
             name="Test1",
             description="first job",
             job_controller_id=2,
@@ -37,7 +36,7 @@ class TestResultFilesAndGenerateFileDownloadIds(ViterbiTestCase):
             {'path': '/a/path/here4.txt', 'isDir': False, 'fileSize': "1234567"}
         ]
 
-        self.query = f"""
+        self.query_string = f"""
             query {{
                 viterbiResultFiles (jobId: "{self.global_id}") {{
                     files {{
@@ -78,15 +77,14 @@ class TestResultFilesAndGenerateFileDownloadIds(ViterbiTestCase):
         ViterbiResultFiles query should return a file object.
         """
         # Check user must be authenticated
-        self.client.authenticate(None)
-        response = self.client.execute(self.query)
+        response = self.query(self.query_string)
 
         self.assertEqual(response.data['viterbiResultFiles'], None)
-        self.assertEqual(str(response.errors[0]), "You do not have permission to perform this action")
+        self.assertEqual(response.errors[0]['message'], "You do not have permission to perform this action")
 
         # Check authenticated user
-        self.client.authenticate(self.user)
-        response = self.client.execute(self.query)
+        self.authenticate(self.django_user)
+        response = self.query(self.query_string)
 
         for i, f in enumerate(self.files):
             if f['isDir']:
@@ -115,22 +113,24 @@ class TestResultFilesAndGenerateFileDownloadIds(ViterbiTestCase):
             }
         }
 
+        # Deauthenticate for next test
+        self.deauthenticate()
+
         # Check user must be authenticated
-        self.client.authenticate(None)
-        response = self.client.execute(self.mutation, single_file_input)
+        response = self.query(self.mutation, variables=single_file_input)
 
         self.assertEqual(response.data['generateFileDownloadIds'], None)
-        self.assertEqual(str(response.errors[0]), "You do not have permission to perform this action")
+        self.assertEqual(response.errors[0]['message'], "You do not have permission to perform this action")
 
         # Check authenticated user
-        self.client.authenticate(self.user)
-        response = self.client.execute(self.mutation, single_file_input)
+        self.authenticate(self.django_user)
+        response = self.query(self.mutation, variables=single_file_input)
 
         # Make sure the regex is parsable
         self.assertEqual(len(response.data['generateFileDownloadIds']['result']), 1)
         uuid.UUID(response.data['generateFileDownloadIds']['result'][0], version=4)
 
-        response = self.client.execute(self.mutation, multi_file_input)
+        response = self.query(self.mutation, variables=multi_file_input)
 
         # Make sure the regex is parsable
         self.assertEqual(len(response.data['generateFileDownloadIds']['result']), 3)
@@ -143,7 +143,7 @@ class TestResultFilesAndGenerateFileDownloadIds(ViterbiTestCase):
         tk.created = timezone.now() - timezone.timedelta(seconds=settings.FILE_DOWNLOAD_TOKEN_EXPIRY + 1)
         tk.save()
 
-        response = self.client.execute(self.mutation, multi_file_input)
+        response = self.query(self.mutation, variables=multi_file_input)
 
         self.assertEqual(response.data['generateFileDownloadIds'], None)
-        self.assertEqual(str(response.errors[0]), "At least one token was invalid or expired.")
+        self.assertEqual(response.errors[0]['message'], "At least one token was invalid or expired.")

@@ -59,12 +59,12 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }}
             """
         # Check fails without authenticated user
-        response = self.client.execute(query)
+        response = self.query(query)
         self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
 
         # Try again with authenticated user
-        self.client.authenticate(self.user)
-        response = self.client.execute(query)
+        self.authenticate(self.user)
+        response = self.query(query)
         expected = {
             "viterbiJob": {
                 "id": "Vml0ZXJiaUpvYk5vZGU6MQ==",
@@ -72,7 +72,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
     @silence_errors
@@ -108,12 +108,12 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 }
             }
             """
-        response = self.client.execute(query)
+        response = self.query(query)
         self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
 
         # Try again with authenticated user
-        self.client.authenticate(self.user)
-        response = self.client.execute(query)
+        self.authenticate(self.user)
+        response = self.query(query)
         expected = {
             "viterbiJobs": {
                 "edges": [
@@ -123,7 +123,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            response.data, expected, "viterbiJobs query returned unexpected data."
+            response.json()['data'], expected, "viterbiJobs query returned unexpected data."
         )
 
     @silence_errors
@@ -155,12 +155,12 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 }
             }
             """
-        response = self.client.execute(query)
+        response = self.query(query)
         self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
 
         # Try again with authenticated user
-        self.client.authenticate(self.user)
-        response = self.client.execute(query)
+        self.authenticate(self.user)
+        response = self.query(query)
         expected = {
             'publicViterbiJobs': {
                 'edges': [
@@ -191,7 +191,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 ]
             }
         }
-        self.assertDictEqual(response.data, expected, "publicViterbiJobs query returned unexpected data.")
+        self.assertDictEqual(response.json()['data'], expected, "publicViterbiJobs query returned unexpected data.")
 
     @silence_errors
     @mock.patch('viterbi.schema.get_viterbi_summary_results')
@@ -209,16 +209,16 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
                 }}
             }}
             """
-        response = self.client.execute(query)
+        response = self.query(query)
         self.assertResponseHasErrors(response, "Query returned no errors even though user was not authenticated")
 
         # Try again with authenticated user
-        self.client.authenticate(self.user)
-        response = self.client.execute(query)
+        self.authenticate(self.user)
+        response = self.query(query)
         expected = {
             'viterbiSummaryResults': {
                 'tableData': test_table_data,
                 'plotData': test_plot_data
             }
         }
-        self.assertDictEqual(response.data, expected, "publicViterbiJobs query returned unexpected data.")
+        self.assertDictEqual(response.json()['data'], expected, "publicViterbiJobs query returned unexpected data.")

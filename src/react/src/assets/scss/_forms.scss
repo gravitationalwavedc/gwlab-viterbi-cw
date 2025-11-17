@@ -1,0 +1,102 @@
+.btn,
+.input-group > .form-control,
+.input-group > .form-control-plaintext,
+.input-group > .custom-select,
+.input-group > .custom-file,
+.custom-select {
+    font-family: $font-family-display !important;
+    font-weight: 500 !important;
+    font-variant: small-caps;
+}
+
+.btn.btn-primary {
+    color: $orange-100;
+    background-color: $orange-600;
+}
+
+.btn.btn-tertiary {
+    color: $orange-600;
+
+    &:hover {
+      color: $orange-900;
+    }
+}
+
+.form-group {
+    .form-control,
+    .custom-select {
+        border-color: $orange-500;
+        -webkit-appearance: none;
+    }
+}
+
+.btn.btn-outline-primary {
+    color: $orange-600;
+
+    &:hover:enabled {
+        color: $orange-100;
+    }
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  padding: none;
+  min-width: 65px;
+  font-variant: small-caps;
+  color: $orange-600;
+  font-family: $font-family-display;
+
+  &:hover,
+  &:focus {
+    color: $orange;
+    outline: none;
+  }
+}
+
+.save-button {
+  background: none;
+  border: none;
+  padding: none;
+  color: $accent-green;
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
+
+.cancel-button {
+  background: none;
+  border: none;
+  padding: none;
+  color: $accent-red;
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
+
+.form-container {
+    background: $orange-100;
+
+    .nav-link {
+      padding: 0.5rem 1rem 0.5rem 0;
+      font-size: 1rem;
+    }
+}
+
+.form-row {
+    padding-top: 24px;
+    padding-bottom: 24px;
+
+    .form-break {
+        padding-top: 24px;
+    }
+}
+
+.form-title-row {
+    padding-top: 24px;
+    padding-bottom: 24px;
+}

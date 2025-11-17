@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'found/Link';
 import { commitMutation, createRefetchContainer, graphql } from 'react-relay';
-import { harnessApi } from '../index';
+import environment from '../environment';
 import { Row, Col, Button, Container, Toast } from 'react-bootstrap';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
 import moment from 'moment';
@@ -24,7 +24,7 @@ const JobHeading = ({jobData, match, router, relay}) => {
     const cancelStatuses = [40, 50]; // These correspond to Queued and Running statuses
 
     const cancelJob = () => {
-        commitMutation(harnessApi.getEnvironment('viterbi'), {
+        commitMutation(environment, {
             mutation: graphql`mutation JobHeadingCancelJobMutation($jobId: ID!){
                 cancelViterbiJob(input: {jobId: $jobId}) {
                     result
@@ -45,7 +45,7 @@ const JobHeading = ({jobData, match, router, relay}) => {
     };
 
     const generateCandidates = () => {
-        commitMutation(harnessApi.getEnvironment('viterbi'), {
+        commitMutation(environment, {
             mutation: graphql`mutation JobHeadingGenerateCandidatesMutation($jobId: ID!) {
                 generateCandidates(input: {jobId: $jobId}) {
                     groupId

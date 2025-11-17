@@ -23,7 +23,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
         }
 
         self.user = User.objects.create(username="buffy", first_name="buffy", last_name="summers")
-        self.client.authenticate(self.user)
+        self.authenticate(self.user)
         self.label = Label.objects.create(name="Test", description="Test description")
         self.job = ViterbiJob.objects.create(**self.job_data)
         self.job.labels.set([self.label])
@@ -33,7 +33,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
 
     def job_request(self, *fields):
         field_str = "\n".join(fields)
-        return self.client.execute(
+        return self.query(
             f"""
             query {{
                 viterbiJob(id:"{self.global_id}"){{
@@ -69,7 +69,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             "viterbiJob": camelize(self.job_data)
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
     @mock.patch('viterbi.schema.request_lookup_users', side_effect=request_lookup_users_mock)
@@ -84,7 +84,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
         # If it returns no user
@@ -96,7 +96,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
     @mock.patch('viterbi.schema.request_job_filter', return_value=(None, [{"history": None}]))
@@ -116,7 +116,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
     def test_viterbi_job_start_query(self):
@@ -134,7 +134,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
     def test_viterbi_job_last_updated_query(self):
@@ -148,7 +148,7 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )
 
     def test_viterbi_job_labels_query(self):
@@ -167,5 +167,5 @@ class TestQueriesWithAuthenticatedUser(ViterbiTestCase):
             }
         }
         self.assertDictEqual(
-            expected, response.data, "viterbiJob query returned unexpected data."
+            expected, response.json()['data'], "viterbiJob query returned unexpected data."
         )

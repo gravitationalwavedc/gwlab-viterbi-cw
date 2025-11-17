@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {commitMutation} from 'relay-runtime';
 import {graphql} from 'react-relay';
-import {harnessApi} from '../index';
+import environment from '../environment';
 import { Container, Col, Row, Tab, Nav } from 'react-bootstrap'; 
 import { Formik } from 'formik';
 import JobTitle from '../Components/Forms/JobTitle';
@@ -73,7 +73,7 @@ const NewJob = ({initialValues, router}) => {
             }
         };
 
-        commitMutation(harnessApi.getEnvironment('viterbi'), {
+        commitMutation(environment, {
             mutation: submitMutation,
             variables: variables,
             onCompleted: (response, errors) => {

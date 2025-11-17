@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {QueryRenderer, graphql} from 'react-relay';
-import {harnessApi} from '../../index';
+import environment from '../../environment';
 import Table from 'react-bootstrap/Table';
 import ResultFile from './ResultFile';
 
@@ -42,7 +42,7 @@ const Files = ({hidden, jobId}) => {
             </thead>
             <tbody>
                 <QueryRenderer
-                    environment={harnessApi.getEnvironment('viterbi')}
+                    environment={environment}
                     query={graphql`
                           query FilesQuery ($jobId: ID!) {
                             viterbiResultFiles(jobId: $jobId) {

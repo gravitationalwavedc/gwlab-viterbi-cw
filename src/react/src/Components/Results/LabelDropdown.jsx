@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createFragmentContainer, commitMutation, graphql } from 'react-relay';
 import { Row, Col, DropdownButton, Dropdown, Alert } from 'react-bootstrap';
-import { harnessApi } from '../../index';
+import environment from '../../environment';
 import getBadgeType from '../getBadgeType';
 
 const LabelDropdown = (props) => {
@@ -56,7 +56,7 @@ const LabelDropdown = (props) => {
     );
 };
 
-const updateJob = (variables, callback) => commitMutation(harnessApi.getEnvironment('viterbi'), {
+const updateJob = (variables, callback) => commitMutation(environment, {
     mutation: graphql`mutation LabelDropdownMutation($jobId: ID!, $private: Boolean, $labels: [String])
             {
               updateViterbiJob(input: {jobId: $jobId, private: $private, labels: $labels}) 

@@ -21,7 +21,7 @@ class TestJobCancellation(ViterbiTestCase):
         }
 
         self.user = User.objects.create(username="buffy", first_name="buffy", last_name="summers")
-        self.client.authenticate(self.user)
+        self.authenticate(self.user)
         self.job = ViterbiJob.objects.create(**self.job_data)
         self.global_id = to_global_id("ViterbiJobNode", self.job.id)
 
@@ -45,7 +45,7 @@ class TestJobCancellation(ViterbiTestCase):
             }
         }
 
-        response = self.client.execute(
+        response = self.query(
             """
             mutation CancelJobMutation($input: CancelViterbiJobMutationInput!) {
                 cancelViterbiJob(input: $input) {
@@ -53,7 +53,7 @@ class TestJobCancellation(ViterbiTestCase):
                 }
             }
             """,
-            params
+            variables=params
         )
 
         expected = {
@@ -63,5 +63,5 @@ class TestJobCancellation(ViterbiTestCase):
         }
 
         self.assertDictEqual(
-            expected, response.data, "create ViterbiJob mutation returned unexpected data."
+            expected, response.json()['data'], "create ViterbiJob mutation returned unexpected data."
         )

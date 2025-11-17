@@ -1,7 +1,7 @@
 import React from 'react';
 import {commitMutation, createFragmentContainer, graphql} from 'react-relay';
-import filesize from 'filesize';
-import {harnessApi} from '../../index';
+import { filesize } from 'filesize';
+import environment from '../../environment';
 
 const downloadUrl = 'https://jobcontroller.adacs.org.au/job/apiv1/file/?fileId=';
 
@@ -14,7 +14,7 @@ const getFileDownloadIdMutation = graphql`
 `;
 
 const performFileDownload = (e, jobId, token) => {
-    commitMutation(harnessApi.getEnvironment('viterbi'), {
+    commitMutation(environment, {
         mutation: getFileDownloadIdMutation,
         variables: {
             input: {

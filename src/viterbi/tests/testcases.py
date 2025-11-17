@@ -1,26 +1,13 @@
+import datetime
 from django.test import testcases
-from graphql_jwt.testcases import JSONWebTokenClient
+from graphene_django.utils.testing import GraphQLTestCase
 from gw_viterbi.schema import schema
-from graphql_jwt.shortcuts import get_token
-from graphql_jwt.settings import jwt_settings
+from adacs_sso_plugin.adacs_user import ADACSAnonymousUser, ADACSUser
+from adacs_sso_plugin.test_client import ADACSSSOSessionClient
+from adacs_sso_plugin.constants import AUTHENTICATION_METHODS
 
 
-class ViterbiJSONWebTokenClient(JSONWebTokenClient):
-    """Viterbi test client with a custom authentication method."""
-
-    def authenticate(self, user, is_ligo=False):
-        """Payload for authentication in viterbi requires a special userID parameter."""
-        if user:
-            self._credentials = {
-                jwt_settings.JWT_AUTH_HEADER_NAME: "{0} {1}".format(
-                    jwt_settings.JWT_AUTH_HEADER_PREFIX, get_token(user, userId=user.id, isLigo=is_ligo)
-                ),
-            }
-        else:
-            self._credentials = {}
-
-
-class ViterbiTestCase(testcases.TestCase):
+class ViterbiTestCase(GraphQLTestCase, testcases.TestCase):
     """
     Viterbi test classes should inherit from this class.
 
@@ -34,26 +21,71 @@ class ViterbiTestCase(testcases.TestCase):
 
     GRAPHQL_URL : str
         Sets the graphql url to the current viterbi url.
-
-    client_class : class
-        Sets client to be a special viterbi specific object that uses a custom authentication.
-        method.
     """
 
     GRAPHQL_SCHEMA = schema
     GRAPHQL_URL = "/graphql"
-    client_class = ViterbiJSONWebTokenClient
+    client_class = ADACSSSOSessionClient
+
+    DEFAULT_USER = {
+        "is_authenticated": True,
+        "id": 1,
+        "name": "buffy summers",
+        "primary_email": "slayer@gmail.com",
+        "emails": ["slayer@gmail.com"],
+        "authentication_method": "password",
+        "authenticated_at": 0,
+        "fetched_at": 0,
+    }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # We always want to see the full diff when an error occurs.
         self.maxDiff = None
+        self.user = ADACSAnonymousUser()
+
+    def authenticate(self, user=None, **kwargs):
+        """Authenticate a user for testing."""
+        if user is not None:
+            # Django User model passed - convert to ADACS user dict
+            user_dict = {
+                **ViterbiTestCase.DEFAULT_USER,
+                "id": user.id,
+                "name": f"{user.first_name} {user.last_name}",
+                "authenticated_at": datetime.datetime.now(tz=datetime.UTC).timestamp(),
+                "fetched_at": datetime.datetime.now(tz=datetime.UTC).timestamp(),
+                **kwargs,
+            }
+        else:
+            # Direct user dict passed via kwargs
+            user_dict = {
+                **ViterbiTestCase.DEFAULT_USER,
+                "authenticated_at": datetime.datetime.now(tz=datetime.UTC).timestamp(),
+                "fetched_at": datetime.datetime.now(tz=datetime.UTC).timestamp(),
+                **kwargs,
+            }
+            
+        self.client.authenticate(user_dict)
+        self.user = ADACSUser(**user_dict)
+
+    def deauthenticate(self):
+        self.client.deauthenticate()
+        self.user = ADACSAnonymousUser()
 
     def assertResponseHasNoErrors(self, resp, msg=None):
-        """Semi-borrowed from graphene_django.utils.testing
-        They also check status_code, which we don't have access to"""
-        self.assertNotIn("errors", list(resp.to_dict().keys()), msg or resp)
+        """Check that the GraphQL response has no errors"""
+        return self.assertResponseNoErrors(resp, msg)
 
     def assertResponseHasErrors(self, resp, msg=None):
-        """Borrowed from graphene_django.utils.testing"""
-        self.assertIn("errors", list(resp.to_dict().keys()), msg or resp)
+        """Check that the GraphQL response has errors"""
+        content = resp.json()
+        self.assertIn("errors", content, msg or content)
+
+    # Add a .data parameter as a result of doing a query
+    def query(self, *args, **kwargs):
+        response = super().query(*args, **kwargs)
+        response_json = response.json()
+        response.data = response_json["data"] if "data" in response_json else None
+        response.errors = response_json["errors"] if "errors" in response_json else None
+        return response
+

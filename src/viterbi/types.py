@@ -1,4 +1,4 @@
-from graphene import AbstractType, ObjectType, Int, String, Boolean
+from graphene import Interface, ObjectType, Int, String, Boolean
 
 
 class OutputStartType(ObjectType):
@@ -7,7 +7,7 @@ class OutputStartType(ObjectType):
     private = Boolean()
 
 
-class AbstractDataType(AbstractType):
+class AbstractDataType(Interface):
     start_frequency_band = String()
     min_start_time = String()
     max_start_time = String()
@@ -21,7 +21,7 @@ class AbstractDataType(AbstractType):
     d_freq = String()
 
 
-class AbstractSearchType(AbstractType):
+class AbstractSearchType(Interface):
     search_start_time = String()
     search_t_block = String()
     search_central_a0 = String()

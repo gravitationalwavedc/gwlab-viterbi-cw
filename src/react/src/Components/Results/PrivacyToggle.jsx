@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {harnessApi} from '../../index';
+import environment from '../../environment';
 import { commitMutation, createFragmentContainer, graphql } from 'react-relay';
 import { Form } from 'react-bootstrap';
 
@@ -23,12 +23,12 @@ const PrivacyToggle = (props) => {
             type="checkbox"
             label="Share with LIGO collaborators"
             onChange={handleChange} 
-            disabled={harnessApi.currentUser.userId !== props.userId} 
+                            disabled={true} // TODO: implement currentUser check 
             checked={!isPrivate}/>
     </Form.Group>;
 };
 
-const updateJob = (variables, callback) => commitMutation(harnessApi.getEnvironment('viterbi'), {
+const updateJob = (variables, callback) => commitMutation(environment, {
     mutation: graphql`
       mutation PrivacyToggleMutation($jobId: ID!, $private: Boolean, $labels: [String]) {
         updateViterbiJob(input: {jobId: $jobId, private: $private, labels: $labels}) {

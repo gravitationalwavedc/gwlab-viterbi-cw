@@ -21,12 +21,12 @@ WORKDIR /
 
 # Copy the generate viterbi schema
 RUN mkdir -p /gwlab-viterbi-cw/src/react/data/
-RUN mv /tmp/gwlab-viterbi-cw/src/react/data/schema.json /src/react/data/
+RUN mv /tmp/gwlab-viterbi-cw/src/react/data/schema.graphql /src/react/data/
 
 # Don't need the viterbi project now
 RUN rm -Rf /tmp/gwlab-viterbi-cw
 
-# Build webpack bundle
+# Build Vite bundle
 RUN mkdir /src/static
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 RUN . ~/.nvm/nvm.sh && cd /src/react/ && nvm install && nvm use && npm install && npm run relay && npm run build

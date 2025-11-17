@@ -1,0 +1,86 @@
+// Custom styles
+
+.navbar-brand-link {
+
+   img {
+      height: 3rem;
+   }
+
+   &:hover,
+   &:active {
+       text-decoration: none;
+   }
+}
+
+.nav-link.active {
+   color: $orange-900;
+   font-weight: 600;
+}
+
+.navbar.navbar-light {
+   font-family: $font-family-display;
+   background: $orange-200;
+   font-weight: 600;
+
+   &:not(.fixed-bottom) {
+      box-shadow: $shadow-base;
+   }
+
+   .nav-title {
+      margin-left: -1rem;
+      color: $orange-600;
+   }
+   
+   .nav-username {
+      font-family: $font-family-sans-serif;
+      text-transform: capitalize;
+      font-weight: 300;
+
+      @include media-breakpoint-down(sm) {
+            border-top: 2px solid $orange-600;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+      }
+
+      @include media-breakpoint-up(md) {
+            border-right: 2px solid $orange-600;
+            padding-right: 1.5rem;
+      }
+   }
+}
+
+.navbar-collapse {
+   background: $orange-200;
+
+   @include media-breakpoint-down(sm) {
+      margin-top: 2rem;
+   }
+}
+
+.top-shadow {
+   box-shadow: $shadow-base-top;
+}
+
+.navbar.navbar-secondary {
+   font-family: $font-family-display;
+   background: $orange-700;
+   font-weight: 600;
+   height: 30px;
+   margin-top: 83px;
+
+   .nav-link {
+      color: $orange-100;
+      padding-top: 0;
+      padding-bottom: 0;
+      
+      &:hover,
+      &:active,
+      &:focus {
+         color: $orange-300
+      }
+   }
+
+   .navbar-collapse {
+      background: $orange-700;
+   }
+}
